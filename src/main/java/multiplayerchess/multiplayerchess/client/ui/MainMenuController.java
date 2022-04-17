@@ -1,4 +1,4 @@
-package multiplayerchess.multiplayerchess.client.ui.mainmenu;
+package multiplayerchess.multiplayerchess.client.ui;
 
 import javafx.event.ActionEvent;
 
