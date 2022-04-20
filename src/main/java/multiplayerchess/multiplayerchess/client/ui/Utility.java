@@ -25,11 +25,7 @@ public class Utility {
         Scene scene = new Scene(root);
         stage.setScene(scene);
 
-        return null;
+        return loader;
     }
 
-    public static Scene oldBuild() throws IOException {
-        var url = Main.class.getResource("/multiplayerchess/multiplayerchess/MainMenu.fxml");
-        return new Scene(FXMLLoader.load(Objects.requireNonNull(url)));
-    }
 }

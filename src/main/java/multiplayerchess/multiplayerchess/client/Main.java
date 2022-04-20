@@ -2,8 +2,6 @@ package multiplayerchess.multiplayerchess.client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -22,8 +20,9 @@ public class Main extends Application {
         stage.setHeight(800);
         stage.setWidth(800);
 
-        //Utility.loadNewScene(stage, MainMenuController.getFXMLFile());
-        stage.setScene(Utility.oldBuild());
+        Utility.loadNewScene(stage, MainMenuController.getFXMLFile());
+
+        stage.show();
     }
 
     public static void main(String[] args) {
