@@ -9,13 +9,13 @@ public final class JoinMatchReplyMessage extends ServerMessage implements Serial
     static final long serialVrsionUID = 0x123456;
     public final boolean success;
     public final String gameStateFEN;
-    public final Player playedColor;
+    public final Player player;
     public final String matchID;
 
-    public JoinMatchReplyMessage(boolean success, String gameStateFEN, Player playedColor, String matchID) {
+    public JoinMatchReplyMessage(boolean success, String gameStateFEN, Player player, String matchID) {
         this.success = success;
         this.gameStateFEN = gameStateFEN;
-        this.playedColor = playedColor;
+        this.player = player;
         this.matchID = matchID;
     }
 }

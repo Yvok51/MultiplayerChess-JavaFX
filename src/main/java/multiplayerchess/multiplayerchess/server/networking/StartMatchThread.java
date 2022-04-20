@@ -31,9 +31,11 @@ public class StartMatchThread implements Runnable {
         }
 
         try (ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream())) {
-            outputStream.writeObject(new StartGameReplyMessage(true, potentialMatchID));
             MatchController createdMatch = controllers.addMatch(potentialMatchID);
-            createdMatch.addPlayer(socket);
+            var addedPlayer = createdMatch.addPlayer(socket);
+            outputStream.writeObject(
+                    new StartGameReplyMessage(true, potentialMatchID, createdMatch.getMatchFEN(), addedPlayer)
+            );
         }
         catch (IOException e) {
             System.err.println("Unknown error while replying to a start match request");

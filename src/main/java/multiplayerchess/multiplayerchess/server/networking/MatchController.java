@@ -88,14 +88,22 @@ public final class MatchController extends Thread {
         return whitePlayerSocket == null || blackPLayerSocket == null;
     }
 
-    public void addPlayer(Socket player) {
+    public Player addPlayer(Socket player) {
         if (whitePlayerSocket == null) {
             whitePlayerSocket = player;
+            return Player.White;
         } else if (blackPLayerSocket == null) {
             blackPLayerSocket = player;
             // When both players are present -> wake up the thread waiting in the run method
             bothPlayersPresentLatch.countDown();
+            return Player.Black;
         }
+
+        return null; // No open spot - should never happen
+    }
+
+    public String getMatchFEN() {
+        return match.getFEN();
     }
 
     private void handlePlayerMessage(ClientOngoingMatchMessage message, Player player) {
