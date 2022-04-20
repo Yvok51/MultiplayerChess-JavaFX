@@ -51,7 +51,8 @@ public class FENParser {
 
     public static Piece[][] ParseBoard(String FEN) {
         String fenBoard = FEN.split("\\s+")[0];
-        Piece[][] board = new Piece[Board.MaxBoardRow - Board.MinBoardRow + 1][Board.MaxBoardColumn - Board.MinBoardColumn + 1];
+        Piece[][] board =
+                new Piece[Board.MaxBoardRow - Board.MinBoardRow + 1][Board.MaxBoardColumn - Board.MinBoardColumn + 1];
 
         int rank = Board.MaxBoardRow;
         int file = Board.MinBoardColumn;

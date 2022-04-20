@@ -3,6 +3,7 @@ package multiplayerchess.multiplayerchess.client.controller.parsing;
 import multiplayerchess.multiplayerchess.client.controller.pieces.*;
 import multiplayerchess.multiplayerchess.common.Color;
 import multiplayerchess.multiplayerchess.common.Player;
+import multiplayerchess.multiplayerchess.client.controller.Board;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,15 +34,16 @@ public class FENParser {
 
     public static Piece[][] ParseBoard(String FEN) {
         String fenBoard = FEN.split("\\s+")[0];
-        Piece[][] board = new Piece[8][8];
+        Piece[][] board =
+                new Piece[Board.MaxBoardRow - Board.MinBoardRow + 1][Board.MaxBoardColumn - Board.MinBoardColumn + 1];
 
-        int rank = 7;
-        int file = 0;
+        int rank = Board.MaxBoardRow;
+        int file = Board.MinBoardColumn;
         for (int i = 0; i < fenBoard.length(); i++) {
             char c = fenBoard.charAt(i);
             if (c == '/') {
                 rank--;
-                file = 0;
+                file = Board.MinBoardColumn;
             } else {
                 if (Character.isDigit(c)) {
                     file += Character.digit(c, 10);
