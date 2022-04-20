@@ -6,7 +6,7 @@ public final class JoinMatchMessage extends ClientMessage implements Serializabl
     static final long serialVersionUID = 0x1234567;
     public final String matchID;
 
-    JoinMatchMessage(String matchID) {
+    public JoinMatchMessage(String matchID) {
         this.matchID = matchID;
     }
 }
