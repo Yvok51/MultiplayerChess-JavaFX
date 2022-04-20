@@ -4,7 +4,10 @@ import multiplayerchess.multiplayerchess.common.Color;
 import multiplayerchess.multiplayerchess.common.PieceType;
 
 public class Pawn extends Piece {
-    private static final String IconFilename = "Pawn.png";
+
+    private static final String whiteIconFilename = basePiecePath + "white-pawn.png";
+    private static final String blackIconFilename = basePiecePath + "black-pawn.png";
+
     private final boolean hasMoved;
 
     public Pawn(Color color) {
@@ -22,10 +25,9 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public String getIconFilename() {
-        return IconFilename;
+    public String getIconFilename(Color color) {
+        return color == Color.White ? whiteIconFilename : blackIconFilename;
     }
-
     @Override
     public PieceType getPieceType() {
         return PieceType.Pawn;

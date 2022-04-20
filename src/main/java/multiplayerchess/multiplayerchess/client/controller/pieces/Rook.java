@@ -12,7 +12,9 @@ public class Rook extends Piece {
     },
             true
     );
-    private static final String IconFilename = "Rook.png";
+
+    private static final String whiteIconFilename = basePiecePath + "white-rook.png";
+    private static final String blackIconFilename = basePiecePath + "black-rook.png";
 
     public Rook(Color color) {
         super(color);
@@ -24,8 +26,8 @@ public class Rook extends Piece {
     }
 
     @Override
-    public String getIconFilename() {
-        return IconFilename;
+    public String getIconFilename(Color color) {
+        return color == Color.White ? whiteIconFilename : blackIconFilename;
     }
 
     @Override

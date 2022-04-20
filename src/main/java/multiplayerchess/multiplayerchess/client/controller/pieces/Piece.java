@@ -4,6 +4,8 @@ import multiplayerchess.multiplayerchess.common.Color;
 import multiplayerchess.multiplayerchess.common.PieceType;
 
 public abstract class Piece {
+    protected final static String basePiecePath = "/multiplayerchess/multiplayerchess/images";
+
     protected final Color color;
 
     public Piece(Color color) {
@@ -12,7 +14,7 @@ public abstract class Piece {
 
     public abstract Movement getMovement();
 
-    public abstract String getIconFilename();
+    public abstract String getIconFilename(Color color);
 
     public abstract PieceType getPieceType();
 

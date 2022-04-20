@@ -16,7 +16,9 @@ public class King extends Piece {
     },
             false
     );
-    private static final String IconFilename = "King.png";
+
+    private static final String whiteIconFilename = basePiecePath + "white-king.png";
+    private static final String blackIconFilename = basePiecePath + "black-king.png";
 
     public King(Color color) {
         super(color);
@@ -28,8 +30,8 @@ public class King extends Piece {
     }
 
     @Override
-    public String getIconFilename() {
-        return IconFilename;
+    public String getIconFilename(Color color) {
+        return color == Color.White ? whiteIconFilename : blackIconFilename;
     }
 
     @Override

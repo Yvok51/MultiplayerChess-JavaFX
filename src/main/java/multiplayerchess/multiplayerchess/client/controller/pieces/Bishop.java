@@ -12,7 +12,9 @@ public class Bishop extends Piece {
     },
             true
     );
-    private static final String IconFilename = "Bishop.png";
+
+    private static final String whiteIconFilename = basePiecePath + "white-bishop.png";
+    private static final String blackIconFilename = basePiecePath + "black-bishop.png";
 
     public Bishop(Color color) {
         super(color);
@@ -24,8 +26,8 @@ public class Bishop extends Piece {
     }
 
     @Override
-    public String getIconFilename() {
-        return IconFilename;
+    public String getIconFilename(Color color) {
+        return color == Color.White ? whiteIconFilename : blackIconFilename;
     }
 
     @Override
