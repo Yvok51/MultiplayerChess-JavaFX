@@ -54,7 +54,7 @@
                     <execution>
                         <id>server</id>
                         <configuration>
-                            <mainClass>multiplayerchess.multiplayerchess.server.Main</mainClass>
+                            <mainClass>multiplayerchess.multiplayerchess/multiplayerchess.multiplayerchess.server.Main</mainClass>
                         </configuration>
                     </execution>
                 </executions>
