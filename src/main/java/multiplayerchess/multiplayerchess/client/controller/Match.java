@@ -5,12 +5,16 @@ import multiplayerchess.multiplayerchess.client.controller.pieces.Piece;
 import multiplayerchess.multiplayerchess.common.Player;
 
 public class Match {
-    private static final String StartingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-    private final Piece[][] board;
+    private static final String NormalStartingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    private final Board board;
     private final Player currentPlayer;
+    private boolean ourTurn;
+    private Player player;
 
-    public Match() {
-        board = FENParser.ParseBoard(StartingFEN);
-        currentPlayer = Player.White;
+    public Match(String startignFEN, Player currentPlayer, boolean ourTurn, Player player) {
+        board = new Board(startignFEN);
+        this.currentPlayer = currentPlayer;
+        this.ourTurn = ourTurn;
+        this.player = player;
     }
 }
