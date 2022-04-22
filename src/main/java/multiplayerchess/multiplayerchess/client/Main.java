@@ -1,15 +1,11 @@
 package multiplayerchess.multiplayerchess.client;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import multiplayerchess.multiplayerchess.client.ui.MainMenuController;
 import multiplayerchess.multiplayerchess.client.ui.Utility;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class Main extends Application {
     @Override
@@ -19,6 +15,9 @@ public class Main extends Application {
         stage.setTitle("Multiplayer Chess");
         stage.setHeight(800);
         stage.setWidth(800);
+
+        var url = Main.class.getResource("/multiplayerchess/multiplayerchess/style.css");
+        Utility.css = url.toExternalForm();
 
         Utility.loadNewScene(stage, MainMenuController.getFXMLFile());
 

@@ -1,5 +1,6 @@
 package multiplayerchess.multiplayerchess.client.networking;
 
+import multiplayerchess.multiplayerchess.client.controller.Match;
 import multiplayerchess.multiplayerchess.common.Color;
 import multiplayerchess.multiplayerchess.common.PieceType;
 import multiplayerchess.multiplayerchess.common.Position;
@@ -11,11 +12,37 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Optional;
 
-public class NetworkController {
+public class NetworkController implements INetworkController {
 
     public static NetworkController connect(String host, int port) throws IOException {
         Socket socket = new Socket(host, port);
         return new NetworkController(socket);
+    }
+
+    public Optional<Match> StartMatch() {
+        var success = sendStartMatch();
+        if (!success) {
+            return Optional.empty();
+        }
+        var optReply = recieveStartGameReply();
+        if (optReply.isEmpty() || !optReply.get().success) {
+            return Optional.empty();
+        }
+        var reply = optReply.get();
+        return Optional.of(new Match(reply.startingFEN, reply.player, reply.matchID));
+    }
+
+    public Optional<Match> joinMatch(String matchID) {
+        var success = sendJoinMatch(matchID);
+        if (!success) {
+            return Optional.empty();
+        }
+        var optReply = receiveJoinMatchReply();
+        if (optReply.isEmpty() || !optReply.get().success) {
+            return Optional.empty();
+        }
+        var reply = optReply.get();
+        return Optional.of(new Match(reply.gameStateFEN, reply.player, reply.matchID));
     }
 
     /**

@@ -5,7 +5,7 @@ import multiplayerchess.multiplayerchess.client.controller.pieces.Piece;
 import multiplayerchess.multiplayerchess.common.Player;
 
 public class Match {
-    private static final String NormalStartingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    public static final String NormalStartingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
     private final Board board;
     private boolean ourTurn;
@@ -20,5 +20,11 @@ public class Match {
         this.matchID = matchID;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
 
+    public Board getBoard() {
+        return board;
+    }
 }

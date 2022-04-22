@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import multiplayerchess.multiplayerchess.client.Main;
 import multiplayerchess.multiplayerchess.client.controller.Match;
+import multiplayerchess.multiplayerchess.client.networking.INetworkController;
+import multiplayerchess.multiplayerchess.client.networking.MockNetworkController;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
 import multiplayerchess.multiplayerchess.common.Networking;
 
@@ -22,26 +24,21 @@ public class MainMenuController {
 
     public void onStartGame(ActionEvent e) {
         try {
-            var networkController = NetworkController.connect(Networking.SERVER_ADDR, Networking.SERVER_PORT);
-            var success = networkController.sendStartMatch();
-            if (!success) {
-                return;
+            INetworkController networkController = new MockNetworkController(); // NetworkController.connect(Networking.SERVER_ADDR, Networking.SERVER_PORT);
+
+            var startedMatch = networkController.StartMatch();
+            if (startedMatch.isEmpty()) {
+                throw new IOException("Could not start match");
             }
-            var optReply = networkController.recieveStartGameReply();
-            if (optReply.isEmpty() || !optReply.get().success) {
-                return;
-            }
-            var reply = optReply.get();
-            Match startedMatch = new Match(reply.startingFEN, reply.player, reply.matchID);
 
             FXMLLoader loader = Utility.loadNewScene(e, ChessGameController.getFXMLFile());
 
             ChessGameController controller = loader.getController();
-            controller.setMatch(startedMatch);
+            controller.setMatch(startedMatch.get());
 
         } catch (IOException ex) {
             ex.printStackTrace();
-            Platform.exit();
+            // Platform.exit();
         }
     }
 

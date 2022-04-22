@@ -1,8 +1,8 @@
 package multiplayerchess.multiplayerchess.client.controller;
 
+import multiplayerchess.multiplayerchess.client.controller.parsing.FENParser;
+import multiplayerchess.multiplayerchess.client.controller.pieces.Piece;
 import multiplayerchess.multiplayerchess.common.Position;
-import multiplayerchess.multiplayerchess.server.controller.parsing.FENParser;
-import multiplayerchess.multiplayerchess.server.controller.pieces.Piece;
 
 public final class Board {
 

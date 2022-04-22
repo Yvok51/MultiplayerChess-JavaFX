@@ -30,25 +30,19 @@ public class JoinGameController {
 
         try {
             var networkController = NetworkController.connect(Networking.SERVER_ADDR, Networking.SERVER_PORT);
-            var success = networkController.sendJoinMatch(matchID);
-            if (!success) {
-                return;
+            var match = networkController.joinMatch(matchID);
+            if (match.isEmpty()) {
+                throw new IOException("Match not found");
             }
-            var optReply = networkController.receiveJoinMatchReply();
-            if (optReply.isEmpty() || !optReply.get().success) {
-                return;
-            }
-            var reply = optReply.get();
-            Match startedMatch = new Match(reply.gameStateFEN, reply.player, reply.matchID);
 
             FXMLLoader loader = Utility.loadNewScene(e, ChessGameController.getFXMLFile());
 
             ChessGameController controller = loader.getController();
-            controller.setMatch(startedMatch);
+            controller.setMatch(match.get());
 
         } catch (IOException ex) {
             ex.printStackTrace();
-            Platform.exit();
+            // Platform.exit();
         }
     }
 
