@@ -14,7 +14,7 @@ public abstract class Piece {
 
     public abstract Movement getMovement();
 
-    public abstract String getIconFilename(Color color);
+    public abstract String getIconFilename();
 
     public abstract PieceType getPieceType();
 
