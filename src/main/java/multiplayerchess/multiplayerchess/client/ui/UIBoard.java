@@ -26,15 +26,14 @@ public class UIBoard extends GridPane  {
                 }
 
                 if (currentPlayer == Player.White) {
-                    this.add(fields[x][y], x, CHESSBOARD_COLUMN_SIZE - 1 - y);
+                    this.add(fields[x][y], y, CHESSBOARD_ROW_SIZE - 1 - x);
                 } else {
-                    this.add(fields[x][y], CHESSBOARD_ROW_SIZE - 1 - x, y);
+                    this.add(fields[x][y], y, x);
                 }
 
                 final int xPosition = x;
                 final int yPosition = y;
-                fields[x][y]
-                        .setOnAction(e -> onFieldClick(xPosition, yPosition));
+                fields[x][y].setOnAction(e -> onFieldClick(xPosition, yPosition));
             }
         }
     }
@@ -53,8 +52,11 @@ public class UIBoard extends GridPane  {
         UIBoardField clickedField = fields[x][y];
 
         // if a piece is trying to get moved
-        if (selectedField != null && selectedField.isOccupied()
-                && clickedField.getPieceColor() != selectedField.getPieceColor()) {
+        if (selectedField != null && selectedField.isOccupied()) {
+            if (clickedField.getPieceColor() == selectedField.getPieceColor()) {
+                this.deselectField();
+                return;
+            }
 
             Move move = new Move(selectedField.getX(), selectedField.getY(), x, y);
 

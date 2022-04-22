@@ -1,7 +1,6 @@
 package multiplayerchess.multiplayerchess.client.ui;
 
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import multiplayerchess.multiplayerchess.client.controller.pieces.Piece;
 import multiplayerchess.multiplayerchess.common.Color;
@@ -54,7 +53,7 @@ public class UIBoardField extends Button {
     public void setPiece(Piece piece) {
         this.piece = piece;
         if (isOccupied()) {
-            this.setGraphic(Utility.getImageView(piece));
+            this.setGraphic(new ImageView(Utility.getImage(piece)));
         } else {
             this.setGraphic(new ImageView());
         }

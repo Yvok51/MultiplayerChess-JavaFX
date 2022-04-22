@@ -18,13 +18,13 @@ import java.util.Objects;
 public class Utility {
 
     public static String css;
-    public static Map<String, ImageView> pieceImages = new HashMap<>();
+    public static Map<String, Image> pieceImages = new HashMap<>();
 
-    public static ImageView getImageView(Piece piece) {
+    public static Image getImage(Piece piece) {
         var image = pieceImages.get(piece.getIconFilename());
         if (image == null) {
             var resource = Utility.class.getResourceAsStream(piece.getIconFilename());
-            image = new ImageView(new Image(resource));
+            image = new Image(resource);
             pieceImages.put(piece.getIconFilename(), image);
         }
         return image;
