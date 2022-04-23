@@ -11,4 +11,8 @@ public enum Player implements Serializable {
     public Player opposite() {
         return this == Player.White ? Player.Black : Player.White;
     }
+
+    public Color getColor() {
+        return this == Player.White ? Color.White : Color.Black;
+    }
 }

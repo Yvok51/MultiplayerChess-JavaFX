@@ -13,9 +13,12 @@ public class UIBoard extends GridPane  {
 
     private UIBoardField[][] fields = new UIBoardField[CHESSBOARD_ROW_SIZE][CHESSBOARD_COLUMN_SIZE];
     private UIBoardField selectedField = null;
+    private Player player;
 
     public UIBoard(Player currentPlayer) {
         super();
+
+        this.player = currentPlayer;
 
         for (int x = 0; x < 8; ++x) {
             for (int y = 0; y < 8; ++y) {
@@ -61,7 +64,7 @@ public class UIBoard extends GridPane  {
             Move move = new Move(selectedField.getX(), selectedField.getY(), x, y);
 
         } else {
-            if (fields[x][y].getPiece() != null) {
+            if (fields[x][y].getPiece() != null && fields[x][y].getPieceColor() == player.getColor()) {
                 this.setSelectedField(fields[x][y]);
             }
         }
@@ -72,13 +75,13 @@ public class UIBoard extends GridPane  {
         this.selectedField = selectedField;
 
         if (this.selectedField != null) {
-            this.selectedField.getStyleClass().add("chess-field-active");
+            this.selectedField.setActive(true);
         }
     }
 
     private void deselectField() {
         if (this.selectedField != null) {
-            selectedField.getStyleClass().removeAll("chess-field-active");
+            selectedField.setActive(false);
             selectedField = null;
         }
     }
