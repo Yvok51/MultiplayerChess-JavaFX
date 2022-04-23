@@ -29,6 +29,10 @@ public class ChessGameController implements Initializable {
         this.match = match;
         board = new UIBoard(match.getPlayer());
         board.setupBoard(match.getBoard());
+
         chessGamePane.getChildren().add(board);
+
+        AnchorPane.setTopAnchor(board, 60.0);
+        AnchorPane.setLeftAnchor(board, 140.0);
     }
 }
