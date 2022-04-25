@@ -27,11 +27,11 @@ public class Bishop extends Piece {
 
     @Override
     public String getIconFilename() {
-        return color == Color.White ? whiteIconFilename : blackIconFilename;
+        return color == Color.WHITE ? whiteIconFilename : blackIconFilename;
     }
 
     @Override
     public PieceType getPieceType() {
-        return PieceType.Bishop;
+        return PieceType.BISHOP;
     }
 }

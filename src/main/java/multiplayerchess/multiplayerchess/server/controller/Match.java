@@ -25,7 +25,7 @@ public final class Match {
         rules = new ChessRules();
         moves = 1;
         halfmoveClock = 0;
-        currentPlayer = Player.White;
+        currentPlayer = Player.WHITE;
         enPassant = null;
 
         possibleCastles = new HashSet<>();
@@ -47,12 +47,12 @@ public final class Match {
         }
 
         // Update move count
-        if (currentPlayer == Player.Black) {
+        if (currentPlayer == Player.BLACK) {
             moves++;
         }
 
         // Update halfmove clock
-        if (move.isCapture || move.pieceType == PieceType.Pawn) {
+        if (move.isCapture || move.pieceType == PieceType.PAWN) {
             halfmoveClock = 0;
         } else {
             halfmoveClock++;
@@ -187,7 +187,7 @@ public final class Match {
      * @param movedPiece The piece that is to be moved
      */
     private void performEnPassant(Board board, Move move, Piece movedPiece) {
-        int pawnRowOffset = movedPiece.color == Color.White ? -1 : 1;
+        int pawnRowOffset = movedPiece.color == Color.WHITE ? -1 : 1;
         board.setPiece(move.endPosition, rules.pieceAfterMove(movedPiece, rules.isPromotion(move, movedPiece, currentPlayer)));
         board.clearPiece(move.startPosition);
         board.clearPiece(new Position(move.endPosition.row + pawnRowOffset, move.endPosition.column));
@@ -219,8 +219,8 @@ public final class Match {
      */
     private Position nextEnPassant(Move move, Piece movedPiece) {
         Position nextEnPassant = null;
-        if (movedPiece.getType() == PieceType.Pawn && move.getRowDifference() == 2) {
-            int rowOffset = movedPiece.color == Color.White ? -1 : 1;
+        if (movedPiece.getType() == PieceType.PAWN && move.getRowDifference() == 2) {
+            int rowOffset = movedPiece.color == Color.WHITE ? -1 : 1;
             nextEnPassant = new Position(move.endPosition.row + rowOffset, move.endPosition.column);
         }
 
@@ -235,8 +235,8 @@ public final class Match {
      */
     private void removeCastlingOptions(Move move, Piece movedPiece) {
 
-        if (movedPiece.getType() == PieceType.King) {
-            if (movedPiece.color == Color.White) {
+        if (movedPiece.getType() == PieceType.KING) {
+            if (movedPiece.color == Color.WHITE) {
                 possibleCastles.remove(Castling.WhiteKingside);
                 possibleCastles.remove(Castling.WhiteQueenside);
             } else {
@@ -244,8 +244,8 @@ public final class Match {
                 possibleCastles.remove(Castling.BlackQueenside);
             }
         }
-        if (movedPiece.getType() == PieceType.Rook) {
-            if (movedPiece.color == Color.White) {
+        if (movedPiece.getType() == PieceType.ROOK) {
+            if (movedPiece.color == Color.WHITE) {
                 Position whiteKingsideRookPosition = new Position(ChessRules.MinBoardRow, ChessRules.MaxBoardColumn);
                 Position whiteQueensideRookPosition = new Position(ChessRules.MinBoardRow, ChessRules.MinBoardColumn);
                 if (whiteKingsideRookPosition.equals(move.startPosition)) {

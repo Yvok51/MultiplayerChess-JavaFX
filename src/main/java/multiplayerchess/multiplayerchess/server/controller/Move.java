@@ -48,7 +48,7 @@ public final class Move {
         int rowDifference = getRowDifference();
         int columnDifference = getColumnDifference();
 
-        if (pieceType == PieceType.Knight) {
+        if (pieceType == PieceType.KNIGHT) {
             return new Position(rowDifference, columnDifference);
         }
 

@@ -3,16 +3,16 @@ package multiplayerchess.multiplayerchess.common;
 import java.io.Serializable;
 
 public enum Player implements Serializable {
-    Black,
-    White;
+    BLACK,
+    WHITE;
 
     static final long serialVersionUID = 0x98765;
 
     public Player opposite() {
-        return this == Player.White ? Player.Black : Player.White;
+        return this == Player.WHITE ? Player.BLACK : Player.WHITE;
     }
 
     public Color getColor() {
-        return this == Player.White ? Color.White : Color.Black;
+        return this == Player.WHITE ? Color.WHITE : Color.BLACK;
     }
 }

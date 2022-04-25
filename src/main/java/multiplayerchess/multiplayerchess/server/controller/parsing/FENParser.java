@@ -19,32 +19,32 @@ public class FENParser {
 
     static {
         Map<PieceType, Function<Color, Character>> builder = new HashMap<>();
-        builder.put(PieceType.King, (color) -> color == Color.White ? 'K' : 'k');
-        builder.put(PieceType.Queen, (color) -> color == Color.White ? 'Q' : 'q');
-        builder.put(PieceType.Bishop, (color) -> color == Color.White ? 'B' : 'b');
-        builder.put(PieceType.Knight, (color) -> color == Color.White ? 'N' : 'n');
-        builder.put(PieceType.Rook, (color) -> color == Color.White ? 'R' : 'r');
-        builder.put(PieceType.Pawn, (color) -> color == Color.White ? 'P' : 'p');
+        builder.put(PieceType.KING, (color) -> color == Color.WHITE ? 'K' : 'k');
+        builder.put(PieceType.QUEEN, (color) -> color == Color.WHITE ? 'Q' : 'q');
+        builder.put(PieceType.BISHOP, (color) -> color == Color.WHITE ? 'B' : 'b');
+        builder.put(PieceType.KNIGHT, (color) -> color == Color.WHITE ? 'N' : 'n');
+        builder.put(PieceType.ROOK, (color) -> color == Color.WHITE ? 'R' : 'r');
+        builder.put(PieceType.PAWN, (color) -> color == Color.WHITE ? 'P' : 'p');
 
         pieceToCharTransaltion = Collections.unmodifiableMap(builder);
 
         Map<Character, Function<Position, Piece>> pieceBuilder = new HashMap<>();
-        pieceBuilder.put('k', (position) -> new King(Color.Black));
-        pieceBuilder.put('K', (position) -> new King(Color.White));
+        pieceBuilder.put('k', (position) -> new King(Color.BLACK));
+        pieceBuilder.put('K', (position) -> new King(Color.WHITE));
         pieceBuilder.put('p', (position) -> {
-            return position.row == 6 ? new Pawn(Color.Black, false) : new Pawn(Color.Black, true);
+            return position.row == 6 ? new Pawn(Color.BLACK, false) : new Pawn(Color.BLACK, true);
         });
         pieceBuilder.put('P', (position) -> {
-            return position.row == 1 ? new Pawn(Color.White, false) : new Pawn(Color.White, true);
+            return position.row == 1 ? new Pawn(Color.WHITE, false) : new Pawn(Color.WHITE, true);
         });
-        pieceBuilder.put('n', (position) -> new Knight(Color.Black));
-        pieceBuilder.put('N', (position) -> new Knight(Color.White));
-        pieceBuilder.put('b', (position) -> new Bishop(Color.Black));
-        pieceBuilder.put('B', (position) -> new Bishop(Color.White));
-        pieceBuilder.put('r', (position) -> new Rook(Color.Black));
-        pieceBuilder.put('R', (position) -> new Rook(Color.White));
-        pieceBuilder.put('q', (position) -> new Queen(Color.Black));
-        pieceBuilder.put('Q', (position) -> new Queen(Color.White));
+        pieceBuilder.put('n', (position) -> new Knight(Color.BLACK));
+        pieceBuilder.put('N', (position) -> new Knight(Color.WHITE));
+        pieceBuilder.put('b', (position) -> new Bishop(Color.BLACK));
+        pieceBuilder.put('B', (position) -> new Bishop(Color.WHITE));
+        pieceBuilder.put('r', (position) -> new Rook(Color.BLACK));
+        pieceBuilder.put('R', (position) -> new Rook(Color.WHITE));
+        pieceBuilder.put('q', (position) -> new Queen(Color.BLACK));
+        pieceBuilder.put('Q', (position) -> new Queen(Color.WHITE));
 
         charToPieceTransaltion = Collections.unmodifiableMap(pieceBuilder);
     }
@@ -77,7 +77,7 @@ public class FENParser {
     public static Player getCurrentPlayer(String FEN) {
         String currentPlayer = FEN.split("\\s+")[1];
 
-        return currentPlayer.equals("w") ? Player.White : Player.Black;
+        return currentPlayer.equals("w") ? Player.WHITE : Player.BLACK;
     }
 
     public static String FENStringFromBoard(
@@ -88,7 +88,7 @@ public class FENParser {
 
         builder.append(' ');
 
-        if (currentPlayer == Player.White) {
+        if (currentPlayer == Player.WHITE) {
             builder.append('w');
         } else {
             builder.append('b');

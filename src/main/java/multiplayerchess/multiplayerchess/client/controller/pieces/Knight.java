@@ -31,11 +31,11 @@ public class Knight extends Piece {
 
     @Override
     public String getIconFilename() {
-        return color == Color.White ? whiteIconFilename : blackIconFilename;
+        return color == Color.WHITE ? whiteIconFilename : blackIconFilename;
     }
     @Override
     public PieceType getPieceType() {
-        return PieceType.Knight;
+        return PieceType.KNIGHT;
     }
 
 }

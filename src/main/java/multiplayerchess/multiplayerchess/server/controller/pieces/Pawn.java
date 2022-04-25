@@ -54,15 +54,15 @@ public final class Pawn extends Piece {
     @Override
     public Movement getMovement() {
         if (hasMoved) {
-            return color == Color.White ? normalMovementWhite : normalMovementBlack;
+            return color == Color.WHITE ? normalMovementWhite : normalMovementBlack;
         } else {
-            return color == Color.White ? startMovementWhite : startMovementBlack;
+            return color == Color.WHITE ? startMovementWhite : startMovementBlack;
         }
     }
 
     @Override
     public Movement getCaptureMovement() {
-        return color == Color.White ? captureMovementWhite : captureMovementBlack;
+        return color == Color.WHITE ? captureMovementWhite : captureMovementBlack;
     }
 
     @Override
@@ -86,7 +86,7 @@ public final class Pawn extends Piece {
 
     @Override
     public PieceType getType() {
-        return PieceType.Pawn;
+        return PieceType.PAWN;
     }
 
     @Override

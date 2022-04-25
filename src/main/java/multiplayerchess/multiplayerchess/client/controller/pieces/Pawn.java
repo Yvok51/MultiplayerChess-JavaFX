@@ -17,7 +17,7 @@ public class Pawn extends Piece {
 
     @Override
     public Movement getMovement() {
-        if (color == Color.Black) {
+        if (color == Color.BLACK) {
             return new Movement(new MovementDirection[]{MovementDirection.DOWN}, false);
         } else {
             return new Movement(new MovementDirection[]{MovementDirection.UP}, false);
@@ -26,10 +26,10 @@ public class Pawn extends Piece {
 
     @Override
     public String getIconFilename() {
-        return color == Color.White ? whiteIconFilename : blackIconFilename;
+        return color == Color.WHITE ? whiteIconFilename : blackIconFilename;
     }
     @Override
     public PieceType getPieceType() {
-        return PieceType.Pawn;
+        return PieceType.PAWN;
     }
 }

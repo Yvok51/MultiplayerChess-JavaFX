@@ -25,12 +25,12 @@ public class UIBoard extends GridPane  {
         for (int x = 0; x < 8; ++x) {
             for (int y = 0; y < 8; ++y) {
                 if ((x + y) % 2 != 0) {
-                    fields[x][y] = new UIBoardField(Color.White, x, y);
+                    fields[x][y] = new UIBoardField(Color.WHITE, x, y);
                 } else {
-                    fields[x][y] = new UIBoardField(Color.Black, x, y);
+                    fields[x][y] = new UIBoardField(Color.BLACK, x, y);
                 }
 
-                if (currentPlayer == Player.White) {
+                if (currentPlayer == Player.WHITE) {
                     this.add(fields[x][y], y, CHESSBOARD_ROW_SIZE - 1 - x);
                 } else {
                     this.add(fields[x][y], y, x);

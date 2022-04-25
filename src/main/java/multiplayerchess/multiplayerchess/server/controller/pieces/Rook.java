@@ -57,6 +57,6 @@ public final class Rook extends Piece {
 
     @Override
     public PieceType getType() {
-        return PieceType.Rook;
+        return PieceType.ROOK;
     }
 }

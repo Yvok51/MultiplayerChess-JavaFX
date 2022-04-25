@@ -59,6 +59,6 @@ public final class King extends Piece {
 
     @Override
     public PieceType getType() {
-        return PieceType.King;
+        return PieceType.KING;
     }
 }

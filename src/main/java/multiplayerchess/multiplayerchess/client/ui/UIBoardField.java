@@ -74,7 +74,7 @@ public class UIBoardField extends Button {
     }
 
     private String getDefaultColorStyle() {
-        return color == Color.White ? "chess-color-white" : "chess-color-black";
+        return color == Color.WHITE ? "chess-color-white" : "chess-color-black";
     }
 
 }

@@ -50,26 +50,26 @@ public final class MatchController extends Thread {
             var whitesMessage = acceptPlayerMessage(whitePlayerSocket);
             if (whitesMessage.isEmpty()) {
                 try {
-                    playerDisconnected(Player.White);
+                    playerDisconnected(Player.WHITE);
                 }
                 catch (IOException ignored) {
                 }
                 break;
             }
 
-            handlePlayerMessage(whitesMessage.get(), Player.White);
+            handlePlayerMessage(whitesMessage.get(), Player.WHITE);
 
             var blacksMessage = acceptPlayerMessage(blackPLayerSocket);
             if (blacksMessage.isEmpty()) {
                 try {
-                    playerDisconnected(Player.Black);
+                    playerDisconnected(Player.BLACK);
                 }
                 catch (IOException ignored) {
                 }
                 break;
             }
 
-            handlePlayerMessage(blacksMessage.get(), Player.Black);
+            handlePlayerMessage(blacksMessage.get(), Player.BLACK);
         }
 
         try {
@@ -91,12 +91,12 @@ public final class MatchController extends Thread {
     public Player addPlayer(Socket player) {
         if (whitePlayerSocket == null) {
             whitePlayerSocket = player;
-            return Player.White;
+            return Player.WHITE;
         } else if (blackPLayerSocket == null) {
             blackPLayerSocket = player;
             // When both players are present -> wake up the thread waiting in the run method
             bothPlayersPresentLatch.countDown();
-            return Player.Black;
+            return Player.BLACK;
         }
 
         return null; // No open spot - should never happen
@@ -163,7 +163,7 @@ public final class MatchController extends Thread {
     }
 
     private Socket playerToSocket(Player player) {
-        return player == Player.White ? whitePlayerSocket : blackPLayerSocket;
+        return player == Player.WHITE ? whitePlayerSocket : blackPLayerSocket;
     }
 
     private Optional<ClientOngoingMatchMessage> acceptPlayerMessage(Socket playerSocket) {
@@ -190,18 +190,18 @@ public final class MatchController extends Thread {
 
     private void sendOpponentDisconnectedMessage(Player disconnectedPlayer) throws IOException {
         OpponentDisconnectedMessage message = new OpponentDisconnectedMessage(matchID);
-        if (disconnectedPlayer == Player.White) {
+        if (disconnectedPlayer == Player.WHITE) {
             sendMessage(blackPLayerSocket, message);
-        } else if (disconnectedPlayer == Player.Black) {
+        } else if (disconnectedPlayer == Player.BLACK) {
             sendMessage(whitePlayerSocket, message);
         }
     }
 
     private void sendOpponentResignedMessage(Player resignedPlayer) throws IOException {
         OpponentResignedMessage message = new OpponentResignedMessage(matchID);
-        if (resignedPlayer == Player.White) {
+        if (resignedPlayer == Player.WHITE) {
             sendMessage(blackPLayerSocket, message);
-        } else if (resignedPlayer == Player.Black) {
+        } else if (resignedPlayer == Player.BLACK) {
             sendMessage(whitePlayerSocket, message);
         }
     }
@@ -217,13 +217,13 @@ public final class MatchController extends Thread {
             sendMessage(whitePlayerSocket, message);
         }
         catch (IOException ignored) {
-            return Optional.of(Player.White);
+            return Optional.of(Player.WHITE);
         }
         try {
             sendMessage(blackPLayerSocket, message);
         }
         catch (IOException ignored) {
-            return Optional.of(Player.Black);
+            return Optional.of(Player.BLACK);
         }
         return Optional.empty();
     }

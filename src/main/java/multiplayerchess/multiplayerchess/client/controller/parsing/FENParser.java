@@ -15,18 +15,18 @@ public class FENParser {
 
     static {
         Map<Character, Supplier<Piece>> builder = new HashMap<>();
-        builder.put('k', () -> new King(Color.Black));
-        builder.put('K', () -> new King(Color.White));
-        builder.put('p', () -> new Pawn(Color.Black));
-        builder.put('P', () -> new Pawn(Color.White));
-        builder.put('n', () -> new Knight(Color.Black));
-        builder.put('N', () -> new Knight(Color.White));
-        builder.put('b', () -> new Bishop(Color.Black));
-        builder.put('B', () -> new Bishop(Color.White));
-        builder.put('r', () -> new Rook(Color.Black));
-        builder.put('R', () -> new Rook(Color.White));
-        builder.put('q', () -> new Queen(Color.Black));
-        builder.put('Q', () -> new Queen(Color.White));
+        builder.put('k', () -> new King(Color.BLACK));
+        builder.put('K', () -> new King(Color.WHITE));
+        builder.put('p', () -> new Pawn(Color.BLACK));
+        builder.put('P', () -> new Pawn(Color.WHITE));
+        builder.put('n', () -> new Knight(Color.BLACK));
+        builder.put('N', () -> new Knight(Color.WHITE));
+        builder.put('b', () -> new Bishop(Color.BLACK));
+        builder.put('B', () -> new Bishop(Color.WHITE));
+        builder.put('r', () -> new Rook(Color.BLACK));
+        builder.put('R', () -> new Rook(Color.WHITE));
+        builder.put('q', () -> new Queen(Color.BLACK));
+        builder.put('Q', () -> new Queen(Color.WHITE));
 
         pieceTransaltion = Collections.unmodifiableMap(builder);
 
@@ -60,6 +60,6 @@ public class FENParser {
     public static Player getCurrentPlayer(String FEN) {
         String currentPlayer = FEN.split("\\s+")[1];
 
-        return currentPlayer.equals("w") ? Player.White : Player.Black;
+        return currentPlayer.equals("w") ? Player.WHITE : Player.BLACK;
     }
 }

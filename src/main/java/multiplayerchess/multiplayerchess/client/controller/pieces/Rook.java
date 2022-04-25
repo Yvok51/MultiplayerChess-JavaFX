@@ -27,11 +27,11 @@ public class Rook extends Piece {
 
     @Override
     public String getIconFilename() {
-        return color == Color.White ? whiteIconFilename : blackIconFilename;
+        return color == Color.WHITE ? whiteIconFilename : blackIconFilename;
     }
 
     @Override
     public PieceType getPieceType() {
-        return PieceType.Rook;
+        return PieceType.ROOK;
     }
 }

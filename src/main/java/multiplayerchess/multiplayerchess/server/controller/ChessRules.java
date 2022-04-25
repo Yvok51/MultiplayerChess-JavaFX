@@ -49,7 +49,7 @@ public class ChessRules {
      * @return Return the piece after being moved
      */
     public Piece pieceAfterMove(Piece piece, boolean isPromotion) {
-        return isPromotion && piece.getType() == PieceType.Pawn ? new Queen(piece.color) : piece.getMovedPiece();
+        return isPromotion && piece.getType() == PieceType.PAWN ? new Queen(piece.color) : piece.getMovedPiece();
     }
 
     /**
@@ -61,9 +61,9 @@ public class ChessRules {
      * @return Whether the current move results in a promotion
      */
     public boolean isPromotion(Move move, Piece movedPiece, Player currentPlayer) {
-        return (currentPlayer == Player.White && movedPiece.getType() == PieceType.Pawn
+        return (currentPlayer == Player.WHITE && movedPiece.getType() == PieceType.PAWN
                 && move.endPosition.row == ChessRules.MaxBoardRow) ||
-                (currentPlayer == Player.Black && movedPiece.getType() == PieceType.Pawn
+                (currentPlayer == Player.BLACK && movedPiece.getType() == PieceType.PAWN
                         && move.endPosition.row == ChessRules.MinBoardRow);
     }
 
@@ -76,7 +76,7 @@ public class ChessRules {
      * @return Whether the move is an en passant move
      */
     public boolean isEnPassant(Board board, Move move, Position enPassant) {
-        return move.isCapture && board.getPiece(move.startPosition).getType() == PieceType.Pawn && enPassant.equals(move.endPosition);
+        return move.isCapture && board.getPiece(move.startPosition).getType() == PieceType.PAWN && enPassant.equals(move.endPosition);
     }
 
     /**
@@ -91,7 +91,7 @@ public class ChessRules {
      */
     public boolean isCastle(Board board, Move move, Player currentPlayer, Set<Castling> possibleCastles, Position enPassant) {
         var movedPiece = board.getPiece(move.startPosition);
-        if (move.pieceType != PieceType.King || movedPiece == null || movedPiece.getType() != PieceType.King) {
+        if (move.pieceType != PieceType.KING || movedPiece == null || movedPiece.getType() != PieceType.KING) {
             return false;
         }
 
@@ -104,14 +104,14 @@ public class ChessRules {
         Position blackLongCastlePosition = new Position(MaxBoardRow, MinBoardColumn + 2);
 
         // TODO: Refactor
-        if (currentPlayer == Player.White && move.startPosition.equals(whiteKingStartingPosition) && whiteShortCastlePosition.equals(move.endPosition)) {
+        if (currentPlayer == Player.WHITE && move.startPosition.equals(whiteKingStartingPosition) && whiteShortCastlePosition.equals(move.endPosition)) {
             List<Position> kingsMoveTiles = new ArrayList<>(List.of(new Position(MinBoardRow, MinBoardColumn + 5), whiteShortCastlePosition));
             boolean castlePossible = possibleCastles.contains(Castling.WhiteKingside);
             boolean kingInDanger = TilesAreThreatened(board, kingsMoveTiles, currentPlayer, enPassant);
             boolean pathFree = anyPieceInPath(board, kingsMoveTiles);
             return castlePossible && !kingInDanger && pathFree;
         }
-        if (currentPlayer == Player.White && move.startPosition.equals(whiteKingStartingPosition) && whiteLongCastlePosition.equals(move.endPosition)) {
+        if (currentPlayer == Player.WHITE && move.startPosition.equals(whiteKingStartingPosition) && whiteLongCastlePosition.equals(move.endPosition)) {
             List<Position> kingsMoveTiles = new ArrayList<>(List.of(new Position(MinBoardRow, MinBoardColumn + 3), whiteLongCastlePosition));
             boolean castlePossible = possibleCastles.contains(Castling.WhiteQueenside);
             boolean kingInDanger = TilesAreThreatened(board, kingsMoveTiles, currentPlayer, enPassant);
@@ -119,14 +119,14 @@ public class ChessRules {
             boolean pathFree = anyPieceInPath(board, kingsMoveTiles);
             return castlePossible && !kingInDanger && pathFree;
         }
-        if (currentPlayer == Player.Black && move.startPosition.equals(blackKingStartingPosition) && blackShortCastlePosition.equals(move.endPosition)) {
+        if (currentPlayer == Player.BLACK && move.startPosition.equals(blackKingStartingPosition) && blackShortCastlePosition.equals(move.endPosition)) {
             List<Position> kingsMoveTiles = new ArrayList<>(List.of(new Position(MaxBoardRow, MinBoardColumn + 5), blackShortCastlePosition));
             boolean castlePossible = possibleCastles.contains(Castling.BlackKingside);
             boolean kingInDanger = TilesAreThreatened(board, kingsMoveTiles, currentPlayer, enPassant);
             boolean pathFree = anyPieceInPath(board, kingsMoveTiles);
             return castlePossible && !kingInDanger && pathFree;
         }
-        if (currentPlayer == Player.Black && move.startPosition.equals(blackKingStartingPosition) && blackLongCastlePosition.equals(move.endPosition)) {
+        if (currentPlayer == Player.BLACK && move.startPosition.equals(blackKingStartingPosition) && blackLongCastlePosition.equals(move.endPosition)) {
             List<Position> kingsMoveTiles = new ArrayList<>(List.of(new Position(MaxBoardRow, MinBoardColumn + 3), blackLongCastlePosition));
             boolean castlePossible = possibleCastles.contains(Castling.BlackQueenside);
             boolean kingInDanger = TilesAreThreatened(board, kingsMoveTiles, currentPlayer, enPassant);
@@ -145,8 +145,8 @@ public class ChessRules {
      * @return Whether there is insufficient material
      */
     public boolean insufficientMaterial(Board board) {
-        var whitePiecePositions = getPlayerPiecePositions(board, Player.White);
-        var blackPiecePositions = getPlayerPiecePositions(board, Player.Black);
+        var whitePiecePositions = getPlayerPiecePositions(board, Player.WHITE);
+        var blackPiecePositions = getPlayerPiecePositions(board, Player.BLACK);
 
         if (whitePiecePositions.size() + blackPiecePositions.size() > 3) {
             return false;
@@ -159,13 +159,13 @@ public class ChessRules {
         if (whitePiecePositions.size() > 1) {
             var firstPiece = board.getPiece(whitePiecePositions.get(0));
             var secondPiece = board.getPiece(whitePiecePositions.get(1));
-            var otherPiece = firstPiece.getType() != PieceType.King ? firstPiece : secondPiece;
-            return otherPiece.getType() == PieceType.Knight || otherPiece.getType() == PieceType.Bishop;
+            var otherPiece = firstPiece.getType() != PieceType.KING ? firstPiece : secondPiece;
+            return otherPiece.getType() == PieceType.KNIGHT || otherPiece.getType() == PieceType.BISHOP;
         } else {
             var firstPiece = board.getPiece(blackPiecePositions.get(0));
             var secondPiece = board.getPiece(blackPiecePositions.get(1));
-            var otherPiece = firstPiece.getType() != PieceType.King ? firstPiece : secondPiece;
-            return otherPiece.getType() == PieceType.Knight || otherPiece.getType() == PieceType.Bishop;
+            var otherPiece = firstPiece.getType() != PieceType.KING ? firstPiece : secondPiece;
+            return otherPiece.getType() == PieceType.KNIGHT || otherPiece.getType() == PieceType.BISHOP;
         }
     }
 
@@ -233,11 +233,11 @@ public class ChessRules {
     }
 
     private Player colorToPlayer(Color color) {
-        return color == Color.White ? Player.White : Player.Black;
+        return color == Color.WHITE ? Player.WHITE : Player.BLACK;
     }
 
     private Color playerToColor(Player player) {
-        return player == Player.White ? Color.White : Color.Black;
+        return player == Player.WHITE ? Color.WHITE : Color.BLACK;
     }
 
     /**
@@ -337,7 +337,7 @@ public class ChessRules {
         for (int row = MinBoardRow; row < RowCount; row++) {
             for (int column = MinBoardColumn; column < ColumnCount; column++) {
                 Piece piece = board.getPiece(row, column);
-                if (piece != null && piece.color.equals(desiredKingColor) && piece.getType() == PieceType.King) {
+                if (piece != null && piece.color.equals(desiredKingColor) && piece.getType() == PieceType.KING) {
                     return new Position(row, column);
                 }
             }
@@ -435,6 +435,6 @@ public class ChessRules {
      * @return Is the move an en passant move
      */
     private boolean isEnPassant(Piece movedPiece, Move move, Position enPassant) {
-        return move.isCapture && movedPiece.getType() == PieceType.Pawn && enPassant.equals(move.endPosition);
+        return move.isCapture && movedPiece.getType() == PieceType.PAWN && enPassant.equals(move.endPosition);
     }
 }

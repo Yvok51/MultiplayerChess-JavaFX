@@ -10,12 +10,12 @@ public class MockNetworkController implements INetworkController{
 
     @Override
     public Optional<Match> StartMatch() {
-        return Optional.of(new Match(Match.NormalStartingFEN, Player.White, Networking.DEBUG_MATCH_ID));
+        return Optional.of(new Match(Match.NormalStartingFEN, Player.WHITE, Networking.DEBUG_MATCH_ID));
     }
 
     @Override
     public Optional<Match> joinMatch(String matchID) {
-        return Optional.of(new Match(Match.NormalStartingFEN, Player.Black, Networking.DEBUG_MATCH_ID));
+        return Optional.of(new Match(Match.NormalStartingFEN, Player.BLACK, Networking.DEBUG_MATCH_ID));
     }
 
     @Override
