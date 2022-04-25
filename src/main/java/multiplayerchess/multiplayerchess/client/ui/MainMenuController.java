@@ -3,18 +3,10 @@ package multiplayerchess.multiplayerchess.client.ui;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import multiplayerchess.multiplayerchess.client.Main;
-import multiplayerchess.multiplayerchess.client.controller.Match;
 import multiplayerchess.multiplayerchess.client.networking.INetworkController;
 import multiplayerchess.multiplayerchess.client.networking.MockNetworkController;
-import multiplayerchess.multiplayerchess.client.networking.NetworkController;
-import multiplayerchess.multiplayerchess.common.Networking;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class MainMenuController {
 
@@ -34,7 +26,7 @@ public class MainMenuController {
             FXMLLoader loader = Utility.loadNewScene(e, ChessGameController.getFXMLFile());
 
             ChessGameController controller = loader.getController();
-            controller.setMatch(startedMatch.get());
+            controller.setupController(startedMatch.get(), networkController);
 
         } catch (IOException ex) {
             ex.printStackTrace();

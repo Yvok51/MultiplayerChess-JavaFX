@@ -13,12 +13,14 @@ public class UIBoard extends GridPane  {
 
     private UIBoardField[][] fields = new UIBoardField[CHESSBOARD_ROW_SIZE][CHESSBOARD_COLUMN_SIZE];
     private UIBoardField selectedField = null;
-    private Player player;
+    private final Player player;
+    private final ChessGameController controller;
 
-    public UIBoard(Player currentPlayer) {
+    public UIBoard(Player currentPlayer, ChessGameController controller) {
         super();
 
         this.player = currentPlayer;
+        this.controller = controller;
 
         for (int x = 0; x < 8; ++x) {
             for (int y = 0; y < 8; ++y) {
@@ -61,7 +63,10 @@ public class UIBoard extends GridPane  {
                 return;
             }
 
-            Move move = new Move(selectedField.getX(), selectedField.getY(), x, y);
+            boolean isCapture = fields[x][y].getPiece() != null;
+            Move move = new Move(selectedField.getX(), selectedField.getY(), x, y,
+                    selectedField.getPiece().getPieceType(), isCapture);
+            controller.movePiece(move);
 
         } else {
             if (fields[x][y].getPiece() != null && fields[x][y].getPieceColor() == player.getColor()) {

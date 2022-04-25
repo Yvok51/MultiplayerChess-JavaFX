@@ -4,10 +4,10 @@ import multiplayerchess.multiplayerchess.client.controller.parsing.FENParser;
 import multiplayerchess.multiplayerchess.client.controller.pieces.Piece;
 import multiplayerchess.multiplayerchess.common.Player;
 
-public class Match {
+public final class Match {
     public static final String NormalStartingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-    private final Board board;
+    private Board board;
     private boolean ourTurn;
     private final Player player;
     private final String matchID;
@@ -25,6 +25,13 @@ public class Match {
     }
 
     public Board getBoard() {
+        return board;
+    }
+
+    public String getMatchID() { return matchID; }
+
+    public Board updateBoard(String FEN) {
+        board = new Board(FEN);
         return board;
     }
 }

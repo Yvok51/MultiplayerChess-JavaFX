@@ -4,17 +4,11 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import multiplayerchess.multiplayerchess.client.Main;
-import multiplayerchess.multiplayerchess.client.controller.Match;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
 import multiplayerchess.multiplayerchess.common.Networking;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class JoinGameController {
 
@@ -38,7 +32,7 @@ public class JoinGameController {
             FXMLLoader loader = Utility.loadNewScene(e, ChessGameController.getFXMLFile());
 
             ChessGameController controller = loader.getController();
-            controller.setMatch(match.get());
+            controller.setupController(match.get(), networkController);
 
         } catch (IOException ex) {
             ex.printStackTrace();
