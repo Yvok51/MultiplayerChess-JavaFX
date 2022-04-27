@@ -6,13 +6,13 @@ import multiplayerchess.multiplayerchess.common.Position;
 
 import java.io.Serializable;
 
+/**
+ * Message from the client to the server to tell the server the move made by the client.
+ */
 public final class TurnMessage extends ClientOngoingMatchMessage implements Serializable {
 
     static final long serialVersionUID = 0x1234567;
-    // some boolean fields may be unnecesarry
-    // public boolean castle;
     public final boolean isCapture;
-    // public boolean check;
     public final PieceType pieceType;
     public final Position startingPosition;
     public final Position endingPosition;

@@ -7,6 +7,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Random;
 
+/**
+ * Class which handles starting a match.
+ */
 public class StartMatchThread implements Runnable {
     private static final String LOWER_CASE = "abcdefghijklmnopqrstuvwxyz";
     private static final String UPPER_CASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -17,14 +20,25 @@ public class StartMatchThread implements Runnable {
     MatchesMap controllers;
     RandomStringGenerator generator;
 
+    /**
+     * The StartMatchThread constructor.
+     * @param socket The socket to which the client is connected.
+     * @param controllers The map of match controllers to add the newly created match.
+     */
     public StartMatchThread(Socket socket, MatchesMap controllers) {
         this.socket = socket;
         this.controllers = controllers;
         this.generator = new RandomStringGenerator(MATCH_ID_AVAILABLE_CHARACTERS);
     }
 
+    /**
+     * Starts a match.
+     * Generates a match id and sends it to the client.
+     * Also adds the newly created match to the matches map and adds the client to the match.
+     */
     @Override
     public void run() {
+        // TODO: Change the length of the generated match id according to the number of ongoing matches.
         String potentialMatchID = generator.nextString(MATCH_ID_LENGTH);
         while (controllers.matchExists(potentialMatchID)) {
             potentialMatchID = generator.nextString(MATCH_ID_LENGTH);
@@ -43,15 +57,27 @@ public class StartMatchThread implements Runnable {
         }
     }
 
+    /**
+     * Class to generates a random string of a given length.
+     */
     private class RandomStringGenerator {
         private final String availableCharacters;
         private final Random random;
 
+        /**
+         * Constructor for the RandomStringGenerator.
+         * @param availableCharacters The characters to generate the string from.
+         */
         public RandomStringGenerator(String availableCharacters) {
             this.availableCharacters = availableCharacters;
             random = new Random();
         }
 
+        /**
+         * Generates a random string of a given length.
+         * @param length The length of the string to generate.
+         * @return The generated string.
+         */
         public String nextString(int length) {
             if (length < 1) {
                 return "";
@@ -65,6 +91,10 @@ public class StartMatchThread implements Runnable {
             return builder.toString();
         }
 
+        /**
+         * Generates a random character.
+         * @return The generated character.
+         */
         private char nextChar() {
             int randomIndex = random.nextInt(availableCharacters.length());
             return availableCharacters.charAt(randomIndex);

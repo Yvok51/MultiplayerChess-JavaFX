@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Represents a chess match with the board as well as extra information needed to play the game.
+ */
 public final class Match {
 
     private static final String StartingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -20,13 +23,16 @@ public final class Match {
     private Player currentPlayer;
     private Position enPassant;
 
+    /**
+     * The match constructor. Creates a new match from the StartingFen string
+     */
     public Match() {
         board = new Board(StartingFEN);
         rules = new ChessRules();
-        moves = 1;
-        halfmoveClock = 0;
-        currentPlayer = Player.WHITE;
-        enPassant = null;
+        moves = FENParser.getMoves(StartingFEN);
+        halfmoveClock = FENParser.getHalfMoves(StartingFEN);
+        currentPlayer = FENParser.getCurrentPlayer(StartingFEN);
+        enPassant = FENParser.getEnPassant(StartingFEN);
 
         possibleCastles = new HashSet<>();
         possibleCastles.add(Castling.WhiteKingside);

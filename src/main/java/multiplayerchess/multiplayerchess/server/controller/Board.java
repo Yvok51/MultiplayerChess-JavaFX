@@ -4,6 +4,9 @@ import multiplayerchess.multiplayerchess.common.Position;
 import multiplayerchess.multiplayerchess.server.controller.parsing.FENParser;
 import multiplayerchess.multiplayerchess.server.controller.pieces.Piece;
 
+/**
+ * Representation of the chess board, represented by a 2D array of pieces.
+ */
 public final class Board {
 
     public static final int MinBoardRow = 0;
@@ -12,6 +15,10 @@ public final class Board {
     public static final int MaxBoardColumn = 7;
     private final Piece[][] board;
 
+    /**
+     * The board construcot
+     * @param startingFEN The FEN to parse the board from
+     */
     public Board(String startingFEN) {
         board = FENParser.ParseBoard(startingFEN);
     }

@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Methods which answer rule questions about the game.
+ */
 public class ChessRules {
 
     public static final int MinBoardRow = 0;
@@ -33,7 +36,7 @@ public class ChessRules {
      */
     public boolean isMoveValid(Board board, Move move, Player currentPlayer, Position enPassant, Set<Castling> possibleCastles) {
         Piece piece = board.getPiece(move.startPosition);
-        if (piece == null || colorToPlayer(piece.color) != currentPlayer) {
+        if (piece == null || piece.color.getPlayer() != currentPlayer) {
             return false;
         }
 
@@ -236,10 +239,6 @@ public class ChessRules {
         return color == Color.WHITE ? Player.WHITE : Player.BLACK;
     }
 
-    private Color playerToColor(Player player) {
-        return player == Player.WHITE ? Color.WHITE : Color.BLACK;
-    }
-
     /**
      * Filters out any moves that don't follow the rules of the game, or moves which contradict their own isCapture
      * field (are captures, but aren't mark as such and vice versa), or moves which put us in check
@@ -272,7 +271,7 @@ public class ChessRules {
      */
     private List<Position> getPlayerPiecePositions(Board board, Player player) {
         List<Position> positions = new ArrayList<>();
-        Color desiredPieceColor = playerToColor(player);
+        Color desiredPieceColor = player.getColor();
 
         for (int row = MinBoardRow; row < RowCount; row++) {
             for (int column = MinBoardColumn; column < ColumnCount; column++) {
@@ -332,7 +331,7 @@ public class ChessRules {
      * @return The position of the player's king on the board
      */
     private Position getKingsPosition(Board board, Player whoseKing) {
-        Color desiredKingColor = playerToColor(whoseKing);
+        Color desiredKingColor = whoseKing.getColor();
 
         for (int row = MinBoardRow; row < RowCount; row++) {
             for (int column = MinBoardColumn; column < ColumnCount; column++) {

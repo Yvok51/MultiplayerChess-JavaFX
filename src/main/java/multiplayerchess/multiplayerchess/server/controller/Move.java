@@ -13,6 +13,13 @@ public final class Move {
     public final Position startPosition;
     public final Position endPosition;
 
+    /**
+     * The Move constructor.
+     * @param pieceType the type of piece moved
+     * @param startPosition The start position of the move
+     * @param endPosition The end position of the move
+     * @param isCapture Whether the move is a capture
+     */
     public Move(PieceType pieceType, Position startPosition, Position endPosition, boolean isCapture) {
         this.pieceType = pieceType;
         this.startPosition = startPosition;
@@ -20,14 +27,26 @@ public final class Move {
         this.isCapture = isCapture;
     }
 
+    /**
+     * Get the row difference between the start and end position.
+     * @return the row difference between the start and end position
+     */
     public int getRowDifference() {
         return endPosition.row - startPosition.row;
     }
 
+    /**
+     * Get the column difference between the start and end position.
+     * @return the column difference between the start and end position
+     */
     public int getColumnDifference() {
         return endPosition.column - startPosition.column;
     }
 
+    /**
+     * Get the list of moves that the piece will go through.
+     * @return the list of moves that the piece will go through
+     */
     public List<Position> getMovePath() {
         List<Position> path = new ArrayList<>();
         Position direction = getMovedDirection();
@@ -44,6 +63,11 @@ public final class Move {
         return path;
     }
 
+    /**
+     * Get the direction of the move i.e. from (7, 7) we get (1, 1) or (5, 0) or (1, 0).
+     * Does not change the knight movement direction.
+     * @return the direction of the move
+     */
     private Position getMovedDirection() {
         int rowDifference = getRowDifference();
         int columnDifference = getColumnDifference();
@@ -58,17 +82,29 @@ public final class Move {
         return new Position(rowDirection, columnDirection);
     }
 
+    /**
+     * The override of the equals method.
+     * @param o The object to compare to
+     * @return Whether this object and o are equal
+     */
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
+        }
 
-        if (o == null || getClass() != o.getClass())
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
         Move move = (Move) o;
-        return startPosition.equals(move.startPosition) && endPosition.equals(move.endPosition);
+        return startPosition.equals(move.startPosition) && endPosition.equals(move.endPosition)
+                && pieceType == move.pieceType && isCapture == move.isCapture;
     }
 
+    /**
+     * The override of the hashCode method.
+     * @return The hashCode of this object
+     */
     @Override
     public int hashCode() {
         return Objects.hash(startPosition, endPosition, isCapture, pieceType);

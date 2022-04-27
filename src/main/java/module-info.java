@@ -7,6 +7,6 @@ module multiplayerchess.multiplayerchess {
     opens multiplayerchess.multiplayerchess.client to javafx.fxml;
     opens multiplayerchess.multiplayerchess.client.ui to javafx.fxml;
 
-    exports multiplayerchess.multiplayerchess;
     exports multiplayerchess.multiplayerchess.client;
+    exports multiplayerchess.multiplayerchess.server;
 }

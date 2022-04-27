@@ -4,6 +4,9 @@ import multiplayerchess.multiplayerchess.common.Player;
 
 import java.io.Serializable;
 
+/**
+ * Message sent by the server to the client to inform about the resutl of a previously sent turn request.
+ */
 public final class TurnReplyMessage extends ServerOngoingMatchMessage implements Serializable {
 
     static final long serialVrsionUID = 0x123456;

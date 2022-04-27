@@ -4,6 +4,9 @@ import multiplayerchess.multiplayerchess.common.Player;
 
 import java.io.Serializable;
 
+/**
+ * Message sent by the server to the client to inform him of a started game.
+ */
 public final class StartGameReplyMessage extends ServerMessage implements Serializable {
     static final long serialVersionUID = 0x1234567;
 

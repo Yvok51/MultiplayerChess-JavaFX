@@ -14,6 +14,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Main {
+    /**
+     * Starts the server. The server listens for incoming connections and dispatches
+     * the messages received from the clients.
+     * @param args Arguments are ignored
+     */
     public static void main(String[] args) {
         MatchesMap controllers = new MatchesMap();
         try (ServerSocket serverSocket = new ServerSocket(Networking.SERVER_PORT)) {
@@ -36,6 +41,11 @@ public class Main {
         }
     }
 
+    /**
+     * Dispatches the message received from the client to the appropriate handler
+     * @param socket the socket from which the message was received
+     * @param controllers the map of matches
+     */
     public static void dispatchMessage(Socket socket, MatchesMap controllers) {
         try (ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream())) {
             ClientMessage message = (ClientMessage) inputStream.readObject();

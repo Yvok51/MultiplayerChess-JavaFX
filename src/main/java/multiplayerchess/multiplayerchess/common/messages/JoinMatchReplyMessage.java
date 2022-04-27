@@ -4,6 +4,9 @@ import multiplayerchess.multiplayerchess.common.Player;
 
 import java.io.Serializable;
 
+/**
+ * The message sent by the server to the client when a player joins a match.
+ */
 public final class JoinMatchReplyMessage extends ServerMessage implements Serializable {
 
     static final long serialVrsionUID = 0x123456;

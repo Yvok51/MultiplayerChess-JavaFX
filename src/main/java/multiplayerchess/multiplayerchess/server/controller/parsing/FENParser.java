@@ -13,6 +13,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+/**
+ * Parser for FEN notation into a memory representation of a chess game.
+ */
 public class FENParser {
     private static final Map<PieceType, Function<Color, Character>> pieceToCharTransaltion;
     private static final Map<Character, Function<Position, Piece>> charToPieceTransaltion;
@@ -49,6 +52,11 @@ public class FENParser {
         charToPieceTransaltion = Collections.unmodifiableMap(pieceBuilder);
     }
 
+    /**
+     * Parses the FEN string into a board.
+     * @param FEN The FEN string to parse and create a board from.
+     * @return The board created from the FEN string.
+     */
     public static Piece[][] ParseBoard(String FEN) {
         String fenBoard = FEN.split("\\s+")[0];
         Piece[][] board =
@@ -74,12 +82,60 @@ public class FENParser {
         return board;
     }
 
+    /**
+     * Get the player from the FEN string.
+     * @param FEN The FEN string to parse.
+     * @return The player parsed from the FEN string.
+     */
     public static Player getCurrentPlayer(String FEN) {
         String currentPlayer = FEN.split("\\s+")[1];
 
         return currentPlayer.equals("w") ? Player.WHITE : Player.BLACK;
     }
 
+    /**
+     * Get the number of moves from the FEN string.
+     * @param FEN The FEN string to parse.
+     * @return The move count parsed from the FEN string.
+     */
+    public static int getMoves(String FEN) {
+        String moves = FEN.split("\\s+")[5];
+
+        return Integer.parseInt(moves);
+    }
+
+    /**
+     * Get the number of half-moves from the FEN string.
+     * @param FEN The FEN string to parse.
+     * @return The half-move number parsed from the FEN string.
+     */
+    public static int getHalfMoves(String FEN) {
+        String halfmoves = FEN.split("\\s+")[4];
+
+        return Integer.parseInt(halfmoves);
+    }
+
+    /**
+     * Get the en passant tile from the FEN string.
+     * @param FEN The FEN string to parse.
+     * @return The en passant tile from the FEN string.
+     */
+    public static Position getEnPassant(String FEN) {
+        String enPassant = FEN.split("\\s+")[3];
+
+        return enPassant.equals("-") ? null : new Position(enPassant);
+    }
+
+    /**
+     * Create a FEN string from the given state of the match
+     * @param board The board situation in the match
+     * @param currentPlayer The player whose turn it is
+     * @param possibleCastling The possible castling options
+     * @param halfmoveClock The number of halfmoves since the last pawn move or capture
+     * @param moves The number of full moves since the start of the game
+     * @param enpassant The enpassant square
+     * @return The FEN string
+     */
     public static String FENStringFromBoard(
             Board board, Player currentPlayer, Set<Castling> possibleCastling, int halfmoveClock, int moves, Position enpassant
     ) {
@@ -122,6 +178,11 @@ public class FENParser {
         return builder.toString();
     }
 
+    /**
+     * Add the board to the string builder
+     * @param builder The string builder to add the board to
+     * @param board The board to add
+     */
     private static void addBoardToBuilder(StringBuilder builder, Board board) {
         for (int rank = Board.MaxBoardRow; rank >= Board.MinBoardRow; --rank) {
             int emptySquares = 0;
