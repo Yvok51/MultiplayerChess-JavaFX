@@ -37,7 +37,7 @@ public class MainMenuController {
             FXMLLoader loader = Utility.loadNewScene(e, ChessGameController.getFXMLFile());
 
             ChessGameController controller = loader.getController();
-            controller.setupController(startedMatch.get(), networkController);
+            controller.setupController(startedMatch.get(), networkController, Utility.getStageFromEvent(e));
 
         } catch (IOException ex) {
             ex.printStackTrace();

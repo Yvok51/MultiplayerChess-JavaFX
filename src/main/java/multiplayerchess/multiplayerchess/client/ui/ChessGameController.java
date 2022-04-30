@@ -1,19 +1,19 @@
 package multiplayerchess.multiplayerchess.client.ui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
 import multiplayerchess.multiplayerchess.client.controller.Match;
 import multiplayerchess.multiplayerchess.client.controller.Move;
 import multiplayerchess.multiplayerchess.client.controller.Winner;
 import multiplayerchess.multiplayerchess.client.networking.INetworkController;
 import multiplayerchess.multiplayerchess.client.networking.TurnReplyStatus;
-import multiplayerchess.multiplayerchess.common.messages.OpponentDisconnectedMessage;
-import multiplayerchess.multiplayerchess.common.messages.OpponentResignedMessage;
-import multiplayerchess.multiplayerchess.common.messages.TurnReplyMessage;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.io.IOException;
 
 public class ChessGameController {
 
@@ -21,9 +21,15 @@ public class ChessGameController {
     private AnchorPane chessGamePane;
 
     private Match match;
-    private UIBoard board;
-
     private INetworkController networkController;
+
+    private Stage stage;
+    private UIBoard board;
+    private Label errorLabel;
+
+    private Popup endOfGamePopup;
+    private Label popupLabel;
+    private Button popupButton;
 
     /**
      * Get the file path of the FXML file for this controler's scene.
@@ -39,7 +45,8 @@ public class ChessGameController {
      * @param match The match the controller handles.
      * @param networkController The network controller to use.
      */
-    public void setupController(Match match, INetworkController networkController) {
+    public void setupController(Match match, INetworkController networkController, Stage stage) {
+        this.stage = stage;
         this.networkController = networkController;
         this.match = match;
         board = new UIBoard(match.getPlayer(), this);
@@ -49,6 +56,23 @@ public class ChessGameController {
 
         AnchorPane.setTopAnchor(board, 60.0);
         AnchorPane.setLeftAnchor(board, 140.0);
+
+        endOfGamePopup = new Popup();
+        popupLabel = new Label();
+        popupButton = new Button("OK");
+        popupButton.setOnAction(event -> {
+            endOfGamePopup.hide();
+            // Go back to main menu
+            try {
+                Utility.loadNewScene(stage, MainMenuController.getFXMLFile());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                Platform.exit();
+            }
+        });
+        endOfGamePopup.getContent().add(popupLabel);
+        endOfGamePopup.getContent().add(popupButton);
+
     }
 
     /**
@@ -94,5 +118,10 @@ public class ChessGameController {
     private void endMatch(Winner winner, String reason) {
         // TODO: Implement
 
+    }
+
+    private void showEndOfGamePopup(String message) {
+        popupLabel.setText(message);
+        endOfGamePopup.show(stage);
     }
 }

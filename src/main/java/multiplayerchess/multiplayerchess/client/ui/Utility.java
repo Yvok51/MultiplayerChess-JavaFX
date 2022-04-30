@@ -37,6 +37,15 @@ public class Utility {
     }
 
     /**
+     * Gets the stage from an event.
+     * @param event The event to get the stage from.
+     * @return The stage got from the event.
+     */
+    public static Stage getStageFromEvent(ActionEvent event) {
+        return (Stage) ((Node) event.getSource()).getScene().getWindow();
+    }
+
+    /**
      * Loads a new scene and sets the stage to the new scene.
      * @param e The event that triggered the load.
      * @param FXMLFile The FXML file to load.

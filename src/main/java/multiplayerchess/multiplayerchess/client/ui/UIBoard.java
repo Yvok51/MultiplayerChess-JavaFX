@@ -52,6 +52,28 @@ public class UIBoard extends GridPane  {
     }
 
     /**
+     * Set the board to not respond to mouse clicks.
+     */
+    public void disable() {
+        for (int x = 0; x < 8; ++x) {
+            for (int y = 0; y < 8; ++y) {
+                fields[x][y].setDisable(true);
+            }
+        }
+    }
+
+    /**
+     * Set the board to respond to mouse clicks.
+     */
+    public void enable() {
+        for (int x = 0; x < 8; ++x) {
+            for (int y = 0; y < 8; ++y) {
+                fields[x][y].setDisable(false);
+            }
+        }
+    }
+
+    /**
      * Updates the UI board with the given board.
      * @param board the board to be updated to
      */

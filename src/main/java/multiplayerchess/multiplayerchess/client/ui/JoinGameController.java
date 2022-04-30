@@ -44,7 +44,7 @@ public class JoinGameController {
             FXMLLoader loader = Utility.loadNewScene(e, ChessGameController.getFXMLFile());
 
             ChessGameController controller = loader.getController();
-            controller.setupController(match.get(), networkController);
+            controller.setupController(match.get(), networkController, Utility.getStageFromEvent(e));
 
         } catch (IOException ex) {
             ex.printStackTrace();
