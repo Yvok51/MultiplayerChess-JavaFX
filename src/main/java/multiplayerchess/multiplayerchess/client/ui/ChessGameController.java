@@ -7,6 +7,7 @@ import multiplayerchess.multiplayerchess.client.controller.Match;
 import multiplayerchess.multiplayerchess.client.controller.Move;
 import multiplayerchess.multiplayerchess.client.controller.Winner;
 import multiplayerchess.multiplayerchess.client.networking.INetworkController;
+import multiplayerchess.multiplayerchess.client.networking.TurnReplyStatus;
 import multiplayerchess.multiplayerchess.common.messages.OpponentDisconnectedMessage;
 import multiplayerchess.multiplayerchess.common.messages.OpponentResignedMessage;
 import multiplayerchess.multiplayerchess.common.messages.TurnReplyMessage;
@@ -57,35 +58,31 @@ public class ChessGameController {
      * @param move The move to make.
      */
     public void movePiece(Move move) {
-        boolean success = networkController.sendTurn(move.getPieceType(), move.getStartPosition(),
+        var reply = networkController.sendTurn(move.getPieceType(), move.getStartPosition(),
                 move.getEndPosition(), match.getPlayer().getColor(), move.isCapture(), match.getMatchID());
-        if (!success) {
-            return;
-        }
-        var reply = networkController.receiveTurnReply();
+
         if (reply.isEmpty()) {
             return;
         }
 
         var message = reply.get();
-        if (message instanceof OpponentResignedMessage) {
+        if (message.status == TurnReplyStatus.OPPONENT_RESIGNED) {
             endMatch(Winner.getWinnerFromPlayer(match.getPlayer()), "Opponent resigned");
         }
-        else if (message instanceof OpponentDisconnectedMessage) {
+        else if (message.status == TurnReplyStatus.OPPONENT_DISCONNECTED) {
             endMatch(Winner.getWinnerFromPlayer(match.getPlayer()), "Opponent disconnected");
         }
-        else if (message instanceof TurnReplyMessage turnMessage) {
-            if (!turnMessage.success) {
-                // TODO: Show error message
-                return;
-            }
-
-            match.updateBoard(turnMessage.gameStateFEN);
+        else if (message.status == TurnReplyStatus.TURN_ACCEPTED) {
+            match.updateBoard(message.gameStateFEN);
             board.setupBoard(match.getBoard());
 
-            if (turnMessage.gameOver) {
-                endMatch(Winner.getWinnerFromPlayer(turnMessage.winner), "Game over");
+            if (message.gameOver) {
+                endMatch(Winner.getWinnerFromPlayer(message.winner), "Game over");
             }
+        }
+        else if (message.status == TurnReplyStatus.TURN_REJECTED) {
+            // TODO: Show error message
+            return;
         }
     }
 

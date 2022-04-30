@@ -1,6 +1,7 @@
 package multiplayerchess.multiplayerchess.client.networking;
 
 import multiplayerchess.multiplayerchess.client.controller.Match;
+import multiplayerchess.multiplayerchess.client.controller.Winner;
 import multiplayerchess.multiplayerchess.common.Color;
 import multiplayerchess.multiplayerchess.common.PieceType;
 import multiplayerchess.multiplayerchess.common.Position;
@@ -74,9 +75,23 @@ public class NetworkController implements INetworkController {
      * @param matchID The ID of the match
      * @return Whether the move was sent successfully
      */
-    public boolean sendTurn(PieceType pieceType, Position startPosition, Position endPosition,
+    public Optional<TurnReply> sendTurn(PieceType pieceType, Position startPosition, Position endPosition,
             Color color, boolean isCapture, String matchID) {
-        return sendMessage(new TurnMessage(pieceType, startPosition, endPosition, color, isCapture, matchID));
+        // return sendMessage(new TurnMessage(pieceType, startPosition, endPosition, color, isCapture, matchID));
+        boolean success = sendMessage(new TurnMessage(pieceType, startPosition, endPosition, color, isCapture, matchID));
+        if (!success) {
+            return Optional.empty();
+        }
+        var reply = receiveTurnReply();
+        if (reply.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return switch (reply.get()) {
+            case OpponentResignedMessage resignedMessage -> Optional.of(new TurnReply(resignedMessage));
+            case OpponentDisconnectedMessage disconnectedMessage -> Optional.of(new TurnReply(disconnectedMessage));
+            case TurnReplyMessage turnMessage -> Optional.of(new TurnReply(turnMessage));
+        };
     }
 
     /**

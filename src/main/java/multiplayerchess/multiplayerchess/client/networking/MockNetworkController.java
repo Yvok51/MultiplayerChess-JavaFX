@@ -22,8 +22,9 @@ public class MockNetworkController implements INetworkController{
     }
 
     @Override
-    public boolean sendTurn(PieceType pieceType, Position startPosition, Position endPosition, Color color, boolean isCapture, String matchID) {
-        return true;
+    public Optional<TurnReply> sendTurn(PieceType pieceType, Position startPosition, Position endPosition,
+            Color color, boolean isCapture, String matchID) {
+        return Optional.empty();
     }
 
     @Override

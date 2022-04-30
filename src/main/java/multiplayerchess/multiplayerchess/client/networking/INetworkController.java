@@ -35,7 +35,7 @@ public interface INetworkController {
      * @param matchID The ID of the match
      * @return Whether the move was sent successfully
      */
-    boolean sendTurn(PieceType pieceType, Position startPosition,
+    Optional<TurnReply> sendTurn(PieceType pieceType, Position startPosition,
                             Position endPosition, Color color, boolean isCapture, String matchID);
     Optional<ServerOngoingMatchMessage> receiveTurnReply();
 }
