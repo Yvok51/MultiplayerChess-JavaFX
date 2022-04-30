@@ -4,6 +4,9 @@ import multiplayerchess.multiplayerchess.client.controller.parsing.FENParser;
 import multiplayerchess.multiplayerchess.client.controller.pieces.Piece;
 import multiplayerchess.multiplayerchess.common.Player;
 
+/**
+ * This class represents a match between two players.
+ */
 public final class Match {
     public static final String NormalStartingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
@@ -12,6 +15,12 @@ public final class Match {
     private final Player player;
     private final String matchID;
 
+    /**
+     * Constructor for a match.
+     * @param startingFEN The FEN string of the board.
+     * @param player Which player we are playing as.
+     * @param matchID The ID of the match.
+     */
     public Match(String startingFEN, Player player, String matchID) {
         board = new Board(startingFEN);
         Player playerOnTurn = FENParser.getCurrentPlayer(startingFEN);
@@ -20,16 +29,33 @@ public final class Match {
         this.matchID = matchID;
     }
 
+    /**
+     * Returns the player who we are playing as.
+     * @return The player who we are playing as.
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * Returns the board of the match.
+     * @return The board of the match.
+     */
     public Board getBoard() {
         return board;
     }
 
+    /**
+     * Returns the ID of the match.
+     * @return The ID of the match.
+     */
     public String getMatchID() { return matchID; }
 
+    /**
+     * Update the board to reflect the given FEN string.
+     * @param FEN The FEN string to update the board to.
+     * @return The new board.
+     */
     public Board updateBoard(String FEN) {
         board = new Board(FEN);
         return board;

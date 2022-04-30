@@ -8,12 +8,23 @@ import multiplayerchess.multiplayerchess.client.networking.MockNetworkController
 
 import java.io.IOException;
 
+/**
+ * Controller for the main menu scene.
+ */
 public class MainMenuController {
 
+    /**
+     * Get the file path of the FXML file for this controler's scene.
+     * @return The file path of the FXML file for this controler's scene.
+     */
     public static String getFXMLFile() {
         return "/multiplayerchess/multiplayerchess/MainMenu.fxml";
     }
 
+    /**
+     * Handler for the "Start Game" button.
+     * @param e The click event.
+     */
     public void onStartGame(ActionEvent e) {
         try {
             INetworkController networkController = new MockNetworkController(); // NetworkController.connect(Networking.SERVER_ADDR, Networking.SERVER_PORT);
@@ -34,6 +45,10 @@ public class MainMenuController {
         }
     }
 
+    /**
+     * Handler for the "Join Game" button.
+     * @param e The click event.
+     */
     public void onJoinGame(ActionEvent e) {
         try {
             Utility.loadNewScene(e, JoinGameController.getFXMLFile());
@@ -43,6 +58,10 @@ public class MainMenuController {
         }
     }
 
+    /**
+     * Handler for the "Exit" button.
+     * @param e The click event.
+     */
     public void onQuit(ActionEvent e) {
         Platform.exit();
     }

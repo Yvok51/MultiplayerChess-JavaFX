@@ -8,10 +8,34 @@ import multiplayerchess.multiplayerchess.common.messages.ServerOngoingMatchMessa
 
 import java.util.Optional;
 
+/**
+ * Interface for the network controller.
+ * Responsible for handling all network communication
+ */
 public interface INetworkController {
-    public Optional<Match> StartMatch();
-    public Optional<Match> joinMatch(String matchID);
-    public boolean sendTurn(PieceType pieceType, Position startPosition,
+    /**
+     * Send a request to start a match to the server.
+     * @return The started match if the request was successful, otherwise an empty optional
+     */
+    Optional<Match> StartMatch();
+
+    /**
+     * Sends a request to join a match to the server.
+     * @param matchID The ID of the match to join
+     * @return The joined match if the request was successful, otherwise an empty optional
+     */
+    Optional<Match> joinMatch(String matchID);
+    /**
+     * Sends a turn message to the server.
+     * @param pieceType The type of piece moved
+     * @param startPosition The starting position of the piece
+     * @param endPosition The ending position of the piece
+     * @param color The color of the piece
+     * @param isCapture Whether the move resulted in a capture
+     * @param matchID The ID of the match
+     * @return Whether the move was sent successfully
+     */
+    boolean sendTurn(PieceType pieceType, Position startPosition,
                             Position endPosition, Color color, boolean isCapture, String matchID);
     Optional<ServerOngoingMatchMessage> receiveTurnReply();
 }

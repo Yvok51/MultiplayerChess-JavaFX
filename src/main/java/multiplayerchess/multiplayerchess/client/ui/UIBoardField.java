@@ -5,17 +5,26 @@ import javafx.scene.image.ImageView;
 import multiplayerchess.multiplayerchess.client.controller.pieces.Piece;
 import multiplayerchess.multiplayerchess.common.Color;
 
+/**
+ * Represents a field on the UI board.
+ */
 public class UIBoardField extends Button {
 
-    private int x;
-    private int y;
+    private final int row;
+    private final int column;
     private Piece piece;
-    private Color color;
+    private final Color color;
 
-    public UIBoardField(Color color, int x, int y) {
+    /**
+     * The UI board field constructor
+     * @param color the color of the field
+     * @param row the row where the field is located
+     * @param column the column where the field is located
+     */
+    public UIBoardField(Color color, int row, int column) {
         super();
-        this.x = x;
-        this.y = y;
+        this.row = row;
+        this.column = column;
         this.piece = null; //add piece later
         this.color = color;
 
@@ -23,6 +32,10 @@ public class UIBoardField extends Button {
         this.getStyleClass().add(this.getDefaultColorStyle());
     }
 
+    /**
+     * Set the field to be highlighted as active or not
+     * @param active true if the field should be highlighted as active
+     */
     public void setActive(boolean active) {
         // A bit dirty trick to change the color of the selected field
         if (active) {
@@ -34,12 +47,20 @@ public class UIBoardField extends Button {
         }
     }
 
+    /**
+     * Release the piece from the field
+     * @return the piece which was on the field
+     */
     public Piece releasePiece() {
         Piece tmp = this.piece;
         setPiece(null);
         return tmp;
     }
 
+    /**
+     * Get the color of the field
+     * @return the color of the field
+     */
     public Color getPieceColor() {
         if (this.piece != null) {
             return piece.getColor();
@@ -48,14 +69,26 @@ public class UIBoardField extends Button {
         }
     }
 
+    /**
+     * Check if the field is occupied
+     * @return true if the field is occupied
+     */
     public boolean isOccupied() {
         return this.piece != null;
     }
 
+    /**
+     * Get the piece on the field
+     * @return the piece on the field
+     */
     public Piece getPiece() {
         return this.piece;
     }
 
+    /**
+     * Set the piece on the field
+     * @param piece the piece to set
+     */
     public void setPiece(Piece piece) {
         this.piece = piece;
         if (isOccupied()) {
@@ -65,14 +98,26 @@ public class UIBoardField extends Button {
         }
     }
 
-    public int getX() {
-        return x;
+    /**
+     * Get the row of the field
+     * @return the row of the field
+     */
+    public int getRow() {
+        return row;
     }
 
-    public int getY() {
-        return y;
+    /**
+     * Get the column of the field
+     * @return the column of the field
+     */
+    public int getColumn() {
+        return column;
     }
 
+    /**
+     * Get the default css style which specifies the color of the field
+     * @return the default css style of the field
+     */
     private String getDefaultColorStyle() {
         return color == Color.WHITE ? "chess-color-white" : "chess-color-black";
     }

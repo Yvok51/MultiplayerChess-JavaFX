@@ -4,6 +4,9 @@ import multiplayerchess.multiplayerchess.client.controller.parsing.FENParser;
 import multiplayerchess.multiplayerchess.client.controller.pieces.Piece;
 import multiplayerchess.multiplayerchess.common.Position;
 
+/**
+ * The Board class represents the chess board.
+ */
 public final class Board {
 
     public static final int MinBoardRow = 0;
@@ -12,6 +15,10 @@ public final class Board {
     public static final int MaxBoardColumn = 7;
     private final Piece[][] board;
 
+    /**
+     * The board constructor. Initializes the board with the given FEN string.
+     * @param startingFEN The FEN string to initialize the board with
+     */
     public Board(String startingFEN) {
         board = FENParser.ParseBoard(startingFEN);
     }

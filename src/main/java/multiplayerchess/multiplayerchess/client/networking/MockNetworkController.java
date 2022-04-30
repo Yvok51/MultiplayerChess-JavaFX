@@ -6,6 +6,9 @@ import multiplayerchess.multiplayerchess.common.messages.ServerOngoingMatchMessa
 
 import java.util.Optional;
 
+/**
+ * Mock implementation of NetworkController.
+ */
 public class MockNetworkController implements INetworkController{
 
     @Override

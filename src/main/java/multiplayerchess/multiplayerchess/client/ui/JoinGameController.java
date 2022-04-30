@@ -10,15 +10,27 @@ import multiplayerchess.multiplayerchess.common.Networking;
 
 import java.io.IOException;
 
+/**
+ * Controller for the join game screen.
+ */
 public class JoinGameController {
 
     @FXML
     private TextField MatchIDTextField;
 
+    /**
+     * Get the file path of the FXML file for this controler's scene.
+     * @return The file path of the FXML file for this controler's scene.
+     */
     public static String getFXMLFile() {
         return "/multiplayerchess/multiplayerchess/JoinGame.fxml";
     }
 
+    /**
+     * Handler for the join game button.
+     * Attempts to join the game with the given match ID.
+     * @param e The click event.
+     */
     public void onJoinGame(ActionEvent e) {
         String matchID = MatchIDTextField.getText();
 
@@ -40,6 +52,11 @@ public class JoinGameController {
         }
     }
 
+    /**
+     * Handler for the back button.
+     * Returns the user to the main menu.
+     * @param e The click event.
+     */
     public void onBack(ActionEvent e) {
         try {
             Utility.loadNewScene(e, MainMenuController.getFXMLFile());

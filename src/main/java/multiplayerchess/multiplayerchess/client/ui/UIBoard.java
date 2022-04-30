@@ -6,6 +6,9 @@ import multiplayerchess.multiplayerchess.client.controller.Move;
 import multiplayerchess.multiplayerchess.common.Color;
 import multiplayerchess.multiplayerchess.common.Player;
 
+/**
+ * The UIBoard class is responsible for displaying the board and the pieces.
+ */
 public class UIBoard extends GridPane  {
 
     private static final int CHESSBOARD_ROW_SIZE = 8;
@@ -16,6 +19,11 @@ public class UIBoard extends GridPane  {
     private final Player player;
     private final ChessGameController controller;
 
+    /**
+     * The UI board constructor.
+     * @param currentPlayer Which player are we
+     * @param controller The controller of the game
+     */
     public UIBoard(Player currentPlayer, ChessGameController controller) {
         super();
 
@@ -43,6 +51,10 @@ public class UIBoard extends GridPane  {
         }
     }
 
+    /**
+     * Updates the UI board with the given board.
+     * @param board the board to be updated to
+     */
     public void setupBoard(Board board) {
         for (int x = 0; x < 8; ++x) {
             for (int y = 0; y < 8; ++y) {
@@ -53,28 +65,43 @@ public class UIBoard extends GridPane  {
         }
     }
 
-    private void onFieldClick(int x, int y) {
-        UIBoardField clickedField = fields[x][y];
+    /**
+     * Handles the click on a field.
+     * Selects the field if it is not already selected. Deselects the field if it is already selected.
+     * Moves the piece if we think a move is possible.
+     * @param row the row of the field
+     * @param column the column of the field
+     */
+    private void onFieldClick(int row, int column) {
+        UIBoardField clickedField = fields[row][column];
 
-        // if a piece is trying to get moved
+        // We have a selected field
         if (selectedField != null && selectedField.isOccupied()) {
+            // We clicked on a field with our own piece
             if (clickedField.getPieceColor() == selectedField.getPieceColor()) {
                 this.deselectField();
+                if (clickedField != selectedField) {
+                    this.setSelectedField(clickedField); // change the focus
+                }
                 return;
             }
 
-            boolean isCapture = fields[x][y].getPiece() != null;
-            Move move = new Move(selectedField.getX(), selectedField.getY(), x, y,
+            boolean isCapture = fields[row][column].getPiece() != null;
+            Move move = new Move(selectedField.getRow(), selectedField.getColumn(), row, column,
                     selectedField.getPiece().getPieceType(), isCapture);
             controller.movePiece(move);
 
         } else {
-            if (fields[x][y].getPiece() != null && fields[x][y].getPieceColor() == player.getColor()) {
-                this.setSelectedField(fields[x][y]);
+            if (fields[row][column].getPiece() != null && fields[row][column].getPieceColor() == player.getColor()) {
+                this.setSelectedField(fields[row][column]);
             }
         }
     }
 
+    /**
+     * Sets the selected field.
+     * @param selectedField the field to be selected
+     */
     private void setSelectedField(UIBoardField selectedField) {
         this.deselectField();
         this.selectedField = selectedField;
@@ -84,6 +111,9 @@ public class UIBoard extends GridPane  {
         }
     }
 
+    /**
+     * Deselects the currently selected field.
+     */
     private void deselectField() {
         if (this.selectedField != null) {
             selectedField.setActive(false);

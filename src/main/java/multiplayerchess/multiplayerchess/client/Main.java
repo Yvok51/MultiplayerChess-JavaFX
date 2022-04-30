@@ -8,6 +8,11 @@ import multiplayerchess.multiplayerchess.client.ui.Utility;
 import java.io.IOException;
 
 public class Main extends Application {
+    /**
+     * Starts the application.
+     * @param stage The stage to start the application on.
+     * @throws IOException If the FXML file for the next scene could not be loaded.
+     */
     @Override
     public void start(Stage stage) throws IOException {
 
