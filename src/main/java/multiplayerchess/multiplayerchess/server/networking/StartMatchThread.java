@@ -45,7 +45,9 @@ public class StartMatchThread implements Runnable {
             potentialMatchID = generator.nextString(MATCH_ID_LENGTH);
         }
 
-        try (ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream())) {
+        try {
+            // TODO: closing socket in case of an error?
+            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             MatchController createdMatch = controllers.addMatch(potentialMatchID);
             var addedPlayer = createdMatch.addPlayer(socket);
             outputStream.writeObject(
@@ -53,6 +55,7 @@ public class StartMatchThread implements Runnable {
             );
         }
         catch (IOException e) {
+            controllers.matchEnded(potentialMatchID);
             SafePrint.printErr("Unknown error while replying to a start match request");
             SafePrint.printErr(e.getMessage());
         }

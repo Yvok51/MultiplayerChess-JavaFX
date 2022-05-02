@@ -163,7 +163,7 @@ public class FENParser {
 
         builder.append(' ');
 
-        if (enpassant != Position.InvalidPosition) {
+        if (enpassant != null) {
             builder.append(enpassant.getNotation());
         } else {
             builder.append('-');

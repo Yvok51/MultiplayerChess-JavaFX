@@ -37,6 +37,7 @@ public class JoinMatchThread implements Runnable {
     public void run() {
         Optional<MatchController> matchToJoin = controllers.getMatch(message.matchID);
         if (matchToJoin.isEmpty()) {
+            // close the socket as no more messages will be exchanged
             try (ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream())) {
                 outputStream.writeObject(new JoinMatchReplyMessage(
                         false, "", null, message.matchID
@@ -53,7 +54,9 @@ public class JoinMatchThread implements Runnable {
         var matchController = matchToJoin.get();
         var joinedAs = matchController.addPlayer(socket);
 
-        try (ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream())) {
+        try {
+            // TODO: socket not closed?
+            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(new JoinMatchReplyMessage(
                     true, matchController.getMatchFEN(), joinedAs, matchController.getMatchID()
                 )

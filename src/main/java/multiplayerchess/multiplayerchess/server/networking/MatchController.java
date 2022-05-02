@@ -224,13 +224,15 @@ public final class MatchController extends Thread {
      * @return The message received. If no message could be received, returns empty
      */
     private Optional<ClientOngoingMatchMessage> acceptPlayerMessage(Socket playerSocket) {
-        try (ObjectInputStream input = new ObjectInputStream(playerSocket.getInputStream())) {
+        try {
+            ObjectInputStream input = new ObjectInputStream(playerSocket.getInputStream());
             var message = (ClientOngoingMatchMessage) input.readObject();
             return Optional.of(message);
         }
         catch (IOException | ClassNotFoundException ignored) {
             // returning a null message will signify there was an error with the socket -> client disconnected
             // The client won't send anything but an OngoingMatchMessage
+            // Socket will be closed by the caller
             return Optional.empty();
         }
     }
@@ -315,8 +317,7 @@ public final class MatchController extends Thread {
      * @throws IOException If anything happened while sending the message e.g. the socket is closed
      */
     private void sendMessage(Socket socket, Message message) throws IOException {
-        try (ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream())) {
-            output.writeObject(message);
-        }
+        ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+        output.writeObject(message);
     }
 }

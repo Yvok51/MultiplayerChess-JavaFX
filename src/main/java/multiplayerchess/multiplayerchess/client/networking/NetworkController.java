@@ -1,7 +1,6 @@
 package multiplayerchess.multiplayerchess.client.networking;
 
 import multiplayerchess.multiplayerchess.client.controller.Match;
-import multiplayerchess.multiplayerchess.client.controller.Winner;
 import multiplayerchess.multiplayerchess.common.Color;
 import multiplayerchess.multiplayerchess.common.PieceType;
 import multiplayerchess.multiplayerchess.common.Position;
@@ -39,7 +38,7 @@ public class NetworkController implements INetworkController {
         if (!success) {
             return Optional.empty();
         }
-        var optReply = recieveStartGameReply();
+        var optReply = receiveStartGameReply();
         if (optReply.isEmpty() || !optReply.get().success) {
             return Optional.empty();
         }
@@ -128,7 +127,7 @@ public class NetworkController implements INetworkController {
      * Receives a StartGame reply message from the server.
      * @return The message received from the server or empty if there was an error
      */
-    private Optional<StartGameReplyMessage> recieveStartGameReply() {
+    private Optional<StartGameReplyMessage> receiveStartGameReply() {
         var reply = receiveReply();
         if (reply.isEmpty()) {
             return Optional.empty();
@@ -168,7 +167,8 @@ public class NetworkController implements INetworkController {
      * @return The message received from the server or empty if there was an error
      */
     private Optional<ServerMessage> receiveReply() {
-        try (ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream())) {
+        try {
+            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
             ServerMessage reply = (ServerMessage) inputStream.readObject();
             return Optional.of(reply);
         }
@@ -183,7 +183,8 @@ public class NetworkController implements INetworkController {
      * @return Whether the message was sent successfully
      */
     private boolean sendMessage(ClientMessage message) {
-        try (ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream())) {
+        try {
+            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(message);
             return true;
         }

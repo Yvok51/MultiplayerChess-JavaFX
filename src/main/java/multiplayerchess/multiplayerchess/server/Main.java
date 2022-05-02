@@ -32,7 +32,7 @@ public class Main {
                     Socket socket = serverSocket.accept();
                     SafePrint.print("Connection accepted");
                     dispatchMessage(socket, controllers);
-                    SafePrint.print("Connection dispatched");
+                    // SafePrint.print("Connection dispatched");
                 }
                 catch (IOException e) {
                     SafePrint.print("Client unexpectedly disconnected");
@@ -52,8 +52,10 @@ public class Main {
      * @param controllers the map of matches
      */
     public static void dispatchMessage(Socket socket, MatchesMap controllers) {
-        try (ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream())) {
+        try {
+            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
             ClientMessage message = (ClientMessage) inputStream.readObject();
+
             if (message instanceof StartGameMessage) {
                 new Thread(new StartMatchThread(socket, controllers)).start();
             } else if (message instanceof JoinMatchMessage joinMatchMessage) {
