@@ -21,23 +21,28 @@ public class Main {
      */
     public static void main(String[] args) {
         MatchesMap controllers = new MatchesMap();
+        SafePrint.print("Starting server...");
         try (ServerSocket serverSocket = new ServerSocket(Networking.SERVER_PORT)) {
 
+            SafePrint.print("Server started");
+            SafePrint.print("Listening for connections...");
             serverSocket.setReuseAddress(true);
             while (true) {
                 try {
                     Socket socket = serverSocket.accept();
+                    SafePrint.print("Connection accepted");
                     dispatchMessage(socket, controllers);
+                    SafePrint.print("Connection dispatched");
                 }
                 catch (IOException e) {
-                    System.out.println("Client unexpectedly disconnected");
-                    System.out.println(e.getMessage());
+                    SafePrint.print("Client unexpectedly disconnected");
+                    SafePrint.print(e.getMessage());
                 }
             }
         }
         catch (IOException e) {
-            System.out.println("Server unexpectedly crashed");
-            System.out.println(e.getMessage());
+            SafePrint.print("Server unexpectedly crashed");
+            SafePrint.print(e.getMessage());
         }
     }
 
@@ -54,16 +59,16 @@ public class Main {
             } else if (message instanceof JoinMatchMessage joinMatchMessage) {
                 new Thread(new JoinMatchThread(socket, controllers, joinMatchMessage)).start();
             } else {
-                System.err.println("Unexpected message"); // maybe start a new thread which sends an error message back
+                SafePrint.printErr("Unexpected message"); // maybe start a new thread which sends an error message back
             }
         }
         catch (IOException e) {
-            System.err.println("Connection failed");
-            System.err.println(e.getMessage());
+            SafePrint.printErr("Connection failed");
+            SafePrint.printErr(e.getMessage());
         }
         catch (ClassNotFoundException e) {
-            System.err.println("Input stream has unknown format");
-            System.err.println(e.getMessage());
+            SafePrint.printErr("Input stream has unknown format");
+            SafePrint.printErr(e.getMessage());
         }
     }
 }

@@ -2,6 +2,7 @@ package multiplayerchess.multiplayerchess.server.networking;
 
 import multiplayerchess.multiplayerchess.common.messages.JoinMatchMessage;
 import multiplayerchess.multiplayerchess.common.messages.JoinMatchReplyMessage;
+import multiplayerchess.multiplayerchess.server.SafePrint;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -43,8 +44,8 @@ public class JoinMatchThread implements Runnable {
                 );
             }
             catch (IOException e) {
-                System.err.println("Unknown error while replying to a Join Match message");
-                System.err.println(e.getMessage());
+                SafePrint.printErr("Unknown error while replying to a Join Match message");
+                SafePrint.printErr(e.getMessage());
             }
             return;
         }
@@ -59,8 +60,8 @@ public class JoinMatchThread implements Runnable {
             );
         }
         catch (IOException e) {
-            System.err.println("Unknown error while replying to a Join Match message");
-            System.err.println(e.getMessage());
+            SafePrint.printErr("Unknown error while replying to a Join Match message");
+            SafePrint.printErr(e.getMessage());
         }
     }
 }

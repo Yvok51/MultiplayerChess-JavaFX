@@ -5,6 +5,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import multiplayerchess.multiplayerchess.client.networking.INetworkController;
 import multiplayerchess.multiplayerchess.client.networking.MockNetworkController;
+import multiplayerchess.multiplayerchess.client.networking.NetworkController;
+import multiplayerchess.multiplayerchess.common.Networking;
 
 import java.io.IOException;
 
@@ -27,7 +29,7 @@ public class MainMenuController {
      */
     public void onStartGame(ActionEvent e) {
         try {
-            INetworkController networkController = new MockNetworkController(); // NetworkController.connect(Networking.SERVER_ADDR, Networking.SERVER_PORT);
+            INetworkController networkController = NetworkController.connect(Networking.SERVER_ADDR, Networking.SERVER_PORT);
 
             var startedMatch = networkController.StartMatch();
             if (startedMatch.isEmpty()) {

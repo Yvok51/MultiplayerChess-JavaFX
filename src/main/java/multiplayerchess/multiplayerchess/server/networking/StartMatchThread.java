@@ -1,6 +1,7 @@
 package multiplayerchess.multiplayerchess.server.networking;
 
 import multiplayerchess.multiplayerchess.common.messages.StartGameReplyMessage;
+import multiplayerchess.multiplayerchess.server.SafePrint;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -52,8 +53,8 @@ public class StartMatchThread implements Runnable {
             );
         }
         catch (IOException e) {
-            System.err.println("Unknown error while replying to a start match request");
-            System.err.println(e.getMessage());
+            SafePrint.printErr("Unknown error while replying to a start match request");
+            SafePrint.printErr(e.getMessage());
         }
     }
 
