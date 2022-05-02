@@ -16,7 +16,7 @@ public class StartMatchThread implements Runnable {
     private static final String UPPER_CASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String NUMERALS = "0123456789";
     private static final String MATCH_ID_AVAILABLE_CHARACTERS = LOWER_CASE + UPPER_CASE + NUMERALS;
-    private static final int MATCH_ID_LENGTH = 8;
+    private static final int MATCH_ID_LENGTH = 1;
     private final Socket socket;
     MatchesMap controllers;
     RandomStringGenerator generator;
