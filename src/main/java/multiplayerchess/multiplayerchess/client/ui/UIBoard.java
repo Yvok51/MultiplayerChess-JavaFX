@@ -30,8 +30,8 @@ public class UIBoard extends GridPane  {
         this.player = currentPlayer;
         this.controller = controller;
 
-        for (int x = 0; x < 8; ++x) {
-            for (int y = 0; y < 8; ++y) {
+        for (int x = 0; x < CHESSBOARD_ROW_SIZE; ++x) {
+            for (int y = 0; y < CHESSBOARD_COLUMN_SIZE; ++y) {
                 if ((x + y) % 2 != 0) {
                     fields[x][y] = new UIBoardField(Color.WHITE, x, y);
                 } else {
@@ -55,8 +55,8 @@ public class UIBoard extends GridPane  {
      * Set the board to not respond to mouse clicks.
      */
     public void disable() {
-        for (int x = 0; x < 8; ++x) {
-            for (int y = 0; y < 8; ++y) {
+        for (int x = 0; x < CHESSBOARD_ROW_SIZE; ++x) {
+            for (int y = 0; y < CHESSBOARD_COLUMN_SIZE; ++y) {
                 fields[x][y].setDisable(true);
             }
         }
@@ -66,8 +66,8 @@ public class UIBoard extends GridPane  {
      * Set the board to respond to mouse clicks.
      */
     public void enable() {
-        for (int x = 0; x < 8; ++x) {
-            for (int y = 0; y < 8; ++y) {
+        for (int x = 0; x < CHESSBOARD_ROW_SIZE; ++x) {
+            for (int y = 0; y < CHESSBOARD_COLUMN_SIZE; ++y) {
                 fields[x][y].setDisable(false);
             }
         }
@@ -78,8 +78,8 @@ public class UIBoard extends GridPane  {
      * @param board the board to be updated to
      */
     public void setupBoard(Board board) {
-        for (int x = 0; x < 8; ++x) {
-            for (int y = 0; y < 8; ++y) {
+        for (int x = 0; x < CHESSBOARD_ROW_SIZE; ++x) {
+            for (int y = 0; y < CHESSBOARD_COLUMN_SIZE; ++y) {
                 if (board.getPiece(x, y) != null) {
                     fields[x][y].setPiece(board.getPiece(x, y));
                 }

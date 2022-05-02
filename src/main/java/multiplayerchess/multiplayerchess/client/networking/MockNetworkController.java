@@ -12,13 +12,18 @@ import java.util.Optional;
 public class MockNetworkController implements INetworkController{
 
     @Override
-    public Optional<Match> StartMatch() {
+    public Optional<Match> startMatch() {
         return Optional.of(new Match(Match.NormalStartingFEN, Player.WHITE, Networking.DEBUG_MATCH_ID));
     }
 
     @Override
     public Optional<Match> joinMatch(String matchID) {
         return Optional.of(new Match(Match.NormalStartingFEN, Player.BLACK, Networking.DEBUG_MATCH_ID));
+    }
+
+    @Override
+    public void sendResign(String matchID) {
+        //Do nothing
     }
 
     @Override
@@ -30,5 +35,10 @@ public class MockNetworkController implements INetworkController{
     @Override
     public Optional<ServerOngoingMatchMessage> receiveTurnReply() {
         return Optional.empty();
+    }
+
+    @Override
+    public void close() {
+        //Do nothing
     }
 }

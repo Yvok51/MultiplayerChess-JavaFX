@@ -1,7 +1,6 @@
 package multiplayerchess.multiplayerchess.client.controller;
 
 import multiplayerchess.multiplayerchess.client.controller.parsing.FENParser;
-import multiplayerchess.multiplayerchess.client.controller.pieces.Piece;
 import multiplayerchess.multiplayerchess.common.Player;
 
 /**
@@ -52,12 +51,17 @@ public final class Match {
     public String getMatchID() { return matchID; }
 
     /**
+     * Returns whether it is our turn.
+     * @return Whether it is our turn.
+     */
+    public boolean isOurTurn() { return ourTurn; }
+
+    /**
      * Update the board to reflect the given FEN string.
      * @param FEN The FEN string to update the board to.
-     * @return The new board.
      */
-    public Board updateBoard(String FEN) {
+    public void nextTurn(String FEN) {
+        ourTurn = !ourTurn;
         board = new Board(FEN);
-        return board;
     }
 }

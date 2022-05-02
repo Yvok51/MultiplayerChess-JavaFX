@@ -21,4 +21,13 @@ public enum Winner {
         }
         return player == Player.WHITE ? Winner.WHITE : Winner.BLACK;
     }
+
+    @Override
+    public String toString() {
+        return switch (this) {
+            case WHITE -> "White";
+            case BLACK -> "Black";
+            case NONE -> "Draw";
+        };
+    }
 }

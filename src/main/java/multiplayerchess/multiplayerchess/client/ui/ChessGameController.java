@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import multiplayerchess.multiplayerchess.client.controller.Match;
@@ -20,16 +21,23 @@ public class ChessGameController {
     @FXML
     private AnchorPane chessGamePane;
 
+    @FXML
+    private Button resignButton;
+
+    @FXML
+    private Label matchIDLabel;
+    @FXML
+    private Label turnLabel;
+    @FXML
+    private Text errorText;
+
     private Match match;
     private INetworkController networkController;
 
     private Stage stage;
     private UIBoard board;
-    private Label errorLabel;
 
-    private Popup endOfGamePopup;
-    private Label popupLabel;
-    private Button popupButton;
+    private UIPopup popup;
 
     /**
      * Get the file path of the FXML file for this controler's scene.
@@ -54,14 +62,12 @@ public class ChessGameController {
 
         chessGamePane.getChildren().add(board);
 
-        AnchorPane.setTopAnchor(board, 60.0);
-        AnchorPane.setLeftAnchor(board, 140.0);
+        AnchorPane.setTopAnchor(board, 40.0);
+        AnchorPane.setLeftAnchor(board, 160.0);
 
-        endOfGamePopup = new Popup();
-        popupLabel = new Label();
-        popupButton = new Button("OK");
-        popupButton.setOnAction(event -> {
-            endOfGamePopup.hide();
+        popup = new UIPopup(stage, "OK");
+        popup.setButtonAction(event -> {
+            popup.hide();
             // Go back to main menu
             try {
                 Utility.loadNewScene(stage, MainMenuController.getFXMLFile());
@@ -70,8 +76,9 @@ public class ChessGameController {
                 Platform.exit();
             }
         });
-        endOfGamePopup.getContent().add(popupLabel);
-        endOfGamePopup.getContent().add(popupButton);
+
+        this.newTurn();
+        matchIDLabel.setText("Match ID: " + match.getMatchID());
 
     }
 
@@ -97,8 +104,9 @@ public class ChessGameController {
             endMatch(Winner.getWinnerFromPlayer(match.getPlayer()), "Opponent disconnected");
         }
         else if (message.status == TurnReplyStatus.TURN_ACCEPTED) {
-            match.updateBoard(message.gameStateFEN);
+            match.nextTurn(message.gameStateFEN);
             board.setupBoard(match.getBoard());
+            this.newTurn();
 
             if (message.gameOver) {
                 endMatch(Winner.getWinnerFromPlayer(message.winner), "Game over");
@@ -110,18 +118,53 @@ public class ChessGameController {
         }
     }
 
+    public void onResignAndQuit() {
+        networkController.sendResign(match.getMatchID());
+        endMatch(Winner.getWinnerFromPlayer(match.getPlayer().opposite()), "Resignation");
+    }
+
     /**
      * Ends the match and displays a message to the user.
      * @param winner The winner of the match.
      * @param reason The reason the match ended.
      */
     private void endMatch(Winner winner, String reason) {
-        // TODO: Implement
+        try {
+            networkController.close();
+        } catch (IOException ignored) {
+        }
+
+        String winText = getWinnerText(winner) + ": " + reason;
+        popup.show(winText);
+
+        this.disable();
 
     }
 
-    private void showEndOfGamePopup(String message) {
-        popupLabel.setText(message);
-        endOfGamePopup.show(stage);
+    private String getWinnerText(Winner winner) {
+        String winText = winner.toString();
+        if (winner != Winner.NONE) {
+            winText += " Won";
+        }
+        return winText;
+    }
+
+    private void disable() {
+        board.disable();
+        resignButton.setDisable(true);
+    }
+
+    private void newTurn() {
+        errorText.setText("");
+        setTurnLabel();
+    }
+
+    private void setTurnLabel() {
+        if (match.isOurTurn()) {
+            turnLabel.setText("Your turn");
+        }
+        else {
+            turnLabel.setText("Opponent's turn");
+        }
     }
 }

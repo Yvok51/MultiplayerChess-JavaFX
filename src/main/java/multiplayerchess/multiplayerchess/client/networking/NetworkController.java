@@ -33,7 +33,8 @@ public class NetworkController implements INetworkController {
      * Send a request to start a match to the server.
      * @return The started match if the request was successful, otherwise an empty optional
      */
-    public Optional<Match> StartMatch() {
+    @Override
+    public Optional<Match> startMatch() {
         var success = sendStartMatch();
         if (!success) {
             return Optional.empty();
@@ -51,6 +52,7 @@ public class NetworkController implements INetworkController {
      * @param matchID The ID of the match to join
      * @return The joined match if the request was successful, otherwise an empty optional
      */
+    @Override
     public Optional<Match> joinMatch(String matchID) {
         var success = sendJoinMatch(matchID);
         if (!success) {
@@ -74,6 +76,7 @@ public class NetworkController implements INetworkController {
      * @param matchID The ID of the match
      * @return Whether the move was sent successfully
      */
+    @Override
     public Optional<TurnReply> sendTurn(PieceType pieceType, Position startPosition, Position endPosition,
             Color color, boolean isCapture, String matchID) {
         boolean success = sendMessage(new TurnMessage(pieceType, startPosition, endPosition, color, isCapture, matchID));
@@ -105,6 +108,16 @@ public class NetworkController implements INetworkController {
             case TurnReplyMessage turnMessage -> Optional.of(new TurnReply(turnMessage));
         };
         */
+    }
+
+    @Override
+    public void sendResign(String matchID) {
+        sendMessage(new ResignMessage(matchID));
+    }
+
+    @Override
+    public void close() throws IOException {
+        socket.close();
     }
 
     /**

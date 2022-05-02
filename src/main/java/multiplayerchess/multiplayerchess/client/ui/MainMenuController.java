@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import multiplayerchess.multiplayerchess.client.networking.INetworkController;
-import multiplayerchess.multiplayerchess.client.networking.MockNetworkController;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
 import multiplayerchess.multiplayerchess.common.Networking;
 
@@ -31,7 +30,7 @@ public class MainMenuController {
         try {
             INetworkController networkController = NetworkController.connect(Networking.SERVER_ADDR, Networking.SERVER_PORT);
 
-            var startedMatch = networkController.StartMatch();
+            var startedMatch = networkController.startMatch();
             if (startedMatch.isEmpty()) {
                 throw new IOException("Could not start match - could not connect to server.");
             }
