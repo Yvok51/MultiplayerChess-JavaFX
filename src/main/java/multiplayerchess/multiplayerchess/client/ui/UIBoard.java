@@ -101,10 +101,13 @@ public class UIBoard extends GridPane  {
         if (selectedField != null && selectedField.isOccupied()) {
             // We clicked on a field with our own piece
             if (clickedField.getPieceColor() == selectedField.getPieceColor()) {
-                this.deselectField();
-                if (clickedField != selectedField) {
+                if (clickedField == selectedField) {
+                    this.deselectField();
+                }
+                else {
                     this.setSelectedField(clickedField); // change the focus
                 }
+
                 return;
             }
 
