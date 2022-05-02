@@ -113,8 +113,7 @@ public class ChessGameController {
             }
         }
         else if (message.status == TurnReplyStatus.TURN_REJECTED) {
-            // TODO: Show error message
-            return;
+            errorText.setText("Invalid move");
         }
     }
 

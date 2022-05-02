@@ -32,7 +32,8 @@ public class MainMenuController {
 
             var startedMatch = networkController.startMatch();
             if (startedMatch.isEmpty()) {
-                throw new IOException("Could not start match - could not connect to server.");
+                System.err.println("Could not start match - could not connect to server.");
+                return;
             }
 
             FXMLLoader loader = Utility.loadNewScene(e, ChessGameController.getFXMLFile());
@@ -42,7 +43,7 @@ public class MainMenuController {
 
         } catch (IOException ex) {
            System.err.println(ex.getMessage());
-            // Platform.exit();
+            Platform.exit();
         }
     }
 

@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
 import multiplayerchess.multiplayerchess.common.Networking;
@@ -17,6 +18,9 @@ public class JoinGameController {
 
     @FXML
     private TextField MatchIDTextField;
+
+    @FXML
+    private Label errorLabel;
 
     /**
      * Get the file path of the FXML file for this controler's scene.
@@ -38,7 +42,8 @@ public class JoinGameController {
             var networkController = NetworkController.connect(Networking.SERVER_ADDR, Networking.SERVER_PORT);
             var match = networkController.joinMatch(matchID);
             if (match.isEmpty()) {
-                throw new IOException("Match not found");
+                errorLabel.setText("Game Not Found");
+                return;
             }
 
             FXMLLoader loader = Utility.loadNewScene(e, ChessGameController.getFXMLFile());
@@ -48,7 +53,7 @@ public class JoinGameController {
 
         } catch (IOException ex) {
             ex.printStackTrace();
-            // Platform.exit();
+            Platform.exit();
         }
     }
 
