@@ -77,7 +77,6 @@ public class NetworkController implements INetworkController {
      */
     public Optional<TurnReply> sendTurn(PieceType pieceType, Position startPosition, Position endPosition,
             Color color, boolean isCapture, String matchID) {
-        // return sendMessage(new TurnMessage(pieceType, startPosition, endPosition, color, isCapture, matchID));
         boolean success = sendMessage(new TurnMessage(pieceType, startPosition, endPosition, color, isCapture, matchID));
         if (!success) {
             return Optional.empty();
@@ -87,11 +86,26 @@ public class NetworkController implements INetworkController {
             return Optional.empty();
         }
 
+        var message = reply.get();
+        if (message instanceof OpponentResignedMessage resignedMessage) {
+            return Optional.of(new TurnReply(resignedMessage));
+        }
+        else if (message instanceof OpponentDisconnectedMessage disconnectedMessage) {
+            return Optional.of(new TurnReply(disconnectedMessage));
+        }
+        else if (message instanceof TurnReplyMessage turnMessage) {
+            return Optional.of(new TurnReply(turnMessage));
+        }
+        else {
+            return Optional.empty();
+        }
+        /*
         return switch (reply.get()) {
             case OpponentResignedMessage resignedMessage -> Optional.of(new TurnReply(resignedMessage));
             case OpponentDisconnectedMessage disconnectedMessage -> Optional.of(new TurnReply(disconnectedMessage));
             case TurnReplyMessage turnMessage -> Optional.of(new TurnReply(turnMessage));
         };
+        */
     }
 
     /**
