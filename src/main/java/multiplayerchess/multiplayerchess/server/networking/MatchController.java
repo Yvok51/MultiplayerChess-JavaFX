@@ -18,7 +18,7 @@ public final class MatchController extends Thread {
     private final String matchID;
     private final MatchesMap controllers;
     private Socket whitePlayerSocket;
-    private Socket blackPLayerSocket;
+    private Socket blackPlayerSocket;
     private boolean gameOngoing;
 
     /**
@@ -29,7 +29,7 @@ public final class MatchController extends Thread {
     public MatchController(String matchID, MatchesMap controllers) {
         match = new Match();
         whitePlayerSocket = null;
-        blackPLayerSocket = null;
+        blackPlayerSocket = null;
         bothPlayersPresentLatch = new CountDownLatch(1);
         this.matchID = matchID;
         gameOngoing = true;
@@ -63,36 +63,27 @@ public final class MatchController extends Thread {
 
         // Both players are present
         while (gameOngoing) {
-            var whitesMessage = acceptPlayerMessage(whitePlayerSocket);
-            if (whitesMessage.isEmpty()) {
+            var socket = getCurrentPlayerSocket();
+            var currentPlayer = match.getCurrentPlayer();
+
+            var message = acceptPlayerMessage(socket);
+            if (message.isEmpty()) {
                 try {
-                    playerDisconnected(Player.WHITE);
+                    playerDisconnected(currentPlayer);
                 }
                 catch (IOException ignored) {
                 }
                 break;
             }
 
-            handlePlayerMessage(whitesMessage.get(), Player.WHITE);
-
-            var blacksMessage = acceptPlayerMessage(blackPLayerSocket);
-            if (blacksMessage.isEmpty()) {
-                try {
-                    playerDisconnected(Player.BLACK);
-                }
-                catch (IOException ignored) {
-                }
-                break;
-            }
-
-            handlePlayerMessage(blacksMessage.get(), Player.BLACK);
+            handlePlayerMessage(message.get(), currentPlayer);
         }
 
         try {
             if (!whitePlayerSocket.isClosed())
                 whitePlayerSocket.close();
-            if (!blackPLayerSocket.isClosed())
-                blackPLayerSocket.close();
+            if (!blackPlayerSocket.isClosed())
+                blackPlayerSocket.close();
         }
         catch (IOException ignored) {
         }
@@ -105,7 +96,7 @@ public final class MatchController extends Thread {
      * @return true if there is room for a new player to join, false otherwise
      */
     public boolean hasOpenSpot() {
-        return whitePlayerSocket == null || blackPLayerSocket == null;
+        return whitePlayerSocket == null || blackPlayerSocket == null;
     }
 
     /**
@@ -117,8 +108,8 @@ public final class MatchController extends Thread {
         if (whitePlayerSocket == null) {
             whitePlayerSocket = player;
             return Player.WHITE;
-        } else if (blackPLayerSocket == null) {
-            blackPLayerSocket = player;
+        } else if (blackPlayerSocket == null) {
+            blackPlayerSocket = player;
             // When both players are present -> wake up the thread waiting in the run method
             bothPlayersPresentLatch.countDown();
             return Player.BLACK;
@@ -140,6 +131,10 @@ public final class MatchController extends Thread {
      * @return the match ID
      */
     public String getMatchID() { return matchID; }
+
+    private Socket getCurrentPlayerSocket() {
+        return match.getCurrentPlayer() == Player.WHITE ? whitePlayerSocket : blackPlayerSocket;
+    }
 
     /**
      * Handle the message received from a player.
@@ -197,16 +192,19 @@ public final class MatchController extends Thread {
     private TurnReplyMessage handleTurnMessage(TurnMessage message) {
         Move move = createMoveFromTurnMessage(message);
         boolean success = match.makeMove(move);
-        boolean gameOver = match.gameOver();
+        if (!success) {
+            return new TurnReplyMessage(false, match.getFEN(), false, null, message.matchID);
+        }
 
+        boolean gameOver = match.gameOver();
         if (gameOver) {
             var winner = match.winner();
             return winner.map(player -> new TurnReplyMessage(success, match.getFEN(), gameOver, player, message.matchID))
                     .orElseGet(() -> new TurnReplyMessage(success, match.getFEN(), gameOver, null, message.matchID));
 
-        } else {
-            return new TurnReplyMessage(success, match.getFEN(), gameOver, null, message.matchID);
         }
+
+        return new TurnReplyMessage(success, match.getFEN(), gameOver, null, message.matchID);
     }
 
     /**
@@ -215,7 +213,7 @@ public final class MatchController extends Thread {
      * @return The socket associated with the given player
      */
     private Socket playerToSocket(Player player) {
-        return player == Player.WHITE ? whitePlayerSocket : blackPLayerSocket;
+        return player == Player.WHITE ? whitePlayerSocket : blackPlayerSocket;
     }
 
     /**
@@ -269,7 +267,7 @@ public final class MatchController extends Thread {
     private void sendOpponentDisconnectedMessage(Player disconnectedPlayer) throws IOException {
         OpponentDisconnectedMessage message = new OpponentDisconnectedMessage(matchID);
         if (disconnectedPlayer == Player.WHITE) {
-            sendMessage(blackPLayerSocket, message);
+            sendMessage(blackPlayerSocket, message);
         } else if (disconnectedPlayer == Player.BLACK) {
             sendMessage(whitePlayerSocket, message);
         }
@@ -283,7 +281,7 @@ public final class MatchController extends Thread {
     private void sendOpponentResignedMessage(Player resignedPlayer) throws IOException {
         OpponentResignedMessage message = new OpponentResignedMessage(matchID);
         if (resignedPlayer == Player.WHITE) {
-            sendMessage(blackPLayerSocket, message);
+            sendMessage(blackPlayerSocket, message);
         } else if (resignedPlayer == Player.BLACK) {
             sendMessage(whitePlayerSocket, message);
         }
@@ -302,7 +300,7 @@ public final class MatchController extends Thread {
             return Optional.of(Player.WHITE);
         }
         try {
-            sendMessage(blackPLayerSocket, message);
+            sendMessage(blackPlayerSocket, message);
         }
         catch (IOException ignored) {
             return Optional.of(Player.BLACK);

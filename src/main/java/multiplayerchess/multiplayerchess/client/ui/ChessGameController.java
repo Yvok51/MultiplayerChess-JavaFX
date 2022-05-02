@@ -76,6 +76,7 @@ public class ChessGameController {
                 Platform.exit();
             }
         });
+        // popup.show("Test String");
 
         this.newTurn();
         matchIDLabel.setText("Match ID: " + match.getMatchID());

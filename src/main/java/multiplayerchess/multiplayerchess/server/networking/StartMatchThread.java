@@ -50,6 +50,7 @@ public class StartMatchThread implements Runnable {
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             MatchController createdMatch = controllers.addMatch(potentialMatchID);
             var addedPlayer = createdMatch.addPlayer(socket);
+            createdMatch.start();
             outputStream.writeObject(
                     new StartGameReplyMessage(true, potentialMatchID, createdMatch.getMatchFEN(), addedPlayer)
             );

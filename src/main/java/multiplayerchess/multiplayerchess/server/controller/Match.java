@@ -86,6 +86,12 @@ public final class Match {
     }
 
     /**
+     * Get the player whose turn it is to move
+     * @return The player whose turn it is to move
+     */
+    public Player getCurrentPlayer() { return currentPlayer; }
+
+    /**
      * Answers whether the game is over in the current state
      *
      * @return Whether the game ended
