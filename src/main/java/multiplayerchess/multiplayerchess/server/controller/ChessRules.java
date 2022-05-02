@@ -252,9 +252,9 @@ public class ChessRules {
     private List<Move> removeInvalidMoves(Board board, List<Move> moves, Player player, Position enPassant) {
         List<Move> validMoves = new ArrayList<>();
         for (Move move : moves) {
-            if (!anyPieceInPath(board, move)
-                    && isValidDestination(board, move, enPassant)
-                    && !kingIsInCheckAfterMove(board, move, player, enPassant)) {
+            if (!anyPieceInPath(board, move) && isValidDestination(board, move, enPassant)
+                    && !kingIsInCheckAfterMove(board, move, player, enPassant))
+            {
                 validMoves.add(move);
             }
         }
