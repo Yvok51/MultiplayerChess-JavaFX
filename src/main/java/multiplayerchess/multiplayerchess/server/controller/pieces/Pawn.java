@@ -69,7 +69,7 @@ public final class Pawn extends Piece {
     public List<Move> generateMoveList(Position start, boolean isCapture) {
         List<Move> moves = new ArrayList<>();
 
-        Movement movement = isCapture ? getMovement() : getCaptureMovement();
+        Movement movement = isCapture ? getCaptureMovement() : getMovement();
 
         for (var direction : movement.directions) {
             int row = start.row + direction.row;

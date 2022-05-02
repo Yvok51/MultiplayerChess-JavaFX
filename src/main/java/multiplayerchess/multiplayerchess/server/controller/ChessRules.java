@@ -231,8 +231,8 @@ public class ChessRules {
      */
     private List<Move> generatePossibleMovesForPiece(Board board, Position piecePosition, Player player, boolean isCapture, Position enPassant) {
         Piece piece = board.getPiece(piecePosition);
-
-        return removeInvalidMoves(board, piece.generateMoveList(piecePosition, isCapture), player, enPassant);
+        List<Move> allMoves = piece.generateMoveList(piecePosition, isCapture);    // List of all possible moves for the piece
+        return removeInvalidMoves(board, allMoves, player, enPassant);
     }
 
     private Player colorToPlayer(Color color) {

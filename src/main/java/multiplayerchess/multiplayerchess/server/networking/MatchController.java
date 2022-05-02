@@ -63,8 +63,8 @@ public final class MatchController extends Thread {
 
         // Both players are present
         while (gameOngoing) {
-            var socket = getCurrentPlayerSocket();
-            var currentPlayer = match.getCurrentPlayer();
+            Socket socket = getCurrentPlayerSocket();
+            Player currentPlayer = match.getCurrentPlayer();
 
             var message = acceptPlayerMessage(socket);
             if (message.isEmpty()) {
