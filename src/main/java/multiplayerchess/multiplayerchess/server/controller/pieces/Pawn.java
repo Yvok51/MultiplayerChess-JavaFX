@@ -3,7 +3,7 @@ package multiplayerchess.multiplayerchess.server.controller.pieces;
 import multiplayerchess.multiplayerchess.common.Color;
 import multiplayerchess.multiplayerchess.common.PieceType;
 import multiplayerchess.multiplayerchess.common.Position;
-import multiplayerchess.multiplayerchess.server.controller.ChessRules;
+import multiplayerchess.multiplayerchess.server.controller.rules.ChessRules;
 import multiplayerchess.multiplayerchess.server.controller.Move;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public final class Pawn extends Piece {
     }
 
     @Override
-    public Movement getMovement() {
+    Movement getMovement() {
         if (hasMoved) {
             return color == Color.WHITE ? normalMovementWhite : normalMovementBlack;
         } else {
@@ -61,7 +61,7 @@ public final class Pawn extends Piece {
     }
 
     @Override
-    public Movement getCaptureMovement() {
+    Movement getCaptureMovement() {
         return color == Color.WHITE ? captureMovementWhite : captureMovementBlack;
     }
 

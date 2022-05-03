@@ -19,18 +19,6 @@ public abstract class Piece {
     }
 
     /**
-     * Get the movement of the piece.
-     * @return Movement of the piece.
-     */
-    public abstract Movement getMovement();
-
-    /**
-     * Get the movement of the piece in which the piece can capture
-     * @return Movement of the piece in which the piece can capture
-     */
-    public abstract Movement getCaptureMovement();
-
-    /**
      * Get the possible moves of the piece.
      * @param start Position of the piece.
      * @param isCapture Whether the moves are to be capture moves
@@ -51,4 +39,16 @@ public abstract class Piece {
     public Piece getMovedPiece() {
         return this;
     }
+
+    /**
+     * Get the movement of the piece.
+     * @return Movement of the piece.
+     */
+    abstract Movement getMovement();
+
+    /**
+     * Get the movement of the piece in which the piece can capture
+     * @return Movement of the piece in which the piece can capture
+     */
+    abstract Movement getCaptureMovement();
 }

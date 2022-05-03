@@ -4,6 +4,7 @@ import multiplayerchess.multiplayerchess.common.*;
 import multiplayerchess.multiplayerchess.server.controller.parsing.FENParser;
 import multiplayerchess.multiplayerchess.server.controller.pieces.Castling;
 import multiplayerchess.multiplayerchess.server.controller.pieces.Piece;
+import multiplayerchess.multiplayerchess.server.controller.rules.ChessRules;
 
 import java.util.HashSet;
 import java.util.Optional;

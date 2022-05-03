@@ -2,6 +2,7 @@ package multiplayerchess.multiplayerchess.server.controller;
 
 import multiplayerchess.multiplayerchess.common.PieceType;
 import multiplayerchess.multiplayerchess.common.Position;
+import multiplayerchess.multiplayerchess.server.controller.rules.ChessRules;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,9 @@ public final class Move {
         int row = startPosition.row + direction.row;
         int column = startPosition.column + direction.column;
 
-        while ((row != endPosition.row && column != endPosition.column) && row < ChessRules.RowCount && row > 0 && column < ChessRules.ColumnCount && column > 0) {
+        while ((row != endPosition.row || column != endPosition.column) && row < ChessRules.RowCount && row >= 0 &&
+                column < ChessRules.ColumnCount && column >= 0)
+        {
             path.add(new Position(row, column));
             row += direction.row;
             column += direction.column;
@@ -64,7 +67,7 @@ public final class Move {
     }
 
     /**
-     * Get the direction of the move i.e. from (7, 7) we get (1, 1) or (5, 0) or (1, 0).
+     * Get the direction of the move i.e. from (7, 7) we get (1, 1) or (5, 0) we get (1, 0).
      * Does not change the knight movement direction.
      * @return the direction of the move
      */
