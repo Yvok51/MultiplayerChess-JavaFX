@@ -46,7 +46,18 @@ public class FENParser {
                 file = Board.MinBoardColumn;
             } else {
                 if (Character.isDigit(c)) {
-                    file += Character.digit(c, 10);
+                    /* For some reason the FEN string we get has the digits representing the number of empty squares
+                     * converted to its value?!? So we have to convert it back to the original number, which this
+                     * little hack does. */
+                    if (Character.isDigit(fenBoard.charAt(i + 1))) {
+                        i += 1;
+                        char secondDigit = fenBoard.charAt(i);
+                        char originalChar = (char) (Character.digit(c, 10) * 10 + Character.digit(secondDigit, 10));
+                        file += Character.digit(originalChar, 10);
+                    }
+                    else {
+                        file += Character.digit(c, 10);
+                    }
                 } else {
                     board[rank][file] = pieceTransaltion.get(c).get();
                     file++;
