@@ -12,4 +12,7 @@ public final class OpponentResignedMessage extends ServerOngoingMatchMessage imp
     public OpponentResignedMessage(String matchID) {
         super(matchID);
     }
+
+    @Override
+    public ServerMessageType getType() { return ServerMessageType.OPPONENT_RESIGNED; }
 }

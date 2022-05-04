@@ -21,4 +21,7 @@ public final class JoinMatchReplyMessage extends ServerMessage implements Serial
         this.player = player;
         this.matchID = matchID;
     }
+
+    @Override
+    public ServerMessageType getType() { return ServerMessageType.JOIN_GAME; }
 }

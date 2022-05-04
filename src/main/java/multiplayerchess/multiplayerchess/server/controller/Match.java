@@ -53,6 +53,8 @@ public final class Match {
             return false;
         }
 
+        Piece movedPiece = board.getPiece(move.startPosition);
+
         // Update move count
         if (currentPlayer == Player.BLACK) {
             moves++;
@@ -70,7 +72,6 @@ public final class Match {
         // Flip current player
         currentPlayer = currentPlayer.opposite();
         // check whether we made a two tile move with a pawn -> en passant possible
-        Piece movedPiece = board.getPiece(move.startPosition);
         enPassant = nextEnPassant(move, movedPiece);
         removeCastlingOptions(move, movedPiece);
 

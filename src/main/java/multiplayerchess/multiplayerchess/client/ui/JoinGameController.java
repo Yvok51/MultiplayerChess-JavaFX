@@ -6,8 +6,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import multiplayerchess.multiplayerchess.client.controller.Match;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
 import multiplayerchess.multiplayerchess.common.Networking;
+import multiplayerchess.multiplayerchess.common.messages.JoinMatchReplyMessage;
+import multiplayerchess.multiplayerchess.common.messages.ServerMessage;
+import multiplayerchess.multiplayerchess.common.messages.ServerMessageType;
 
 import java.io.IOException;
 
@@ -30,6 +35,10 @@ public class JoinGameController {
         return "/multiplayerchess/multiplayerchess/JoinGame.fxml";
     }
 
+    public void setupController(Stage stage) {
+        this.stage = stage;
+    }
+
     /**
      * Handler for the join game button.
      * Attempts to join the game with the given match ID.
@@ -39,18 +48,11 @@ public class JoinGameController {
         String matchID = MatchIDTextField.getText();
 
         try {
-            var networkController = NetworkController.connect(Networking.SERVER_ADDR, Networking.SERVER_PORT);
-            var match = networkController.joinMatch(matchID);
-            if (match.isEmpty()) {
-                errorLabel.setText("Game Not Found");
-                return;
-            }
+            networkController = NetworkController.connect(Networking.SERVER_ADDR, Networking.SERVER_PORT);
 
-            FXMLLoader loader = Utility.loadNewScene(e, ChessGameController.getFXMLFile());
-
-            ChessGameController controller = loader.getController();
-            controller.setupController(match.get(), networkController, Utility.getStageFromEvent(e));
-
+            networkController.addCallback(ServerMessageType.JOIN_GAME, this::joinGameReplyHandler);
+            networkController.requestJoinMatch(matchID);
+            networkController.start();
         } catch (IOException ex) {
             ex.printStackTrace();
             Platform.exit();
@@ -64,10 +66,44 @@ public class JoinGameController {
      */
     public void onBack(ActionEvent e) {
         try {
-            Utility.loadNewScene(e, MainMenuController.getFXMLFile());
+            FXMLLoader loader = Utility.loadNewScene(e, MainMenuController.getFXMLFile());
+            MainMenuController controller = loader.getController();
+            controller.setupController(stage);
         } catch (IOException ex) {
             ex.printStackTrace();
             Platform.exit();
         }
     }
+
+    private void joinGameReplyHandler(ServerMessage message) {
+        var reply = (JoinMatchReplyMessage) message;
+        networkController.clearCallbacks(ServerMessageType.JOIN_GAME);
+
+        if (reply.success) {
+            Platform.runLater(() -> {
+                Match startedMatch = new Match(reply.gameStateFEN, reply.player, reply.matchID);
+
+                FXMLLoader loader;
+                try {
+                    loader = Utility.loadNewScene(stage, ChessGameController.getFXMLFile());
+                }
+                catch (IOException ex) {
+                    //TODO: Handle this - send message to server to dump match
+                    return;
+                }
+
+                ChessGameController controller = loader.getController();
+                controller.setupController(startedMatch, networkController, stage);
+            });
+        }
+        else {
+            Platform.runLater(() -> {
+                errorLabel.setText("Game Not Found");
+
+            });
+        }
+    }
+
+    private NetworkController networkController;
+    private Stage stage;
 }

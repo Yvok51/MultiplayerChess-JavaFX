@@ -6,6 +6,8 @@ import java.io.Serializable;
  * The base class for all server messages.
  */
 public abstract sealed class ServerMessage extends Message implements Serializable
-        permits JoinMatchReplyMessage, StartGameReplyMessage, ServerOngoingMatchMessage {
+        permits JoinMatchReplyMessage, StartGameReplyMessage, ServerOngoingMatchMessage, OpponentConnectedMessage {
     static final long serialVersionUID = 0x1234567;
+
+    public abstract ServerMessageType getType();
 }

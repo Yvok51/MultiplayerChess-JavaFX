@@ -6,13 +6,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import multiplayerchess.multiplayerchess.client.controller.Match;
 import multiplayerchess.multiplayerchess.client.controller.Move;
 import multiplayerchess.multiplayerchess.client.controller.Winner;
-import multiplayerchess.multiplayerchess.client.networking.INetworkController;
-import multiplayerchess.multiplayerchess.client.networking.TurnReplyStatus;
+import multiplayerchess.multiplayerchess.client.networking.NetworkController;
+import multiplayerchess.multiplayerchess.common.messages.ServerMessage;
+import multiplayerchess.multiplayerchess.common.messages.ServerMessageType;
+import multiplayerchess.multiplayerchess.common.messages.TurnReplyMessage;
 
 import java.io.IOException;
 
@@ -32,7 +33,7 @@ public class ChessGameController {
     private Text errorText;
 
     private Match match;
-    private INetworkController networkController;
+    private NetworkController networkController;
 
     private Stage stage;
     private UIBoard board;
@@ -53,10 +54,16 @@ public class ChessGameController {
      * @param match The match the controller handles.
      * @param networkController The network controller to use.
      */
-    public void setupController(Match match, INetworkController networkController, Stage stage) {
+    public void setupController(Match match, NetworkController networkController, Stage stage) {
         this.stage = stage;
         this.networkController = networkController;
         this.match = match;
+
+        networkController.addCallback(ServerMessageType.TURN, this::turnHandler);
+        networkController.addCallback(ServerMessageType.OPPONENT_RESIGNED, this::opponentResignedHandler);
+        networkController.addCallback(ServerMessageType.OPPONENT_DISCONNECTED, this::opponentDisconnectedHandler);
+        networkController.addCallback(ServerMessageType.OPPONENT_CONNECTED, this::opponentJoinedHandler);
+
         board = new UIBoard(match.getPlayer(), this);
         board.setupBoard(match.getBoard());
 
@@ -83,6 +90,43 @@ public class ChessGameController {
 
     }
 
+    public void opponentResignedHandler(ServerMessage message) {
+        Platform.runLater(() -> {
+            endMatch(Winner.getWinnerFromPlayer(match.getPlayer()), "Opponent resigned");
+        });
+    }
+
+    public void opponentDisconnectedHandler(ServerMessage message) {
+        Platform.runLater(() -> {
+            endMatch(Winner.getWinnerFromPlayer(match.getPlayer()), "Opponent disconnected");
+        });
+    }
+
+    public void turnHandler(ServerMessage message) {
+        TurnReplyMessage reply = (TurnReplyMessage) message;
+
+        if (reply.success) {
+            Platform.runLater(() -> {
+                match.nextTurn(reply.gameStateFEN);
+                board.setupBoard(match.getBoard());
+                this.newTurn();
+
+                if (reply.gameOver) {
+                    endMatch(Winner.getWinnerFromPlayer(reply.winner), "Game over");
+                }
+            });
+        }
+        else {
+            Platform.runLater(() -> {
+                errorText.setText("Invalid move");
+            });
+        }
+    }
+
+    public void opponentJoinedHandler(ServerMessage message) {
+
+    }
+
     /**
      * Called when the user clicks on a square in order to move a selected piece.
      * Calls the server to perform the move and if everything is successful, updates the board,
@@ -90,32 +134,8 @@ public class ChessGameController {
      * @param move The move to make.
      */
     public void movePiece(Move move) {
-        var reply = networkController.sendTurn(move.getPieceType(), move.getStartPosition(),
+        networkController.sendTurn(move.getPieceType(), move.getStartPosition(),
                 move.getEndPosition(), match.getPlayer().getColor(), move.isCapture(), match.getMatchID());
-
-        if (reply.isEmpty()) {
-            return;
-        }
-
-        var message = reply.get();
-        if (message.status == TurnReplyStatus.OPPONENT_RESIGNED) {
-            endMatch(Winner.getWinnerFromPlayer(match.getPlayer()), "Opponent resigned");
-        }
-        else if (message.status == TurnReplyStatus.OPPONENT_DISCONNECTED) {
-            endMatch(Winner.getWinnerFromPlayer(match.getPlayer()), "Opponent disconnected");
-        }
-        else if (message.status == TurnReplyStatus.TURN_ACCEPTED) {
-            match.nextTurn(message.gameStateFEN);
-            board.setupBoard(match.getBoard());
-            this.newTurn();
-
-            if (message.gameOver) {
-                endMatch(Winner.getWinnerFromPlayer(message.winner), "Game over");
-            }
-        }
-        else if (message.status == TurnReplyStatus.TURN_REJECTED) {
-            errorText.setText("Invalid move");
-        }
     }
 
     public void onResignAndQuit() {

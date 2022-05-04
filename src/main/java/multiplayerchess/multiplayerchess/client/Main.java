@@ -1,6 +1,8 @@
 package multiplayerchess.multiplayerchess.client;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import multiplayerchess.multiplayerchess.client.ui.MainMenuController;
 import multiplayerchess.multiplayerchess.client.ui.Utility;
@@ -22,9 +24,17 @@ public class Main extends Application {
         stage.setWidth(800);
 
         var url = Main.class.getResource("/multiplayerchess/multiplayerchess/style.css");
+        if (url == null) {
+            System.err.println("Could not load style.css");
+            Platform.exit();
+            return;
+        }
+
         Utility.css = url.toExternalForm();
 
-        Utility.loadNewScene(stage, MainMenuController.getFXMLFile());
+        FXMLLoader loader = Utility.loadNewScene(stage, MainMenuController.getFXMLFile());
+        MainMenuController controller = loader.getController();
+        controller.setupController(stage);
 
         stage.show();
     }

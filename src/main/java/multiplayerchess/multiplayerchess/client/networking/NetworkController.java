@@ -1,7 +1,7 @@
 package multiplayerchess.multiplayerchess.client.networking;
 
-import multiplayerchess.multiplayerchess.client.controller.Match;
 import multiplayerchess.multiplayerchess.common.Color;
+import multiplayerchess.multiplayerchess.common.MessageQueue;
 import multiplayerchess.multiplayerchess.common.PieceType;
 import multiplayerchess.multiplayerchess.common.Position;
 import multiplayerchess.multiplayerchess.common.messages.*;
@@ -10,12 +10,16 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * The NetworkController class is responsible for handling all network communication.
  */
-public class NetworkController implements INetworkController {
+public class NetworkController {
 
     /**
      * Factory method to construct a NetworkController.
@@ -26,25 +30,52 @@ public class NetworkController implements INetworkController {
      */
     public static NetworkController connect(String host, int port) throws IOException {
         Socket socket = new Socket(host, port);
-        return new NetworkController(socket);
+        var controller = new NetworkController(socket);
+
+        MessageQueue<ClientMessage> queue = new MessageQueue<>();
+        SocketMessageListener listener = new SocketMessageListener(
+                new ObjectInputStream(socket.getInputStream()), controller::handleServerMessage);
+        SocketMessageWriter writer = new SocketMessageWriter(new ObjectOutputStream(socket.getOutputStream()), queue);
+
+        controller.setListener(listener);
+        controller.setWriter(writer, queue);
+
+        return controller;
+    }
+
+    public synchronized void addCallback(ServerMessageType type, Consumer<ServerMessage> callback) {
+        if (callbackMap.containsKey(type)) {
+            callbackMap.get(type).add(callback);
+        }
+        else {
+            List<Consumer<ServerMessage>> callbacks = new ArrayList<>();
+            callbacks.add(callback);
+            callbackMap.put(type, callbacks);
+        }
+    }
+
+    public synchronized void removeCallback(ServerMessageType type, Consumer<ServerMessage> callback) {
+        var callbacks = callbackMap.get(type);
+        if (callbacks != null) {
+            callbacks.remove(callback);
+        }
+    }
+
+    public synchronized void clearCallbacks(ServerMessageType type) {
+        callbackMap.remove(type);
+    }
+
+    public void start() {
+        listener.start();
+        writer.start();
     }
 
     /**
      * Send a request to start a match to the server.
      * @return The started match if the request was successful, otherwise an empty optional
      */
-    @Override
-    public Optional<Match> startMatch() {
-        var success = sendStartMatch();
-        if (!success) {
-            return Optional.empty();
-        }
-        var optReply = receiveStartGameReply();
-        if (optReply.isEmpty() || !optReply.get().success) {
-            return Optional.empty();
-        }
-        var reply = optReply.get();
-        return Optional.of(new Match(reply.startingFEN, reply.player, reply.matchID));
+    public void requestNewMatch() {
+        sendMessage(new StartGameMessage());
     }
 
     /**
@@ -52,18 +83,8 @@ public class NetworkController implements INetworkController {
      * @param matchID The ID of the match to join
      * @return The joined match if the request was successful, otherwise an empty optional
      */
-    @Override
-    public Optional<Match> joinMatch(String matchID) {
-        var success = sendJoinMatch(matchID);
-        if (!success) {
-            return Optional.empty();
-        }
-        var optReply = receiveJoinMatchReply();
-        if (optReply.isEmpty() || !optReply.get().success) {
-            return Optional.empty();
-        }
-        var reply = optReply.get();
-        return Optional.of(new Match(reply.gameStateFEN, reply.player, reply.matchID));
+    public void requestJoinMatch(String matchID) {
+        sendMessage(new JoinMatchMessage(matchID));
     }
 
     /**
@@ -76,118 +97,17 @@ public class NetworkController implements INetworkController {
      * @param matchID The ID of the match
      * @return Whether the move was sent successfully
      */
-    @Override
-    public Optional<TurnReply> sendTurn(PieceType pieceType, Position startPosition, Position endPosition,
+    public void sendTurn(PieceType pieceType, Position startPosition, Position endPosition,
             Color color, boolean isCapture, String matchID) {
-        boolean success = sendMessage(new TurnMessage(pieceType, startPosition, endPosition, color, isCapture, matchID));
-        if (!success) {
-            return Optional.empty();
-        }
-        var reply = receiveTurnReply();
-        if (reply.isEmpty()) {
-            return Optional.empty();
-        }
-
-        var message = reply.get();
-        if (message instanceof OpponentResignedMessage resignedMessage) {
-            return Optional.of(new TurnReply(resignedMessage));
-        }
-        else if (message instanceof OpponentDisconnectedMessage disconnectedMessage) {
-            return Optional.of(new TurnReply(disconnectedMessage));
-        }
-        else if (message instanceof TurnReplyMessage turnMessage) {
-            return Optional.of(new TurnReply(turnMessage));
-        }
-        else {
-            return Optional.empty();
-        }
-        /*
-        return switch (reply.get()) {
-            case OpponentResignedMessage resignedMessage -> Optional.of(new TurnReply(resignedMessage));
-            case OpponentDisconnectedMessage disconnectedMessage -> Optional.of(new TurnReply(disconnectedMessage));
-            case TurnReplyMessage turnMessage -> Optional.of(new TurnReply(turnMessage));
-        };
-        */
+        sendMessage(new TurnMessage(pieceType, startPosition, endPosition, color, isCapture, matchID));
     }
 
-    @Override
     public void sendResign(String matchID) {
         sendMessage(new ResignMessage(matchID));
     }
 
-    @Override
     public void close() throws IOException {
         socket.close();
-    }
-
-    /**
-     * Sends a request to join a match to the server.
-     * @return Whether the request was sent successfully (does not comment on whether the request was accepted)
-     */
-    private boolean sendJoinMatch(String matchID) {
-        return sendMessage(new JoinMatchMessage(matchID));
-    }
-
-    /**
-     * Sends a request to start a match to the server.
-     * @return Whether the request was sent successfully (does not comment on whether the request was accepted)
-     */
-    private boolean sendStartMatch() {
-        return sendMessage(new StartGameMessage());
-    }
-
-    /**
-     * Receives a StartGame reply message from the server.
-     * @return The message received from the server or empty if there was an error
-     */
-    private Optional<StartGameReplyMessage> receiveStartGameReply() {
-        var reply = receiveReply();
-        if (reply.isEmpty()) {
-            return Optional.empty();
-        }
-        StartGameReplyMessage startGameReply = (StartGameReplyMessage) reply.get();
-        return Optional.of(startGameReply);
-    }
-
-    /**
-     * Receives a JoinMatch reply message from the server.
-     * @return The message received from the server or empty if there was an error
-     */
-    private Optional<JoinMatchReplyMessage> receiveJoinMatchReply() {
-        var reply = receiveReply();
-        if (reply.isEmpty()) {
-            return Optional.empty();
-        }
-        JoinMatchReplyMessage joinMatchReply = (JoinMatchReplyMessage) reply.get();
-        return Optional.of(joinMatchReply);
-    }
-
-    /**
-     * Receives a turn reply message from the server.
-     * @return The message received from the server or empty if there was an error
-     */
-    public Optional<ServerOngoingMatchMessage> receiveTurnReply() {
-        var reply = receiveReply();
-        if (reply.isEmpty()) {
-            return Optional.empty();
-        }
-        ServerOngoingMatchMessage turnReply = (ServerOngoingMatchMessage) reply.get();
-        return Optional.of(turnReply);
-    }
-
-    /**
-     * Receives a message from the server.
-     * @return The message received from the server or empty if there was an error
-     */
-    private Optional<ServerMessage> receiveReply() {
-        try {
-            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-            ServerMessage reply = (ServerMessage) inputStream.readObject();
-            return Optional.of(reply);
-        }
-        catch (IOException | ClassNotFoundException ignored) {
-            return Optional.empty();
-        }
     }
 
     /**
@@ -195,14 +115,14 @@ public class NetworkController implements INetworkController {
      * @param message The message to send
      * @return Whether the message was sent successfully
      */
-    private boolean sendMessage(ClientMessage message) {
-        try {
-            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-            outputStream.writeObject(message);
-            return true;
-        }
-        catch (IOException ignored) {
-            return false;
+    private void sendMessage(ClientMessage message) {
+        messageQueue.add(message);
+    }
+
+    private synchronized void handleServerMessage(ServerOngoingMatchMessage message) {
+        var callbacks = callbackMap.get(message.getType());
+        for (var callback : callbacks) {
+            callback.accept(message);
         }
     }
 
@@ -210,9 +130,25 @@ public class NetworkController implements INetworkController {
      * Private constructor to prevent instantiation.
      * @param socket The socket to use for communication
      */
-    NetworkController(Socket socket) {
+    private NetworkController(Socket socket) {
+        this.callbackMap = new HashMap<>();
         this.socket = socket;
     }
 
+    private void setWriter(SocketMessageWriter writer, MessageQueue<ClientMessage> queue) {
+        this.writer = writer;
+        this.messageQueue = queue;
+    }
+
+    private void setListener(SocketMessageListener listener) {
+        this.listener = listener;
+    }
+
     private final Socket socket;
+    private SocketMessageWriter writer;
+    private SocketMessageListener listener;
+    private MessageQueue<ClientMessage> messageQueue;
+
+    private Map<ServerMessageType, List<Consumer<ServerMessage>>> callbackMap;
+
 }

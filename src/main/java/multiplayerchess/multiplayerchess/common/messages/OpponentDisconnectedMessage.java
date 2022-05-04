@@ -12,4 +12,7 @@ public final class OpponentDisconnectedMessage extends ServerOngoingMatchMessage
     public OpponentDisconnectedMessage(String matchID) {
         super(matchID);
     }
+
+    @Override
+    public ServerMessageType getType() { return ServerMessageType.OPPONENT_DISCONNECTED; }
 }

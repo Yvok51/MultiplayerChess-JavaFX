@@ -22,4 +22,7 @@ public final class TurnReplyMessage extends ServerOngoingMatchMessage implements
         this.gameStateFEN = gameStateFEN;
         this.winner = winner;
     }
+
+    @Override
+    public ServerMessageType getType() { return ServerMessageType.TURN; }
 }

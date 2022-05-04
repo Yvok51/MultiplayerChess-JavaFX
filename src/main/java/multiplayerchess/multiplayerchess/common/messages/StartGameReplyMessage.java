@@ -21,4 +21,7 @@ public final class StartGameReplyMessage extends ServerMessage implements Serial
         this.startingFEN = startingFEN;
         this.player = player;
     }
+
+    @Override
+    public ServerMessageType getType() { return ServerMessageType.START_GAME; }
 }
