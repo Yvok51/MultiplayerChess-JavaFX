@@ -43,22 +43,6 @@ public final class Move {
     }
 
     /**
-     * Return the difference between the start and end positions in rows
-     * @return the difference between the start and end positions in rows
-     */
-    public int getRowGap() {
-        return endPosition.row - startPosition.row;
-    }
-
-    /**
-     * Return the difference between the start and end positions in columns
-     * @return the difference between the start and end positions in columns
-     */
-    public int getColumnGap() {
-        return endPosition.column - startPosition.column;
-    }
-
-    /**
      * Returns the start position of the move
      * @return the start position of the move
      */

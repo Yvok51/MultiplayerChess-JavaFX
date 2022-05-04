@@ -6,8 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import multiplayerchess.multiplayerchess.client.controller.Match;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
+import multiplayerchess.multiplayerchess.common.messages.Message;
 import multiplayerchess.multiplayerchess.common.networking.Networking;
-import multiplayerchess.multiplayerchess.common.messages.ServerMessage;
 import multiplayerchess.multiplayerchess.common.messages.MessageType;
 import multiplayerchess.multiplayerchess.common.messages.StartGameReplyMessage;
 
@@ -19,8 +19,8 @@ import java.io.IOException;
 public class MainMenuController {
 
     /**
-     * Get the file path of the FXML file for this controler's scene.
-     * @return The file path of the FXML file for this controler's scene.
+     * Get the file path of the FXML file for this controller's scene.
+     * @return The file path of the FXML file for this controller's scene.
      */
     public static String getFXMLFile() {
         return "/multiplayerchess/multiplayerchess/MainMenu.fxml";
@@ -36,7 +36,7 @@ public class MainMenuController {
      */
     public void onStartGame(ActionEvent e) {
         try {
-            networkController = NetworkController.connect(Networking.SERVER_ADDR, Networking.SERVER_PORT);
+            networkController = NetworkController.connect(Networking.SERVER_ADDRESS, Networking.SERVER_PORT);
 
             networkController.addCallback(MessageType.START_GAME, this::startGameReplyHandler);
             networkController.requestNewMatch();
@@ -72,7 +72,7 @@ public class MainMenuController {
         Platform.exit();
     }
 
-    private void startGameReplyHandler(ServerMessage message) {
+    private void startGameReplyHandler(Message message) {
         var reply = (StartGameReplyMessage) message;
         networkController.clearCallbacks(MessageType.START_GAME);
 
@@ -94,7 +94,7 @@ public class MainMenuController {
             });
         }
         else {
-
+            //TODO: Signify to the user that the match could not be started
         }
     }
 

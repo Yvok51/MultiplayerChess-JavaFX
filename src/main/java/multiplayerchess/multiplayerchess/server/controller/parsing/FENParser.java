@@ -17,8 +17,8 @@ import java.util.function.Function;
  * Parser for FEN notation into a memory representation of a chess game.
  */
 public class FENParser {
-    private static final Map<PieceType, Function<Color, Character>> pieceToCharTransaltion;
-    private static final Map<Character, Function<Position, Piece>> charToPieceTransaltion;
+    private static final Map<PieceType, Function<Color, Character>> pieceToCharTranslation;
+    private static final Map<Character, Function<Position, Piece>> charToPieceTranslation;
 
     static {
         Map<PieceType, Function<Color, Character>> builder = new HashMap<>();
@@ -29,17 +29,17 @@ public class FENParser {
         builder.put(PieceType.ROOK, (color) -> color == Color.WHITE ? 'R' : 'r');
         builder.put(PieceType.PAWN, (color) -> color == Color.WHITE ? 'P' : 'p');
 
-        pieceToCharTransaltion = Collections.unmodifiableMap(builder);
+        pieceToCharTranslation = Collections.unmodifiableMap(builder);
 
         Map<Character, Function<Position, Piece>> pieceBuilder = new HashMap<>();
         pieceBuilder.put('k', (position) -> new King(Color.BLACK));
         pieceBuilder.put('K', (position) -> new King(Color.WHITE));
-        pieceBuilder.put('p', (position) -> {
-            return position.row == 6 ? new Pawn(Color.BLACK, false) : new Pawn(Color.BLACK, true);
-        });
-        pieceBuilder.put('P', (position) -> {
-            return position.row == 1 ? new Pawn(Color.WHITE, false) : new Pawn(Color.WHITE, true);
-        });
+        pieceBuilder.put('p', (position) -> position.row == 6
+                ? new Pawn(Color.BLACK, false)
+                : new Pawn(Color.BLACK, true));
+        pieceBuilder.put('P', (position) -> position.row == 1
+                ? new Pawn(Color.WHITE, false)
+                : new Pawn(Color.WHITE, true));
         pieceBuilder.put('n', (position) -> new Knight(Color.BLACK));
         pieceBuilder.put('N', (position) -> new Knight(Color.WHITE));
         pieceBuilder.put('b', (position) -> new Bishop(Color.BLACK));
@@ -49,7 +49,7 @@ public class FENParser {
         pieceBuilder.put('q', (position) -> new Queen(Color.BLACK));
         pieceBuilder.put('Q', (position) -> new Queen(Color.WHITE));
 
-        charToPieceTransaltion = Collections.unmodifiableMap(pieceBuilder);
+        charToPieceTranslation = Collections.unmodifiableMap(pieceBuilder);
     }
 
     /**
@@ -73,7 +73,7 @@ public class FENParser {
                 if (Character.isDigit(c)) {
                     file += Character.digit(c, 10);
                 } else {
-                    board[rank][file] = charToPieceTransaltion.get(c).apply(new Position(rank, file));
+                    board[rank][file] = charToPieceTranslation.get(c).apply(new Position(rank, file));
                     file++;
                 }
             }
@@ -196,7 +196,7 @@ public class FENParser {
                     }
 
                     Piece piece = board.getPiece(rank, file);
-                    builder.append(pieceToCharTransaltion.get(piece.getType()).apply(piece.color));
+                    builder.append(pieceToCharTranslation.get(piece.getType()).apply(piece.color));
                 }
             }
             if (emptySquares > 0) {

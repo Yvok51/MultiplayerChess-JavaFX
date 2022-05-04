@@ -3,23 +3,24 @@ package multiplayerchess.multiplayerchess.server.networking;
 import multiplayerchess.multiplayerchess.common.messages.*;
 import multiplayerchess.multiplayerchess.common.networking.CallbackMap;
 import multiplayerchess.multiplayerchess.common.networking.MessageQueue;
-import multiplayerchess.multiplayerchess.common.Player;
+import multiplayerchess.multiplayerchess.common.networking.SocketMessageListener;
 import multiplayerchess.multiplayerchess.common.networking.SocketMessageWriter;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 
 public class PlayerConnectionController implements AutoCloseable {
 
-    public static PlayerConnectionController createController(Socket playerSocket, Player player) throws IOException {
+    public static PlayerConnectionController createController(Socket playerSocket) throws IOException {
         var controller = new PlayerConnectionController(playerSocket);
 
         MessageQueue<ServerMessage> queue = new MessageQueue<>();
         SocketMessageWriter<ServerMessage> writer = new SocketMessageWriter<>(playerSocket.getOutputStream(), queue);
-        PlayerSocketMessageListener listener = new PlayerSocketMessageListener(
-                playerSocket.getInputStream(), controller::handleMessage, player);
+        SocketMessageListener listener = new SocketMessageListener(
+                playerSocket.getInputStream(), controller::handleMessage);
 
         controller.setWriter(writer, queue);
         controller.setListener(listener);
@@ -51,7 +52,7 @@ public class PlayerConnectionController implements AutoCloseable {
      * @param type The type of message to listen for
      * @param callback The callback to call when the message is received
      */
-    public synchronized void addCallback(MessageType type, PlayerConsumer<ClientMessage> callback) {
+    public synchronized void addCallback(MessageType type, Consumer<Message> callback) {
         callbackMap.addCallback(type, callback);
     }
 
@@ -60,7 +61,7 @@ public class PlayerConnectionController implements AutoCloseable {
      * @param type The type of message to remove the callback from
      * @param callback The callback to remove
      */
-    public synchronized void removeCallback(MessageType type, PlayerConsumer<ClientMessage> callback) {
+    public synchronized void removeCallback(MessageType type, Consumer<Message> callback) {
         callbackMap.removeCallback(type, callback);
     }
 
@@ -103,9 +104,9 @@ public class PlayerConnectionController implements AutoCloseable {
      * It calls the appropriate callbacks for the message type.
      * @param message The message received
      */
-    private synchronized void handleMessage(ClientMessage message, Player player) {
+    private synchronized void handleMessage(Message message) {
         for (var callback : callbackMap.getCallbacks(message.getType())) {
-            callback.accept(message, player);
+            callback.accept(message);
         }
     }
 
@@ -123,7 +124,7 @@ public class PlayerConnectionController implements AutoCloseable {
      * Set the listener for the network controller.
      * @param listener The listener to use
      */
-    private void setListener(PlayerSocketMessageListener listener) {
+    private void setListener(SocketMessageListener listener) {
         // Not in the constructor so that we can give it a callback from the network controller
         this.listener = listener;
     }
@@ -134,16 +135,16 @@ public class PlayerConnectionController implements AutoCloseable {
         this.callbackMap = new CallbackMap<>();
         this.heartbeatOccurredFlag = new AtomicBoolean(false);
         // default heartbeat callback
-        callbackMap.addCallback(MessageType.HEARTBEAT, (message, player) -> heartbeatOccurredFlag.set(true));
+        callbackMap.addCallback(MessageType.HEARTBEAT, (message) -> heartbeatOccurredFlag.set(true));
     }
 
     private final Socket playerSocket;
     private SocketMessageWriter<ServerMessage> writer;
-    private PlayerSocketMessageListener listener;
+    private SocketMessageListener listener;
     private MessageQueue<ServerMessage> messageQueue;
 
-    private AtomicBoolean heartbeatOccurredFlag;
+    private final AtomicBoolean heartbeatOccurredFlag;
 
-    private final CallbackMap<MessageType, PlayerConsumer<ClientMessage>> callbackMap;
+    private final CallbackMap<MessageType, Consumer<Message>> callbackMap;
 
 }

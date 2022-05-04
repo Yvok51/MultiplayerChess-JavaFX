@@ -53,9 +53,7 @@ public class Main {
      */
     public static void dispatchMessage(Socket socket, MatchesMap controllers) {
         try {
-            // Create both streams so that headers are written and teh client doesn't hang
             ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-            // ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             ClientMessage message = (ClientMessage) inputStream.readObject();
 
             if (message instanceof StartGameMessage) {

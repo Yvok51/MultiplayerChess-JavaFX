@@ -112,7 +112,6 @@ public class ChessRules {
         Position blackShortCastlePosition = new Position(MaxBoardRow, MinBoardColumn + 6);
         Position blackLongCastlePosition = new Position(MaxBoardRow, MinBoardColumn + 2);
 
-        // TODO: Refactor
         if (currentPlayer == Player.WHITE && move.startPosition.equals(whiteKingStartingPosition) && whiteShortCastlePosition.equals(move.endPosition)) {
             List<Position> kingsMoveTiles = new ArrayList<>(List.of(new Position(MinBoardRow, MinBoardColumn + 5), whiteShortCastlePosition));
             boolean castlePossible = possibleCastles.contains(Castling.WhiteKingside);

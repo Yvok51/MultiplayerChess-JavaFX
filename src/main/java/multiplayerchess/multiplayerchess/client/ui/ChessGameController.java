@@ -13,7 +13,7 @@ import multiplayerchess.multiplayerchess.client.controller.Match;
 import multiplayerchess.multiplayerchess.client.controller.Move;
 import multiplayerchess.multiplayerchess.client.controller.Winner;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
-import multiplayerchess.multiplayerchess.common.messages.ServerMessage;
+import multiplayerchess.multiplayerchess.common.messages.Message;
 import multiplayerchess.multiplayerchess.common.messages.MessageType;
 import multiplayerchess.multiplayerchess.common.messages.TurnReplyMessage;
 
@@ -44,14 +44,14 @@ public class ChessGameController {
     private Match match;
     private NetworkController networkController;
 
-    private Stage stage;
+    // private Stage stage;
     private UIBoard board;
 
     // private UIPopup popup;
 
     /**
-     * Get the file path of the FXML file for this controler's scene.
-     * @return The file path of the FXML file for this controler's scene.
+     * Get the file path of the FXML file for this controller's scene.
+     * @return The file path of the FXML file for this controller's scene.
      */
     public static String getFXMLFile() {
         return "/multiplayerchess/multiplayerchess/ChessGame.fxml";
@@ -59,12 +59,11 @@ public class ChessGameController {
 
     /**
      * Setup this controller
-     * Since the JavaFX framework calls the constructor we need to setup the board here.
+     * Since the JavaFX framework calls the constructor we need to set up the board here.
      * @param match The match the controller handles.
      * @param networkController The network controller to use.
      */
     public void setupController(Match match, NetworkController networkController, Stage stage) {
-        this.stage = stage;
         this.networkController = networkController;
         this.match = match;
 
@@ -101,19 +100,15 @@ public class ChessGameController {
 
     }
 
-    public void opponentResignedHandler(ServerMessage message) {
-        Platform.runLater(() -> {
-            endMatch(Winner.getWinnerFromPlayer(match.getPlayer()), "Opponent resigned");
-        });
+    public void opponentResignedHandler(Message message) {
+        Platform.runLater(() -> endMatch(Winner.getWinnerFromPlayer(match.getPlayer()), "Opponent resigned"));
     }
 
-    public void opponentDisconnectedHandler(ServerMessage message) {
-        Platform.runLater(() -> {
-            endMatch(Winner.getWinnerFromPlayer(match.getPlayer()), "Opponent disconnected");
-        });
+    public void opponentDisconnectedHandler(Message message) {
+        Platform.runLater(() -> endMatch(Winner.getWinnerFromPlayer(match.getPlayer()), "Opponent disconnected"));
     }
 
-    public void turnHandler(ServerMessage message) {
+    public void turnHandler(Message message) {
         TurnReplyMessage reply = (TurnReplyMessage) message;
 
         if (reply.success) {
@@ -128,13 +123,11 @@ public class ChessGameController {
             });
         }
         else {
-            Platform.runLater(() -> {
-                errorText.setText("Invalid move");
-            });
+            Platform.runLater(() -> errorText.setText("Invalid move"));
         }
     }
 
-    public void opponentJoinedHandler(ServerMessage message) {
+    public void opponentJoinedHandler(Message message) {
         popupPane.setVisible(false);
         this.setDisable(false);
     }
@@ -151,7 +144,7 @@ public class ChessGameController {
     }
 
     public void onResignAndQuit() {
-        networkController.sendResign(match.getMatchID());
+        networkController.sendResign(match.getMatchID(), match.getPlayer());
         endMatch(Winner.getWinnerFromPlayer(match.getPlayer().opposite()), "Resignation");
     }
 

@@ -128,7 +128,7 @@ public final class Match {
 
     /**
      * Makes the move,
-     * assumes the move has been validated beforehand i.e. piece at the stated position is not null, all of the fields
+     * assumes the move has been validated beforehand i.e. piece at the stated position is not null, all the fields
      * are valid, etc.
      *
      * @param move The move to perform
@@ -140,7 +140,7 @@ public final class Match {
         if (rules.isCastle(board, move, currentPlayer, possibleCastles, enPassant)) {
             performCastle(board, move);
         }
-        // Check whether move is a en passant
+        // Check whether move is an en passant
         else if (rules.isEnPassant(board, move, enPassant)) {
             performEnPassant(board, move, movedPiece);
         } else { // Normal move

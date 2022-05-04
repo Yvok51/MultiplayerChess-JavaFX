@@ -4,6 +4,7 @@ import multiplayerchess.multiplayerchess.common.*;
 import multiplayerchess.multiplayerchess.common.messages.*;
 import multiplayerchess.multiplayerchess.common.networking.CallbackMap;
 import multiplayerchess.multiplayerchess.common.networking.MessageQueue;
+import multiplayerchess.multiplayerchess.common.networking.SocketMessageListener;
 import multiplayerchess.multiplayerchess.common.networking.SocketMessageWriter;
 
 import java.io.IOException;
@@ -70,8 +71,8 @@ public class NetworkController implements AutoCloseable{
      * Send a resignation message to the server.
      * @param matchID The ID of the match
      */
-    public void sendResign(String matchID) {
-        sendMessage(new ResignMessage(matchID));
+    public void sendResign(String matchID, Player player) {
+        sendMessage(new ResignMessage(matchID, player));
     }
 
     /**
@@ -79,7 +80,7 @@ public class NetworkController implements AutoCloseable{
      * @param type The type of message to listen for
      * @param callback The callback to call when the message is received
      */
-    public synchronized void addCallback(MessageType type, Consumer<ServerMessage> callback) {
+    public synchronized void addCallback(MessageType type, Consumer<Message> callback) {
         callbackMap.addCallback(type, callback);
     }
 
@@ -88,7 +89,7 @@ public class NetworkController implements AutoCloseable{
      * @param type The type of message to remove the callback from
      * @param callback The callback to remove
      */
-    public synchronized void removeCallback(MessageType type, Consumer<ServerMessage> callback) {
+    public synchronized void removeCallback(MessageType type, Consumer<Message> callback) {
         callbackMap.removeCallback(type, callback);
     }
 
@@ -135,7 +136,7 @@ public class NetworkController implements AutoCloseable{
      * It calls the appropriate callbacks for the message type.
      * @param message The message received
      */
-    private synchronized void handleServerMessage(ServerMessage message) {
+    private synchronized void handleServerMessage(Message message) {
         for (var callback : callbackMap.getCallbacks(message.getType())) {
             callback.accept(message);
         }
@@ -180,6 +181,6 @@ public class NetworkController implements AutoCloseable{
     private SocketMessageListener listener;
     private MessageQueue<ClientMessage> messageQueue;
 
-    private final CallbackMap<MessageType, Consumer<ServerMessage>> callbackMap;
+    private final CallbackMap<MessageType, Consumer<Message>> callbackMap;
 
 }

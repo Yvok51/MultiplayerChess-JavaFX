@@ -9,9 +9,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import multiplayerchess.multiplayerchess.client.controller.Match;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
+import multiplayerchess.multiplayerchess.common.messages.Message;
 import multiplayerchess.multiplayerchess.common.networking.Networking;
 import multiplayerchess.multiplayerchess.common.messages.JoinMatchReplyMessage;
-import multiplayerchess.multiplayerchess.common.messages.ServerMessage;
 import multiplayerchess.multiplayerchess.common.messages.MessageType;
 
 import java.io.IOException;
@@ -28,8 +28,8 @@ public class JoinGameController {
     private Label errorLabel;
 
     /**
-     * Get the file path of the FXML file for this controler's scene.
-     * @return The file path of the FXML file for this controler's scene.
+     * Get the file path of the FXML file for this controller's scene.
+     * @return The file path of the FXML file for this controller's scene.
      */
     public static String getFXMLFile() {
         return "/multiplayerchess/multiplayerchess/JoinGame.fxml";
@@ -48,7 +48,7 @@ public class JoinGameController {
         String matchID = MatchIDTextField.getText();
 
         try {
-            networkController = NetworkController.connect(Networking.SERVER_ADDR, Networking.SERVER_PORT);
+            networkController = NetworkController.connect(Networking.SERVER_ADDRESS, Networking.SERVER_PORT);
 
             networkController.addCallback(MessageType.JOIN_GAME, this::joinGameReplyHandler);
             networkController.requestJoinMatch(matchID);
@@ -75,7 +75,7 @@ public class JoinGameController {
         }
     }
 
-    private void joinGameReplyHandler(ServerMessage message) {
+    private void joinGameReplyHandler(Message message) {
         var reply = (JoinMatchReplyMessage) message;
         networkController.clearCallbacks(MessageType.JOIN_GAME);
 

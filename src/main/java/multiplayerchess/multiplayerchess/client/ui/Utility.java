@@ -6,7 +6,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import multiplayerchess.multiplayerchess.client.controller.pieces.Piece;
 
@@ -34,15 +33,6 @@ public class Utility {
             pieceImages.put(piece.getIconFilename(), image);
         }
         return image;
-    }
-
-    /**
-     * Gets the stage from an event.
-     * @param event The event to get the stage from.
-     * @return The stage got from the event.
-     */
-    public static Stage getStageFromEvent(ActionEvent event) {
-        return (Stage) ((Node) event.getSource()).getScene().getWindow();
     }
 
     /**

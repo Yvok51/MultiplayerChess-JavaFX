@@ -1,26 +1,15 @@
 package multiplayerchess.multiplayerchess.common;
 
 import java.io.Serializable;
-import java.util.Map;
 import java.util.Objects;
 
 /**
  * A position on the board.
  */
 public final class Position implements Serializable {
-
-    public static final Position InvalidPosition = new Position(-1, -1);
     static final long serialVersionUID = 0x12345;
-    private static final Map<Character, Integer> columnTransaltion = Map.of(
-            'a', 0,
-            'b', 1,
-            'c', 2,
-            'd', 3,
-            'e', 4,
-            'f', 5,
-            'g', 6,
-            'h', 7
-    );
+    // public static final Position InvalidPosition = new Position(-1, -1);
+
     public final int row;
     public final int column;
 
@@ -71,7 +60,6 @@ public final class Position implements Serializable {
         return Character.toString(columnChar) + rowChar;
     }
 
-    // TODO: refactor?
     /**
      * Override equals to compare two positions.
      * @param o The object to compare to.

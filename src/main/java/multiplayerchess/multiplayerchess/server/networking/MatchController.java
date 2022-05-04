@@ -77,6 +77,9 @@ public final class MatchController extends Thread {
             if (!blackPlayerController.isRunning() || !blackPlayerController.hasHeartbeatOccurred()) {
                 playerDisconnected(Player.BLACK);
             }
+
+            whitePlayerController.clearHeartbeat();
+            blackPlayerController.clearHeartbeat();
         }
     }
 
@@ -90,12 +93,12 @@ public final class MatchController extends Thread {
 
     /**
      * Add a player to the match
-     * @param player The socket of the player to add
+     * @param playerSocket The socket of the player to add
      * @return The player color of the player added
      */
-    public Player addPlayer(Socket player) throws IOException {
+    public Player addPlayer(Socket playerSocket) throws IOException {
         if (whitePlayerController == null) {
-            whitePlayerController = PlayerConnectionController.createController(player, Player.WHITE);
+            whitePlayerController = PlayerConnectionController.createController(playerSocket);
             whitePlayerController.addCallback(MessageType.RESIGNED, this::playerResignedHandler);
             whitePlayerController.addCallback(MessageType.TURN, this::playerTurnHandler);
             whitePlayerController.start();
@@ -103,7 +106,7 @@ public final class MatchController extends Thread {
             return Player.WHITE;
         }
         else if (blackPlayerController == null) {
-            blackPlayerController = PlayerConnectionController.createController(player, Player.BLACK);
+            blackPlayerController = PlayerConnectionController.createController(playerSocket);
             blackPlayerController.addCallback(MessageType.RESIGNED, this::playerResignedHandler);
             blackPlayerController.addCallback(MessageType.TURN, this::playerTurnHandler);
             blackPlayerController.start();
@@ -133,10 +136,10 @@ public final class MatchController extends Thread {
     /**
      * Handle a turn message sent by a player
      * @param message The turn message to handle
-     * @param player The player who sent the message
      */
-    private void playerTurnHandler(ClientMessage message, Player player) {
+    private void playerTurnHandler(Message message) {
         var turnMessage = (TurnMessage) message;
+        var player = turnMessage.playerColor.getPlayer();
         if (!player.equals(match.getCurrentPlayer())) { // Ignore if it's not the player's turn
             return;
         }
@@ -157,10 +160,10 @@ public final class MatchController extends Thread {
     /**
      * Handles when a player resigns
      * @param message The message containing the player's resignation
-     * @param resignedPlayer The player who resigned
      */
-    private void playerResignedHandler(ClientMessage message, Player resignedPlayer) {
-        sendMessage(new OpponentResignedMessage(matchID), resignedPlayer.opposite());
+    private void playerResignedHandler(Message message) {
+        var resignMessage = (ResignMessage) message;
+        sendMessage(new OpponentResignedMessage(matchID), resignMessage.player.opposite());
         endGame();
     }
 

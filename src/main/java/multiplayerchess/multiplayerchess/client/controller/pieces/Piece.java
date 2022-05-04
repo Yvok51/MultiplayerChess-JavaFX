@@ -12,8 +12,6 @@ public abstract class Piece {
         this.color = color;
     }
 
-    public abstract Movement getMovement();
-
     public abstract String getIconFilename();
 
     public abstract PieceType getPieceType();

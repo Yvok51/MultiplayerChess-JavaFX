@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class FENParser {
-    private static final Map<Character, Supplier<Piece>> pieceTransaltion;
+    private static final Map<Character, Supplier<Piece>> pieceTranslation;
 
     static {
         Map<Character, Supplier<Piece>> builder = new HashMap<>();
@@ -28,7 +28,7 @@ public class FENParser {
         builder.put('q', () -> new Queen(Color.BLACK));
         builder.put('Q', () -> new Queen(Color.WHITE));
 
-        pieceTransaltion = Collections.unmodifiableMap(builder);
+        pieceTranslation = Collections.unmodifiableMap(builder);
 
     }
 
@@ -59,7 +59,7 @@ public class FENParser {
                         file += Character.digit(c, 10);
                     }
                 } else {
-                    board[rank][file] = pieceTransaltion.get(c).get();
+                    board[rank][file] = pieceTranslation.get(c).get();
                     file++;
                 }
             }

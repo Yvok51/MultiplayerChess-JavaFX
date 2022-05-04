@@ -1,6 +1,6 @@
-package multiplayerchess.multiplayerchess.client.networking;
+package multiplayerchess.multiplayerchess.common.networking;
 
-import multiplayerchess.multiplayerchess.common.messages.ServerMessage;
+import multiplayerchess.multiplayerchess.common.messages.Message;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +14,7 @@ import java.util.function.Consumer;
  */
 public class SocketMessageListener extends Thread {
     private final InputStream inputStream;
-    private final Consumer<ServerMessage> messageConsumer;
+    private final Consumer<Message> messageConsumer;
     private boolean running;
 
     /**
@@ -22,7 +22,7 @@ public class SocketMessageListener extends Thread {
      * @param inputStream the input stream to listen on.
      * @param callback the callback to call when a message is received.
      */
-    public SocketMessageListener(InputStream inputStream, Consumer<ServerMessage> callback) {
+    public SocketMessageListener(InputStream inputStream, Consumer<Message> callback) {
         running = true;
         this.inputStream = inputStream;
         this.messageConsumer = callback;
@@ -38,7 +38,7 @@ public class SocketMessageListener extends Thread {
         while (running) {
             try {
                 ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-                var message = (ServerMessage) objectInputStream.readObject();
+                var message = (Message) objectInputStream.readObject();
                 messageConsumer.accept(message);
             }
             catch (IOException | ClassNotFoundException e) {
@@ -53,4 +53,10 @@ public class SocketMessageListener extends Thread {
     public void stopRunning() {
         running = false;
     }
+
+    /**
+     * Answers whether the listener is still running.
+     * @return Whether the listener is still running.
+     */
+    public boolean isRunning() { return running; }
 }

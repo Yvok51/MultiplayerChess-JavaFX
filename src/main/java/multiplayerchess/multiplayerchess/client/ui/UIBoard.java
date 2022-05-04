@@ -14,7 +14,7 @@ public class UIBoard extends GridPane  {
     private static final int CHESSBOARD_ROW_SIZE = 8;
     private static final int CHESSBOARD_COLUMN_SIZE = 8;
 
-    private UIBoardField[][] fields = new UIBoardField[CHESSBOARD_ROW_SIZE][CHESSBOARD_COLUMN_SIZE];
+    private final UIBoardField[][] fields = new UIBoardField[CHESSBOARD_ROW_SIZE][CHESSBOARD_COLUMN_SIZE];
     private UIBoardField selectedField = null;
     private final Player player;
     private final ChessGameController controller;
@@ -50,17 +50,6 @@ public class UIBoard extends GridPane  {
             }
         }
     }
-
-    /**
-     * Set whether the board shall respond to mouse clicks.
-     */
-    /*public void setDisable(boolean disable) {
-        for (int x = 0; x < CHESSBOARD_ROW_SIZE; ++x) {
-            for (int y = 0; y < CHESSBOARD_COLUMN_SIZE; ++y) {
-                fields[x][y].setDisable(disable);
-            }
-        }
-    }*/
 
     /**
      * Updates the UI board with the given board.

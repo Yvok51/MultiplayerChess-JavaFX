@@ -1,7 +1,5 @@
 package multiplayerchess.multiplayerchess.server.controller.pieces;
 
-import multiplayerchess.multiplayerchess.common.Position;
-
 /**
  * Enum for the movement directions of a piece.
  */
@@ -39,14 +37,4 @@ public enum MovementDirection {
         this.column = column;
         this.row = row;
     }
-
-    /*
-    public boolean equalsPosition(Position position) {
-        return position != null && position.row == row && position.column == column;
-    }
-
-    public boolean equalsPosition(Position position, int directionMultiplier) {
-        return position != null && position.row == directionMultiplier * row && position.column == directionMultiplier * column;
-    }
-    */
 }

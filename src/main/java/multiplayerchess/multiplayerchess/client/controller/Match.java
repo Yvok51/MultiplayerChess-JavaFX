@@ -7,7 +7,7 @@ import multiplayerchess.multiplayerchess.common.Player;
  * This class represents a match between two players.
  */
 public final class Match {
-    public static final String NormalStartingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    // public static final String NormalStartingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
     private Board board;
     private boolean ourTurn;

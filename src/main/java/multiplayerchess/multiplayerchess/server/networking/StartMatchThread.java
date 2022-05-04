@@ -1,7 +1,6 @@
 package multiplayerchess.multiplayerchess.server.networking;
 
 import multiplayerchess.multiplayerchess.common.Player;
-import multiplayerchess.multiplayerchess.common.messages.JoinMatchReplyMessage;
 import multiplayerchess.multiplayerchess.common.messages.StartGameReplyMessage;
 import multiplayerchess.multiplayerchess.server.SafePrint;
 
@@ -76,7 +75,7 @@ public class StartMatchThread implements Runnable {
     }
 
     /**
-     * Class to generates a random string of a given length.
+     * Class to generate a random string of a given length.
      */
     private static class RandomStringGenerator {
         private final String availableCharacters;

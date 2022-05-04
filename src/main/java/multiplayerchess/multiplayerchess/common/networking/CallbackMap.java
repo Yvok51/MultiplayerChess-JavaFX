@@ -1,13 +1,9 @@
 package multiplayerchess.multiplayerchess.common.networking;
 
-import multiplayerchess.multiplayerchess.common.messages.MessageType;
-import multiplayerchess.multiplayerchess.common.messages.ServerMessage;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class CallbackMap<T, V> {
 

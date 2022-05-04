@@ -16,7 +16,7 @@ public final class Board {
     private final Piece[][] board;
 
     /**
-     * The board construcot
+     * The board constructor
      * @param startingFEN The FEN to parse the board from
      */
     public Board(String startingFEN) {
@@ -57,7 +57,7 @@ public final class Board {
     /**
      * Clear any piece that is on the given position
      *
-     * @param position The posiiton to clear
+     * @param position The position to clear
      */
     public void clearPiece(Position position) {
         board[position.row][position.column] = null;
