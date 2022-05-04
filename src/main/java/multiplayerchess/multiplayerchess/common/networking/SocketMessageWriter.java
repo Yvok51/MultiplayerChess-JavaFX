@@ -1,5 +1,6 @@
 package multiplayerchess.multiplayerchess.common.networking;
 
+import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
@@ -31,15 +32,15 @@ public class SocketMessageWriter<T> extends Thread {
     public void run() {
         // Creates a new ObjectOutputStream to write to the server for every message to avoid problems with the headers
         while (running) {
-            T message = messageQueue.get();
-            if (message != null) {
-                try {
-                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-                    objectOutputStream.writeObject(message);
+            try {
+                T message = messageQueue.get();
+                if (message != null) {
+                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                        objectOutputStream.writeObject(message);
                 }
-                catch (Exception e) {
-                    running = false;
-                }
+            }
+            catch (InterruptedException | IOException e) {
+                running = false;
             }
         }
     }

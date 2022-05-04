@@ -53,6 +53,7 @@ public class JoinGameController {
             networkController.addCallback(MessageType.JOIN_GAME, this::joinGameReplyHandler);
             networkController.requestJoinMatch(matchID);
             networkController.start();
+            Utility.addCloseable(networkController);
         } catch (IOException ex) {
             ex.printStackTrace();
             Platform.exit();

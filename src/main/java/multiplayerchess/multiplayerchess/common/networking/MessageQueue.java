@@ -14,13 +14,9 @@ public class MessageQueue<T> {
         this.notify();
     }
 
-    public synchronized T get() {
+    public synchronized T get() throws InterruptedException {
         while (queue.isEmpty()) {
-            try {
-                this.wait();
-            }
-            catch (InterruptedException ignored) {
-            }
+            this.wait();
         }
 
         return queue.poll();

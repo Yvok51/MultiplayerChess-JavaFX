@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 /**
  * The NetworkController class is responsible for handling all network communication.
  */
-public class NetworkController implements AutoCloseable{
+public class NetworkController implements AutoCloseable {
 
     /**
      * Factory method to construct a NetworkController.
@@ -117,6 +117,8 @@ public class NetworkController implements AutoCloseable{
     public void close() throws IOException {
         listener.stopRunning();
         writer.stopRunning();
+        writer.interrupt();
+        listener.interrupt();
         if (!socket.isClosed()) {
             socket.close();
         }

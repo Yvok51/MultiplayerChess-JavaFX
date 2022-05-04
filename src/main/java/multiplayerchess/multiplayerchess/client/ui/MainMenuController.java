@@ -41,6 +41,7 @@ public class MainMenuController {
             networkController.addCallback(MessageType.START_GAME, this::startGameReplyHandler);
             networkController.requestNewMatch();
             networkController.start();
+            Utility.addCloseable(networkController);
         }
         catch (IOException ex) {
            System.err.println(ex.getMessage());

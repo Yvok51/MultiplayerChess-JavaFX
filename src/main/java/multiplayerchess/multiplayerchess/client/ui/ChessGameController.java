@@ -82,6 +82,10 @@ public class ChessGameController {
 
         this.setWaitingForOpponent();
 
+        popupPane.setOpacity(1);
+        popupLabel.setOpacity(1);
+        popupButton.setOpacity(1);
+
         popupButton.setOnAction(event -> {
             popupPane.setVisible(false);
             // Go back to main menu
@@ -171,6 +175,7 @@ public class ChessGameController {
             networkController.close();
         } catch (IOException ignored) {
         }
+        Utility.removeCloseable(networkController);
 
         String winText = getWinnerText(winner) + ": " + reason;
         popupLabel.setText(winText);
@@ -180,7 +185,6 @@ public class ChessGameController {
         popupButton.setDisable(false);
 
         this.setDisable(true);
-
     }
 
     private String getWinnerText(Winner winner) {

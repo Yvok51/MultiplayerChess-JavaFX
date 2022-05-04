@@ -10,15 +10,14 @@ import javafx.stage.Stage;
 import multiplayerchess.multiplayerchess.client.controller.pieces.Piece;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Utility {
 
     public static String css;
     // The map of all the images
-    public static Map<String, Image> pieceImages = new HashMap<>();
+    private final static Map<String, Image> pieceImages = new HashMap<>();
+    private static List<AutoCloseable> closeables = new ArrayList<>();
 
     /**
      * Gets the image for a given piece.
@@ -33,6 +32,26 @@ public class Utility {
             pieceImages.put(piece.getIconFilename(), image);
         }
         return image;
+    }
+
+    public static void removeCloseable(AutoCloseable closeable) {
+        closeables.remove(closeable);
+    }
+
+    public static void addCloseable(AutoCloseable closeable) {
+        closeables.add(closeable);
+    }
+
+    public static void closeAll() {
+        for (var closeable : closeables) {
+            try {
+                closeable.close();
+            }
+            catch (Exception ignored) {
+            }
+        }
+
+        closeables.clear();
     }
 
     /**

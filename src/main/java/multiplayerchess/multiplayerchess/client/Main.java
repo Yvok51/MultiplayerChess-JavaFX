@@ -39,6 +39,21 @@ public class Main extends Application {
         stage.show();
     }
 
+    @Override
+    public void stop(){
+        Utility.closeAll();
+        /*
+        var traces = Thread.getAllStackTraces();
+        for (var trace : traces.entrySet()) {
+            System.out.println(trace.getKey().getName());
+            for (var element : trace.getValue()) {
+                System.out.println(element);
+            }
+            System.out.println("===============================");
+        }
+        */
+    }
+
     public static void main(String[] args) {
         launch();
     }

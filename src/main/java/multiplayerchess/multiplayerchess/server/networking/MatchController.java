@@ -8,6 +8,7 @@ import multiplayerchess.multiplayerchess.server.controller.Move;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class MatchController extends Thread {
     private final Match match;
@@ -16,7 +17,7 @@ public final class MatchController extends Thread {
     private final MatchesMap controllers;
     private PlayerConnectionController whitePlayerController;
     private PlayerConnectionController blackPlayerController;
-    private boolean gameOngoing;
+    private final AtomicBoolean gameOngoing;
 
     /**
      * The MatchController constructor
@@ -29,9 +30,8 @@ public final class MatchController extends Thread {
         blackPlayerController = null;
         bothPlayersPresentLatch = new CountDownLatch(1);
         this.matchID = matchID;
-        gameOngoing = true;
+        gameOngoing = new AtomicBoolean(true);
         this.controllers = controllers;
-
     }
 
     /**
@@ -62,7 +62,7 @@ public final class MatchController extends Thread {
         broadcastMessage(new OpponentConnectedMessage());
 
         final long fiveSeconds = 5000;
-        while (gameOngoing) {
+        while (gameOngoing.get()) {
             broadcastMessage(new HeartbeatMessage(matchID));
 
             try {
@@ -214,7 +214,7 @@ public final class MatchController extends Thread {
         }
 
         controllers.matchEnded(matchID);
-        gameOngoing = false;
+        gameOngoing.set(false);
     }
 
     /**
