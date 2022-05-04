@@ -83,6 +83,9 @@ public class UIBoard extends GridPane  {
                 if (board.getPiece(x, y) != null) {
                     fields[x][y].setPiece(board.getPiece(x, y));
                 }
+                else {
+                    fields[x][y].releasePiece();
+                }
             }
         }
     }
