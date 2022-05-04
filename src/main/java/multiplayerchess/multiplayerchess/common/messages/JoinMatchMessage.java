@@ -12,4 +12,7 @@ public final class JoinMatchMessage extends ClientMessage implements Serializabl
     public JoinMatchMessage(String matchID) {
         this.matchID = matchID;
     }
+
+    @Override
+    public MessageType getType() { return MessageType.JOIN_GAME; }
 }

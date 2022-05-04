@@ -23,5 +23,5 @@ public final class StartGameReplyMessage extends ServerMessage implements Serial
     }
 
     @Override
-    public ServerMessageType getType() { return ServerMessageType.START_GAME; }
+    public MessageType getType() { return MessageType.START_GAME; }
 }

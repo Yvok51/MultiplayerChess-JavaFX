@@ -1,5 +1,7 @@
 package multiplayerchess.multiplayerchess.server.networking;
 
+import multiplayerchess.multiplayerchess.common.Player;
+import multiplayerchess.multiplayerchess.common.messages.JoinMatchReplyMessage;
 import multiplayerchess.multiplayerchess.common.messages.StartGameReplyMessage;
 import multiplayerchess.multiplayerchess.server.SafePrint;
 
@@ -46,26 +48,37 @@ public class StartMatchThread implements Runnable {
         }
 
         try {
-            // TODO: closing socket in case of an error?
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             MatchController createdMatch = controllers.addMatch(potentialMatchID);
-            var addedPlayer = createdMatch.addPlayer(socket);
-            createdMatch.start();
+
+            Player addedPlayer = createdMatch.addPlayer(socket);
+
+            createdMatch.start(); // TODO: end thread if an exception occurs in replying to the client
             outputStream.writeObject(
                     new StartGameReplyMessage(true, potentialMatchID, createdMatch.getMatchFEN(), addedPlayer)
             );
         }
         catch (IOException e) {
             controllers.matchEnded(potentialMatchID);
-            SafePrint.printErr("Unknown error while replying to a start match request");
-            SafePrint.printErr(e.getMessage());
+            SafePrint.printErr("Error while replying to a Start Match request " + e.getMessage());
+            sendRejection();
+        }
+    }
+
+    private void sendRejection() {
+        // close the socket (by having try with resources) as no more messages will be exchanged
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream())) {
+            outputStream.writeObject(new StartGameReplyMessage(false, "", null, null));
+        }
+        catch (IOException e) {
+            SafePrint.printErr("Error while rejecting a Start Match message: " + e.getMessage());
         }
     }
 
     /**
      * Class to generates a random string of a given length.
      */
-    private class RandomStringGenerator {
+    private static class RandomStringGenerator {
         private final String availableCharacters;
         private final Random random;
 

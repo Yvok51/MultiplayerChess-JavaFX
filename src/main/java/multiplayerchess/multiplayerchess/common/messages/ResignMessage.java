@@ -11,4 +11,7 @@ public final class ResignMessage extends ClientOngoingMatchMessage implements Se
     public ResignMessage(String matchID) {
         super(matchID);
     }
+
+    @Override
+    public MessageType getType() { return MessageType.RESIGNED; }
 }

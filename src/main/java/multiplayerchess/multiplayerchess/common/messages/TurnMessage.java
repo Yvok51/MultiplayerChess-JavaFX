@@ -26,4 +26,7 @@ public final class TurnMessage extends ClientOngoingMatchMessage implements Seri
         this.player = player;
         this.isCapture = isCapture;
     }
+
+    @Override
+    public MessageType getType() { return MessageType.TURN; }
 }

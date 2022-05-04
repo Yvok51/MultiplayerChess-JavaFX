@@ -9,10 +9,10 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import multiplayerchess.multiplayerchess.client.controller.Match;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
-import multiplayerchess.multiplayerchess.common.Networking;
+import multiplayerchess.multiplayerchess.common.networking.Networking;
 import multiplayerchess.multiplayerchess.common.messages.JoinMatchReplyMessage;
 import multiplayerchess.multiplayerchess.common.messages.ServerMessage;
-import multiplayerchess.multiplayerchess.common.messages.ServerMessageType;
+import multiplayerchess.multiplayerchess.common.messages.MessageType;
 
 import java.io.IOException;
 
@@ -50,7 +50,7 @@ public class JoinGameController {
         try {
             networkController = NetworkController.connect(Networking.SERVER_ADDR, Networking.SERVER_PORT);
 
-            networkController.addCallback(ServerMessageType.JOIN_GAME, this::joinGameReplyHandler);
+            networkController.addCallback(MessageType.JOIN_GAME, this::joinGameReplyHandler);
             networkController.requestJoinMatch(matchID);
             networkController.start();
         } catch (IOException ex) {
@@ -77,7 +77,7 @@ public class JoinGameController {
 
     private void joinGameReplyHandler(ServerMessage message) {
         var reply = (JoinMatchReplyMessage) message;
-        networkController.clearCallbacks(ServerMessageType.JOIN_GAME);
+        networkController.clearCallbacks(MessageType.JOIN_GAME);
 
         if (reply.success) {
             Platform.runLater(() -> {
@@ -99,6 +99,11 @@ public class JoinGameController {
         else {
             Platform.runLater(() -> {
                 errorLabel.setText("Game Not Found");
+                try {
+                    networkController.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace(); //TODO: Check that socket is really closed
+                }
 
             });
         }

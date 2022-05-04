@@ -1,26 +1,19 @@
 package multiplayerchess.multiplayerchess.client.networking;
 
-import multiplayerchess.multiplayerchess.common.Color;
-import multiplayerchess.multiplayerchess.common.MessageQueue;
-import multiplayerchess.multiplayerchess.common.PieceType;
-import multiplayerchess.multiplayerchess.common.Position;
+import multiplayerchess.multiplayerchess.common.*;
 import multiplayerchess.multiplayerchess.common.messages.*;
+import multiplayerchess.multiplayerchess.common.networking.CallbackMap;
+import multiplayerchess.multiplayerchess.common.networking.MessageQueue;
+import multiplayerchess.multiplayerchess.common.networking.SocketMessageWriter;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 /**
  * The NetworkController class is responsible for handling all network communication.
  */
-public class NetworkController {
+public class NetworkController implements AutoCloseable{
 
     /**
      * Factory method to construct a NetworkController.
@@ -34,7 +27,7 @@ public class NetworkController {
         var controller = new NetworkController(socket);
 
         MessageQueue<ClientMessage> queue = new MessageQueue<>();
-        SocketMessageWriter writer = new SocketMessageWriter(socket.getOutputStream(), queue);
+        SocketMessageWriter<ClientMessage> writer = new SocketMessageWriter<>(socket.getOutputStream(), queue);
         SocketMessageListener listener = new SocketMessageListener(
                 socket.getInputStream(), controller::handleServerMessage);
 
@@ -45,52 +38,7 @@ public class NetworkController {
     }
 
     /**
-     * Add a callback to be called when a message of the given type is received.
-     * @param type The type of message to listen for
-     * @param callback The callback to call when the message is received
-     */
-    public synchronized void addCallback(ServerMessageType type, Consumer<ServerMessage> callback) {
-        if (callbackMap.containsKey(type)) {
-            callbackMap.get(type).add(callback);
-        }
-        else {
-            List<Consumer<ServerMessage>> callbacks = new ArrayList<>();
-            callbacks.add(callback);
-            callbackMap.put(type, callbacks);
-        }
-    }
-
-    /**
-     * Remove a callback from the list of callbacks for the given type.
-     * @param type The type of message to remove the callback from
-     * @param callback The callback to remove
-     */
-    public synchronized void removeCallback(ServerMessageType type, Consumer<ServerMessage> callback) {
-        var callbacks = callbackMap.get(type);
-        if (callbacks != null) {
-            callbacks.remove(callback);
-        }
-    }
-
-    /**
-     * Remove all callbacks for the given type.
-     * @param type The type of message to remove all callbacks from
-     */
-    public synchronized void clearCallbacks(ServerMessageType type) {
-        callbackMap.remove(type);
-    }
-
-    /**
-     * Start the network controller.
-     */
-    public void start() {
-        listener.start();
-        writer.start();
-    }
-
-    /**
      * Send a request to start a match to the server.
-     * @return The started match if the request was successful, otherwise an empty optional
      */
     public void requestNewMatch() {
         sendMessage(new StartGameMessage());
@@ -99,7 +47,6 @@ public class NetworkController {
     /**
      * Sends a request to join a match to the server.
      * @param matchID The ID of the match to join
-     * @return The joined match if the request was successful, otherwise an empty optional
      */
     public void requestJoinMatch(String matchID) {
         sendMessage(new JoinMatchMessage(matchID));
@@ -113,15 +60,14 @@ public class NetworkController {
      * @param color The color of the piece
      * @param isCapture Whether the move resulted in a capture
      * @param matchID The ID of the match
-     * @return Whether the move was sent successfully
      */
     public void sendTurn(PieceType pieceType, Position startPosition, Position endPosition,
-            Color color, boolean isCapture, String matchID) {
+                         Color color, boolean isCapture, String matchID) {
         sendMessage(new TurnMessage(pieceType, startPosition, endPosition, color, isCapture, matchID));
     }
 
     /**
-     * Send a resign message to the server.
+     * Send a resignation message to the server.
      * @param matchID The ID of the match
      */
     public void sendResign(String matchID) {
@@ -129,10 +75,47 @@ public class NetworkController {
     }
 
     /**
-     * Dispose of the network controller's resources.
-     * @throws IOException
+     * Add a callback to be called when a message of the given type is received.
+     * @param type The type of message to listen for
+     * @param callback The callback to call when the message is received
      */
+    public synchronized void addCallback(MessageType type, Consumer<ServerMessage> callback) {
+        callbackMap.addCallback(type, callback);
+    }
+
+    /**
+     * Remove a callback from the list of callbacks for the given type.
+     * @param type The type of message to remove the callback from
+     * @param callback The callback to remove
+     */
+    public synchronized void removeCallback(MessageType type, Consumer<ServerMessage> callback) {
+        callbackMap.removeCallback(type, callback);
+    }
+
+    /**
+     * Remove all callbacks for the given type.
+     * @param type The type of message to remove all callbacks from
+     */
+    public synchronized void clearCallbacks(MessageType type) {
+        callbackMap.clearCallbacks(type);
+    }
+
+    /**
+     * Start the network controller.
+     */
+    public void start() {
+        listener.start();
+        writer.start();
+    }
+
+    /**
+     * Dispose of the network controller's resources.
+     * @throws IOException If an I/O error occurs
+     */
+    @Override
     public void close() throws IOException {
+        listener.stopRunning();
+        writer.stopRunning();
         if (!socket.isClosed()) {
             socket.close();
         }
@@ -141,7 +124,6 @@ public class NetworkController {
     /**
      * Sends a message to the server.
      * @param message The message to send
-     * @return Whether the message was sent successfully
      */
     private void sendMessage(ClientMessage message) {
         messageQueue.add(message);
@@ -154,8 +136,7 @@ public class NetworkController {
      * @param message The message received
      */
     private synchronized void handleServerMessage(ServerMessage message) {
-        var callbacks = callbackMap.get(message.getType());
-        for (var callback : callbacks) {
+        for (var callback : callbackMap.getCallbacks(message.getType())) {
             callback.accept(message);
         }
     }
@@ -165,8 +146,14 @@ public class NetworkController {
      * @param socket The socket to use for communication
      */
     private NetworkController(Socket socket) {
-        this.callbackMap = new HashMap<>();
+        this.callbackMap = new CallbackMap<>();
         this.socket = socket;
+
+        // Add default callback for heartbeat messages
+        callbackMap.addCallback(MessageType.HEARTBEAT, (message) -> {
+            var heartbeat = (HeartbeatMessage) message;
+           sendMessage(new HeartbeatReplyMessage(heartbeat.matchID));
+        });
     }
 
     /**
@@ -174,7 +161,7 @@ public class NetworkController {
      * @param writer The writer to use
      * @param queue The queue to use for sending messages to the writer
      */
-    private void setWriter(SocketMessageWriter writer, MessageQueue<ClientMessage> queue) {
+    private void setWriter(SocketMessageWriter<ClientMessage> writer, MessageQueue<ClientMessage> queue) {
         this.writer = writer;
         this.messageQueue = queue;
     }
@@ -184,14 +171,15 @@ public class NetworkController {
      * @param listener The listener to use
      */
     private void setListener(SocketMessageListener listener) {
+        // Not in the constructor so that we can give it a callback from the network controller
         this.listener = listener;
     }
 
     private final Socket socket;
-    private SocketMessageWriter writer;
+    private SocketMessageWriter<ClientMessage> writer;
     private SocketMessageListener listener;
     private MessageQueue<ClientMessage> messageQueue;
 
-    private Map<ServerMessageType, List<Consumer<ServerMessage>>> callbackMap;
+    private final CallbackMap<MessageType, Consumer<ServerMessage>> callbackMap;
 
 }

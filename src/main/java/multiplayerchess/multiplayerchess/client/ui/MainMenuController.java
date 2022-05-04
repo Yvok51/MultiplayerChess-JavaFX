@@ -6,9 +6,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import multiplayerchess.multiplayerchess.client.controller.Match;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
-import multiplayerchess.multiplayerchess.common.Networking;
+import multiplayerchess.multiplayerchess.common.networking.Networking;
 import multiplayerchess.multiplayerchess.common.messages.ServerMessage;
-import multiplayerchess.multiplayerchess.common.messages.ServerMessageType;
+import multiplayerchess.multiplayerchess.common.messages.MessageType;
 import multiplayerchess.multiplayerchess.common.messages.StartGameReplyMessage;
 
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class MainMenuController {
         try {
             networkController = NetworkController.connect(Networking.SERVER_ADDR, Networking.SERVER_PORT);
 
-            networkController.addCallback(ServerMessageType.START_GAME, this::startGameReplyHandler);
+            networkController.addCallback(MessageType.START_GAME, this::startGameReplyHandler);
             networkController.requestNewMatch();
             networkController.start();
         }
@@ -74,7 +74,7 @@ public class MainMenuController {
 
     private void startGameReplyHandler(ServerMessage message) {
         var reply = (StartGameReplyMessage) message;
-        networkController.clearCallbacks(ServerMessageType.START_GAME);
+        networkController.clearCallbacks(MessageType.START_GAME);
 
         if (reply.success) {
             Platform.runLater(() -> {
@@ -92,6 +92,9 @@ public class MainMenuController {
                 ChessGameController controller = loader.getController();
                 controller.setupController(startedMatch, networkController, stage);
             });
+        }
+        else {
+
         }
     }
 

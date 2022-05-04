@@ -1,4 +1,4 @@
-package multiplayerchess.multiplayerchess.common;
+package multiplayerchess.multiplayerchess.common.networking;
 
 import multiplayerchess.multiplayerchess.common.messages.Message;
 import multiplayerchess.multiplayerchess.common.messages.ServerMessage;

@@ -6,10 +6,7 @@ import multiplayerchess.multiplayerchess.server.controller.Match;
 import multiplayerchess.multiplayerchess.server.controller.Move;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 
 public final class MatchController extends Thread {
@@ -17,8 +14,8 @@ public final class MatchController extends Thread {
     private final CountDownLatch bothPlayersPresentLatch;
     private final String matchID;
     private final MatchesMap controllers;
-    private Socket whitePlayerSocket;
-    private Socket blackPlayerSocket;
+    private PlayerConnectionController whitePlayerController;
+    private PlayerConnectionController blackPlayerController;
     private boolean gameOngoing;
 
     /**
@@ -28,12 +25,13 @@ public final class MatchController extends Thread {
      */
     public MatchController(String matchID, MatchesMap controllers) {
         match = new Match();
-        whitePlayerSocket = null;
-        blackPlayerSocket = null;
+        whitePlayerController = null;
+        blackPlayerController = null;
         bothPlayersPresentLatch = new CountDownLatch(1);
         this.matchID = matchID;
         gameOngoing = true;
         this.controllers = controllers;
+
     }
 
     /**
@@ -61,34 +59,25 @@ public final class MatchController extends Thread {
             }
         }
 
-        // Both players are present
-        while (gameOngoing) {
-            Socket socket = getCurrentPlayerSocket();
-            Player currentPlayer = match.getCurrentPlayer();
+        broadcastMessage(new OpponentConnectedMessage());
 
-            var message = acceptPlayerMessage(socket);
-            if (message.isEmpty()) {
-                try {
-                    playerDisconnected(currentPlayer);
-                }
-                catch (IOException ignored) {
-                }
-                break;
+        final long fiveSeconds = 5000;
+        while (gameOngoing) {
+            broadcastMessage(new HeartbeatMessage(matchID));
+
+            try {
+                Thread.sleep(fiveSeconds);
+            }
+            catch (InterruptedException ignored) {
             }
 
-            handlePlayerMessage(message.get(), currentPlayer);
+            if (!whitePlayerController.isRunning() || !whitePlayerController.hasHeartbeatOccurred()) {
+                playerDisconnected(Player.WHITE);
+            }
+            if (!blackPlayerController.isRunning() || !blackPlayerController.hasHeartbeatOccurred()) {
+                playerDisconnected(Player.BLACK);
+            }
         }
-
-        try {
-            if (!whitePlayerSocket.isClosed())
-                whitePlayerSocket.close();
-            if (!blackPlayerSocket.isClosed())
-                blackPlayerSocket.close();
-        }
-        catch (IOException ignored) {
-        }
-
-        controllers.matchEnded(matchID);
     }
 
     /**
@@ -96,7 +85,7 @@ public final class MatchController extends Thread {
      * @return true if there is room for a new player to join, false otherwise
      */
     public boolean hasOpenSpot() {
-        return whitePlayerSocket == null || blackPlayerSocket == null;
+        return whitePlayerController == null || blackPlayerController == null;
     }
 
     /**
@@ -104,12 +93,21 @@ public final class MatchController extends Thread {
      * @param player The socket of the player to add
      * @return The player color of the player added
      */
-    public Player addPlayer(Socket player) {
-        if (whitePlayerSocket == null) {
-            whitePlayerSocket = player;
+    public Player addPlayer(Socket player) throws IOException {
+        if (whitePlayerController == null) {
+            whitePlayerController = PlayerConnectionController.createController(player, Player.WHITE);
+            whitePlayerController.addCallback(MessageType.RESIGNED, this::playerResignedHandler);
+            whitePlayerController.addCallback(MessageType.TURN, this::playerTurnHandler);
+            whitePlayerController.start();
+
             return Player.WHITE;
-        } else if (blackPlayerSocket == null) {
-            blackPlayerSocket = player;
+        }
+        else if (blackPlayerController == null) {
+            blackPlayerController = PlayerConnectionController.createController(player, Player.BLACK);
+            blackPlayerController.addCallback(MessageType.RESIGNED, this::playerResignedHandler);
+            blackPlayerController.addCallback(MessageType.TURN, this::playerTurnHandler);
+            blackPlayerController.start();
+
             // When both players are present -> wake up the thread waiting in the run method
             bothPlayersPresentLatch.countDown();
             return Player.BLACK;
@@ -132,55 +130,47 @@ public final class MatchController extends Thread {
      */
     public String getMatchID() { return matchID; }
 
-    private Socket getCurrentPlayerSocket() {
-        return match.getCurrentPlayer() == Player.WHITE ? whitePlayerSocket : blackPlayerSocket;
+    /**
+     * Handle a turn message sent by a player
+     * @param message The turn message to handle
+     * @param player The player who sent the message
+     */
+    private void playerTurnHandler(ClientMessage message, Player player) {
+        var turnMessage = (TurnMessage) message;
+        if (!player.equals(match.getCurrentPlayer())) { // Ignore if it's not the player's turn
+            return;
+        }
+
+        var reply = handleTurnMessage(turnMessage);
+        if (reply.success) {
+            broadcastMessage(reply);
+            if (reply.gameOver) {
+                endGame();
+            }
+        }
+        else {
+            sendMessage(reply, player);
+        }
+
     }
 
     /**
-     * Handle the message received from a player.
-     * The message is either a TurnMessage or a ResignMessage
-     * @param message The message received
-     * @param player The player who sent the message
+     * Handles when a player resigns
+     * @param message The message containing the player's resignation
+     * @param resignedPlayer The player who resigned
      */
-    private void handlePlayerMessage(ClientOngoingMatchMessage message, Player player) {
-        if (message instanceof ResignMessage) {
-            try {
-                opponentResigned(player);
-            }
-            catch (IOException ignored) {
-                // Since one player resigned and the second one disconnected,
-                // we don't need to send anything extra and silently ignore the error
-            }
-        } else if (message instanceof TurnMessage turnMessage) {
-            var reply = handleTurnMessage(turnMessage);
-            if (reply.success) {
-                var disconnectedPlayer = broadcastMessage(reply);
-                if (disconnectedPlayer.isPresent()) {
-                    try {
-                        playerDisconnected(disconnectedPlayer.get());
-                    }
-                    catch (IOException ignored) {
-                        // Both players disconnected -> ignore
-                    }
-                }
-                if (reply.gameOver) {
-                    gameOngoing = false;
-                }
-            } else {
-                try {
-                    sendMessage(playerToSocket(player), reply);
-                }
-                catch (IOException ignored) {
-                    // The current player disconnected
-                    try { // TODO: refactor, 'cause this is ugly
-                        playerDisconnected(player);
-                    }
-                    catch (IOException ignored2) {
-                    }
-                }
-            }
-        }
+    private void playerResignedHandler(ClientMessage message, Player resignedPlayer) {
+        sendMessage(new OpponentResignedMessage(matchID), resignedPlayer.opposite());
+        endGame();
+    }
 
+    /**
+     * Handle when a player disconnects
+     * @param player The player who disconnected
+     */
+    private void playerDisconnected(Player player) {
+        sendMessage(new OpponentDisconnectedMessage(matchID), player.opposite());
+        endGame();
     }
 
     /**
@@ -208,114 +198,41 @@ public final class MatchController extends Thread {
     }
 
     /**
-     * Return the socket associated with the given player
-     * @param player The player whose socket we want
-     * @return The socket associated with the given player
+     * End the game, get rid of resources
      */
-    private Socket playerToSocket(Player player) {
-        return player == Player.WHITE ? whitePlayerSocket : blackPlayerSocket;
-    }
-
-    /**
-     * Accepts a message from the given player (socket)
-     * @param playerSocket The socket from which the message is received
-     * @return The message received. If no message could be received, returns empty
-     */
-    private Optional<ClientOngoingMatchMessage> acceptPlayerMessage(Socket playerSocket) {
+    private void endGame() {
         try {
-            ObjectInputStream input = new ObjectInputStream(playerSocket.getInputStream());
-            var message = (ClientOngoingMatchMessage) input.readObject();
-            return Optional.of(message);
+            whitePlayerController.close();
+        } catch (IOException ignored) {
         }
-        catch (IOException | ClassNotFoundException ignored) {
-            // returning a null message will signify there was an error with the socket -> client disconnected
-            // The client won't send anything but an OngoingMatchMessage
-            // Socket will be closed by the caller
-            return Optional.empty();
+        try {
+            blackPlayerController.close();
+        } catch (IOException ignored) {
         }
-    }
 
-    /**
-     * Handles the case where a player disconnected.
-     * Signifies that the game is over with the gameOngoing flag no matter what.
-     * @param disconnectedPlayer The player who disconnected
-     * @throws IOException If anything happened to connection of the opponent of the disconnected player
-     * i.e. the opponent disconnected
-     */
-    private void playerDisconnected(Player disconnectedPlayer) throws IOException {
+        controllers.matchEnded(matchID);
         gameOngoing = false;
-        sendOpponentDisconnectedMessage(disconnectedPlayer);
     }
 
     /**
-     * Handles the case where a player resigned.
-     * Signifies that the game is over with the gameOngoing flag no matter what.
-     * @param resignedPlayer The player who resigned
-     * @throws IOException If anything happened to connection of the opponent of the resigned player
-     * i.e. the opponent disconnected
-     */
-    private void opponentResigned(Player resignedPlayer) throws IOException {
-        gameOngoing = false;
-        sendOpponentResignedMessage(resignedPlayer);
-    }
-
-    /**
-     * Sends a message to the player that the opponent disconnected
-     * @param disconnectedPlayer The player that disconnected
-     * @throws IOException If the message could not be sent
-     */
-    private void sendOpponentDisconnectedMessage(Player disconnectedPlayer) throws IOException {
-        OpponentDisconnectedMessage message = new OpponentDisconnectedMessage(matchID);
-        if (disconnectedPlayer == Player.WHITE) {
-            sendMessage(blackPlayerSocket, message);
-        } else if (disconnectedPlayer == Player.BLACK) {
-            sendMessage(whitePlayerSocket, message);
-        }
-    }
-
-    /**
-     * Sends a message to the player that the opponent has resigned
-     * @param resignedPlayer the player that resigned
-     * @throws IOException if anything unexpected happened i.e. the opponent disconnected
-     */
-    private void sendOpponentResignedMessage(Player resignedPlayer) throws IOException {
-        OpponentResignedMessage message = new OpponentResignedMessage(matchID);
-        if (resignedPlayer == Player.WHITE) {
-            sendMessage(blackPlayerSocket, message);
-        } else if (resignedPlayer == Player.BLACK) {
-            sendMessage(whitePlayerSocket, message);
-        }
-    }
-
-    /**
-     * Sends a message to the both sockets
+     * Sends a message to the both players
      * @param message The message to send
-     * @return Failed socket
      */
-    private Optional<Player> broadcastMessage(Message message) {
-        try {
-            sendMessage(whitePlayerSocket, message);
-        }
-        catch (IOException ignored) {
-            return Optional.of(Player.WHITE);
-        }
-        try {
-            sendMessage(blackPlayerSocket, message);
-        }
-        catch (IOException ignored) {
-            return Optional.of(Player.BLACK);
-        }
-        return Optional.empty();
+    private void broadcastMessage(ServerMessage message) {
+        whitePlayerController.sendMessage(message);
+        blackPlayerController.sendMessage(message);
     }
 
     /**
-     * Sends a message to a socket
-     * @param socket The socket to send the message to
+     * Send a message to one player
      * @param message The message to send
-     * @throws IOException If anything happened while sending the message e.g. the socket is closed
+     * @param player The player to send the message to
      */
-    private void sendMessage(Socket socket, Message message) throws IOException {
-        ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
-        output.writeObject(message);
+    private void sendMessage(ServerMessage message, Player player) {
+        if (player == Player.WHITE) {
+            whitePlayerController.sendMessage(message);
+        } else if (player == Player.BLACK) {
+            blackPlayerController.sendMessage(message);
+        }
     }
 }

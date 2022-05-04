@@ -9,5 +9,4 @@ public abstract sealed class ServerMessage extends Message implements Serializab
         permits JoinMatchReplyMessage, StartGameReplyMessage, ServerOngoingMatchMessage, OpponentConnectedMessage {
     static final long serialVersionUID = 0x1234567;
 
-    public abstract ServerMessageType getType();
 }

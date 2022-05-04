@@ -1,20 +1,22 @@
-package multiplayerchess.multiplayerchess.client.networking;
+package multiplayerchess.multiplayerchess.server.networking;
 
-import multiplayerchess.multiplayerchess.common.messages.ServerMessage;
+import multiplayerchess.multiplayerchess.common.Player;
+import multiplayerchess.multiplayerchess.common.messages.ClientMessage;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.util.function.Consumer;
 
 /**
  * Listens for messages from the server.
  * Gets the input stream to listen on. Does not own the stream and as such does not close it.
  * For every message received, calls the given consumer with the message.
  */
-public class SocketMessageListener extends Thread {
+public class PlayerSocketMessageListener extends Thread {
+
     private final InputStream inputStream;
-    private final Consumer<ServerMessage> messageConsumer;
+    private final PlayerConsumer<ClientMessage> messageConsumer;
+    private final Player player;
     private boolean running;
 
     /**
@@ -22,8 +24,9 @@ public class SocketMessageListener extends Thread {
      * @param inputStream the input stream to listen on.
      * @param callback the callback to call when a message is received.
      */
-    public SocketMessageListener(InputStream inputStream, Consumer<ServerMessage> callback) {
+    public PlayerSocketMessageListener(InputStream inputStream, PlayerConsumer<ClientMessage> callback, Player player) {
         running = true;
+        this.player = player;
         this.inputStream = inputStream;
         this.messageConsumer = callback;
     }
@@ -38,8 +41,8 @@ public class SocketMessageListener extends Thread {
         while (running) {
             try {
                 ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-                var message = (ServerMessage) objectInputStream.readObject();
-                messageConsumer.accept(message);
+                var message = (ClientMessage) objectInputStream.readObject();
+                messageConsumer.accept(message, player);
             }
             catch (IOException | ClassNotFoundException e) {
                 running = false;
@@ -48,9 +51,16 @@ public class SocketMessageListener extends Thread {
     }
 
     /**
-     * Sets the listener to stop listening for messages.
+     * Set the listener to stop listening for messages.
      */
     public void stopRunning() {
         running = false;
     }
+
+    /**
+     * Answers whether the listener is still running
+     * @return Whether the listener is still running
+     */
+    public boolean isRunning() { return running; }
 }
+

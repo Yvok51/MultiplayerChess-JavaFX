@@ -2,9 +2,11 @@ package multiplayerchess.multiplayerchess.client.ui;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import multiplayerchess.multiplayerchess.client.controller.Match;
@@ -12,7 +14,7 @@ import multiplayerchess.multiplayerchess.client.controller.Move;
 import multiplayerchess.multiplayerchess.client.controller.Winner;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
 import multiplayerchess.multiplayerchess.common.messages.ServerMessage;
-import multiplayerchess.multiplayerchess.common.messages.ServerMessageType;
+import multiplayerchess.multiplayerchess.common.messages.MessageType;
 import multiplayerchess.multiplayerchess.common.messages.TurnReplyMessage;
 
 import java.io.IOException;
@@ -32,13 +34,20 @@ public class ChessGameController {
     @FXML
     private Text errorText;
 
+    @FXML
+    private Pane popupPane;
+    @FXML
+    private Label popupLabel;
+    @FXML
+    private Button popupButton;
+
     private Match match;
     private NetworkController networkController;
 
     private Stage stage;
     private UIBoard board;
 
-    private UIPopup popup;
+    // private UIPopup popup;
 
     /**
      * Get the file path of the FXML file for this controler's scene.
@@ -59,10 +68,10 @@ public class ChessGameController {
         this.networkController = networkController;
         this.match = match;
 
-        networkController.addCallback(ServerMessageType.TURN, this::turnHandler);
-        networkController.addCallback(ServerMessageType.OPPONENT_RESIGNED, this::opponentResignedHandler);
-        networkController.addCallback(ServerMessageType.OPPONENT_DISCONNECTED, this::opponentDisconnectedHandler);
-        networkController.addCallback(ServerMessageType.OPPONENT_CONNECTED, this::opponentJoinedHandler);
+        networkController.addCallback(MessageType.TURN, this::turnHandler);
+        networkController.addCallback(MessageType.RESIGNED, this::opponentResignedHandler);
+        networkController.addCallback(MessageType.DISCONNECTED, this::opponentDisconnectedHandler);
+        networkController.addCallback(MessageType.CONNECTED, this::opponentJoinedHandler);
 
         board = new UIBoard(match.getPlayer(), this);
         board.setupBoard(match.getBoard());
@@ -72,18 +81,20 @@ public class ChessGameController {
         AnchorPane.setTopAnchor(board, 40.0);
         AnchorPane.setLeftAnchor(board, 160.0);
 
-        popup = new UIPopup(stage, "OK");
-        popup.setButtonAction(event -> {
-            popup.hide();
+        this.setWaitingForOpponent();
+
+        popupButton.setOnAction(event -> {
+            popupPane.setVisible(false);
             // Go back to main menu
             try {
-                Utility.loadNewScene(stage, MainMenuController.getFXMLFile());
+                FXMLLoader loader = Utility.loadNewScene(stage, MainMenuController.getFXMLFile());
+                MainMenuController controller = loader.getController();
+                controller.setupController(stage);
             } catch (IOException ex) {
                 ex.printStackTrace();
                 Platform.exit();
             }
         });
-        // popup.show("Test String");
 
         this.newTurn();
         matchIDLabel.setText("Match ID: " + match.getMatchID());
@@ -124,7 +135,8 @@ public class ChessGameController {
     }
 
     public void opponentJoinedHandler(ServerMessage message) {
-
+        popupPane.setVisible(false);
+        this.setDisable(false);
     }
 
     /**
@@ -143,6 +155,19 @@ public class ChessGameController {
         endMatch(Winner.getWinnerFromPlayer(match.getPlayer().opposite()), "Resignation");
     }
 
+    private void setWaitingForOpponent() {
+        board.setDisable(true);
+
+        popupPane.setVisible(true);
+        popupPane.setDisable(false);
+
+        popupLabel.setText("Waiting For Opponent...");
+        popupLabel.setVisible(true);
+
+        popupButton.setVisible(false);
+        popupButton.setDisable(true);
+    }
+
     /**
      * Ends the match and displays a message to the user.
      * @param winner The winner of the match.
@@ -155,9 +180,13 @@ public class ChessGameController {
         }
 
         String winText = getWinnerText(winner) + ": " + reason;
-        popup.show(winText);
+        popupLabel.setText(winText);
+        popupPane.setVisible(true);
 
-        this.disable();
+        popupButton.setVisible(true);
+        popupButton.setDisable(false);
+
+        this.setDisable(true);
 
     }
 
@@ -169,9 +198,9 @@ public class ChessGameController {
         return winText;
     }
 
-    private void disable() {
-        board.disable();
-        resignButton.setDisable(true);
+    private void setDisable(boolean disable) {
+        board.setDisable(disable);
+        resignButton.setDisable(disable);
     }
 
     private void newTurn() {

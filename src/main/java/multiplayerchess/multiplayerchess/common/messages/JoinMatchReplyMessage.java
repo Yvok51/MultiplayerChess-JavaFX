@@ -23,5 +23,5 @@ public final class JoinMatchReplyMessage extends ServerMessage implements Serial
     }
 
     @Override
-    public ServerMessageType getType() { return ServerMessageType.JOIN_GAME; }
+    public MessageType getType() { return MessageType.JOIN_GAME; }
 }

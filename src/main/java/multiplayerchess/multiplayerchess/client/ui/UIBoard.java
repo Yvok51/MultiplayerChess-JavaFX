@@ -52,26 +52,15 @@ public class UIBoard extends GridPane  {
     }
 
     /**
-     * Set the board to not respond to mouse clicks.
+     * Set whether the board shall respond to mouse clicks.
      */
-    public void disable() {
+    /*public void setDisable(boolean disable) {
         for (int x = 0; x < CHESSBOARD_ROW_SIZE; ++x) {
             for (int y = 0; y < CHESSBOARD_COLUMN_SIZE; ++y) {
-                fields[x][y].setDisable(true);
+                fields[x][y].setDisable(disable);
             }
         }
-    }
-
-    /**
-     * Set the board to respond to mouse clicks.
-     */
-    public void enable() {
-        for (int x = 0; x < CHESSBOARD_ROW_SIZE; ++x) {
-            for (int y = 0; y < CHESSBOARD_COLUMN_SIZE; ++y) {
-                fields[x][y].setDisable(false);
-            }
-        }
-    }
+    }*/
 
     /**
      * Updates the UI board with the given board.

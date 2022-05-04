@@ -1,5 +1,6 @@
 package multiplayerchess.multiplayerchess.server.networking;
 
+import multiplayerchess.multiplayerchess.common.Player;
 import multiplayerchess.multiplayerchess.common.messages.JoinMatchMessage;
 import multiplayerchess.multiplayerchess.common.messages.JoinMatchReplyMessage;
 import multiplayerchess.multiplayerchess.server.SafePrint;
@@ -36,26 +37,23 @@ public class JoinMatchThread implements Runnable {
     @Override
     public void run() {
         Optional<MatchController> matchToJoin = controllers.getMatch(message.matchID);
-        if (matchToJoin.isEmpty()) {
-            // close the socket as no more messages will be exchanged
-            try (ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream())) {
-                outputStream.writeObject(new JoinMatchReplyMessage(
-                        false, "", null, message.matchID
-                    )
-                );
-            }
-            catch (IOException e) {
-                SafePrint.printErr("Unknown error while replying to a Join Match message");
-                SafePrint.printErr(e.getMessage());
-            }
+        if (matchToJoin.isEmpty() || !matchToJoin.get().hasOpenSpot()) {
+            sendRejection();
             return;
         }
 
         var matchController = matchToJoin.get();
-        var joinedAs = matchController.addPlayer(socket);
+        Player joinedAs;
+        try {
+            joinedAs = matchController.addPlayer(socket);
+        }
+        catch (IOException e) {
+            SafePrint.printErr("Error while adding a player to a match: " + e.getMessage());
+            sendRejection();
+            return;
+        }
 
         try {
-            // TODO: socket not closed?
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(new JoinMatchReplyMessage(
                     true, matchController.getMatchFEN(), joinedAs, matchController.getMatchID()
@@ -63,8 +61,17 @@ public class JoinMatchThread implements Runnable {
             );
         }
         catch (IOException e) {
-            SafePrint.printErr("Unknown error while replying to a Join Match message");
-            SafePrint.printErr(e.getMessage());
+            SafePrint.printErr("Unknown error while replying to a Join Match message: " + e.getMessage());
+        }
+    }
+
+    private void sendRejection() {
+        // close the socket as no more messages will be exchanged
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream())) {
+            outputStream.writeObject(new JoinMatchReplyMessage(false, "", null, message.matchID));
+        }
+        catch (IOException e) {
+            SafePrint.printErr("Unknown error while replying to a Join Match message: " + e.getMessage());
         }
     }
 }

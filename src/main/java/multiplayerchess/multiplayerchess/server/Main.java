@@ -1,6 +1,6 @@
 package multiplayerchess.multiplayerchess.server;
 
-import multiplayerchess.multiplayerchess.common.Networking;
+import multiplayerchess.multiplayerchess.common.networking.Networking;
 import multiplayerchess.multiplayerchess.common.messages.ClientMessage;
 import multiplayerchess.multiplayerchess.common.messages.JoinMatchMessage;
 import multiplayerchess.multiplayerchess.common.messages.StartGameMessage;
@@ -10,7 +10,6 @@ import multiplayerchess.multiplayerchess.server.networking.StartMatchThread;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 

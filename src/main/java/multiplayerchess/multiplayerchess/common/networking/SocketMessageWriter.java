@@ -1,19 +1,16 @@
-package multiplayerchess.multiplayerchess.client.networking;
-
-import multiplayerchess.multiplayerchess.common.MessageQueue;
-import multiplayerchess.multiplayerchess.common.messages.ClientMessage;
+package multiplayerchess.multiplayerchess.common.networking;
 
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
 /**
- * Writer for messages to the server.
- * Writes all messages that appear in the message queue to the server.
+ * Writer for messages to opposite side.
+ * Writes all messages that appear in the message queue.
  */
-public class SocketMessageWriter extends Thread {
+public class SocketMessageWriter<T> extends Thread {
 
     private final OutputStream outputStream;
-    private final MessageQueue<ClientMessage> messageQueue;
+    private final MessageQueue<T> messageQueue;
     boolean running;
 
     /**
@@ -21,20 +18,20 @@ public class SocketMessageWriter extends Thread {
      * @param outputStream The output stream to write to.
      * @param messageQueue The message queue to get the messages from.
      */
-    public SocketMessageWriter(OutputStream outputStream, MessageQueue<ClientMessage> messageQueue) {
+    public SocketMessageWriter(OutputStream outputStream, MessageQueue<T> messageQueue) {
         this.outputStream = outputStream;
         this.messageQueue = messageQueue;
         this.running = true;
     }
 
     /**
-     * Continuously writes messages from the message queue to the server.
+     * Continuously writes messages from the message queue to the stream.
      */
     @Override
     public void run() {
         // Creates a new ObjectOutputStream to write to the server for every message to avoid problems with the headers
         while (running) {
-            ClientMessage message = messageQueue.get();
+            T message = messageQueue.get();
             if (message != null) {
                 try {
                     ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
@@ -46,4 +43,17 @@ public class SocketMessageWriter extends Thread {
             }
         }
     }
+
+    /**
+     * Set the thread to stop
+     */
+    public void stopRunning() {
+        running = false;
+    }
+
+    /**
+     * Answers whether the writer is still running
+     * @return Whether the writer is still running
+     */
+    public boolean isRunning() { return running;}
 }

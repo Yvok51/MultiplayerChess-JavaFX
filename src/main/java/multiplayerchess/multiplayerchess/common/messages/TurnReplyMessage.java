@@ -24,5 +24,5 @@ public final class TurnReplyMessage extends ServerOngoingMatchMessage implements
     }
 
     @Override
-    public ServerMessageType getType() { return ServerMessageType.TURN; }
+    public MessageType getType() { return MessageType.TURN; }
 }
