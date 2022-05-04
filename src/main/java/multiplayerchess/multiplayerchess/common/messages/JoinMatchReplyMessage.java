@@ -8,8 +8,8 @@ import java.io.Serializable;
  * The message sent by the server to the client when a player joins a match.
  */
 public final class JoinMatchReplyMessage extends ServerMessage implements Serializable {
+    static final long serialVersionUID = 0x123456;
 
-    static final long serialVrsionUID = 0x123456;
     public final boolean success;
     public final String gameStateFEN;
     public final Player player;

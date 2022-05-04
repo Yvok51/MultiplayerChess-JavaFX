@@ -7,6 +7,7 @@ import multiplayerchess.multiplayerchess.common.Position;
 import multiplayerchess.multiplayerchess.common.messages.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -33,9 +34,9 @@ public class NetworkController {
         var controller = new NetworkController(socket);
 
         MessageQueue<ClientMessage> queue = new MessageQueue<>();
+        SocketMessageWriter writer = new SocketMessageWriter(socket.getOutputStream(), queue);
         SocketMessageListener listener = new SocketMessageListener(
-                new ObjectInputStream(socket.getInputStream()), controller::handleServerMessage);
-        SocketMessageWriter writer = new SocketMessageWriter(new ObjectOutputStream(socket.getOutputStream()), queue);
+                socket.getInputStream(), controller::handleServerMessage);
 
         controller.setListener(listener);
         controller.setWriter(writer, queue);
@@ -43,6 +44,11 @@ public class NetworkController {
         return controller;
     }
 
+    /**
+     * Add a callback to be called when a message of the given type is received.
+     * @param type The type of message to listen for
+     * @param callback The callback to call when the message is received
+     */
     public synchronized void addCallback(ServerMessageType type, Consumer<ServerMessage> callback) {
         if (callbackMap.containsKey(type)) {
             callbackMap.get(type).add(callback);
@@ -54,6 +60,11 @@ public class NetworkController {
         }
     }
 
+    /**
+     * Remove a callback from the list of callbacks for the given type.
+     * @param type The type of message to remove the callback from
+     * @param callback The callback to remove
+     */
     public synchronized void removeCallback(ServerMessageType type, Consumer<ServerMessage> callback) {
         var callbacks = callbackMap.get(type);
         if (callbacks != null) {
@@ -61,10 +72,17 @@ public class NetworkController {
         }
     }
 
+    /**
+     * Remove all callbacks for the given type.
+     * @param type The type of message to remove all callbacks from
+     */
     public synchronized void clearCallbacks(ServerMessageType type) {
         callbackMap.remove(type);
     }
 
+    /**
+     * Start the network controller.
+     */
     public void start() {
         listener.start();
         writer.start();
@@ -102,12 +120,22 @@ public class NetworkController {
         sendMessage(new TurnMessage(pieceType, startPosition, endPosition, color, isCapture, matchID));
     }
 
+    /**
+     * Send a resign message to the server.
+     * @param matchID The ID of the match
+     */
     public void sendResign(String matchID) {
         sendMessage(new ResignMessage(matchID));
     }
 
+    /**
+     * Dispose of the network controller's resources.
+     * @throws IOException
+     */
     public void close() throws IOException {
-        socket.close();
+        if (!socket.isClosed()) {
+            socket.close();
+        }
     }
 
     /**
@@ -119,7 +147,13 @@ public class NetworkController {
         messageQueue.add(message);
     }
 
-    private synchronized void handleServerMessage(ServerOngoingMatchMessage message) {
+    /**
+     * The handler for messages received from the server.
+     * A unified callback which the listener calls for each message received.
+     * It calls the appropriate callbacks for the message type.
+     * @param message The message received
+     */
+    private synchronized void handleServerMessage(ServerMessage message) {
         var callbacks = callbackMap.get(message.getType());
         for (var callback : callbacks) {
             callback.accept(message);
@@ -135,11 +169,20 @@ public class NetworkController {
         this.socket = socket;
     }
 
+    /**
+     * Set the writer for the network controller.
+     * @param writer The writer to use
+     * @param queue The queue to use for sending messages to the writer
+     */
     private void setWriter(SocketMessageWriter writer, MessageQueue<ClientMessage> queue) {
         this.writer = writer;
         this.messageQueue = queue;
     }
 
+    /**
+     * Set the listener for the network controller.
+     * @param listener The listener to use
+     */
     private void setListener(SocketMessageListener listener) {
         this.listener = listener;
     }

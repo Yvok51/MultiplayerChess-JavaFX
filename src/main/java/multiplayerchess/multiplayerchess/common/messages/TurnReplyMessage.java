@@ -8,8 +8,8 @@ import java.io.Serializable;
  * Message sent by the server to the client to inform about the resutl of a previously sent turn request.
  */
 public final class TurnReplyMessage extends ServerOngoingMatchMessage implements Serializable {
+    static final long serialVersionUID = 0x123456;
 
-    static final long serialVrsionUID = 0x123456;
     public final boolean success;
     public final String gameStateFEN;
     public final boolean gameOver;
