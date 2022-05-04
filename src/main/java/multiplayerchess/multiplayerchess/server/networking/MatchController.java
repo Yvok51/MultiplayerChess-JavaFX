@@ -93,12 +93,12 @@ public final class MatchController extends Thread {
 
     /**
      * Add a player to the match
-     * @param playerSocket The socket of the player to add
+     * @param playerController The controller of the connection of the player to add
      * @return The player color of the player added
      */
-    public Player addPlayer(Socket playerSocket) throws IOException {
+    public Player addPlayer(PlayerConnectionController playerController) {
         if (whitePlayerController == null) {
-            whitePlayerController = PlayerConnectionController.createController(playerSocket);
+            whitePlayerController = playerController;
             whitePlayerController.addCallback(MessageType.RESIGNED, this::playerResignedHandler);
             whitePlayerController.addCallback(MessageType.TURN, this::playerTurnHandler);
             whitePlayerController.start();
@@ -106,7 +106,7 @@ public final class MatchController extends Thread {
             return Player.WHITE;
         }
         else if (blackPlayerController == null) {
-            blackPlayerController = PlayerConnectionController.createController(playerSocket);
+            blackPlayerController = playerController;
             blackPlayerController.addCallback(MessageType.RESIGNED, this::playerResignedHandler);
             blackPlayerController.addCallback(MessageType.TURN, this::playerTurnHandler);
             blackPlayerController.start();

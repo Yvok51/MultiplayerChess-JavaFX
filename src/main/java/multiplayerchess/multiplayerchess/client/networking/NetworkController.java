@@ -105,8 +105,8 @@ public class NetworkController implements AutoCloseable {
      * Start the network controller.
      */
     public void start() {
-        listener.start();
         writer.start();
+        listener.start();
     }
 
     /**
@@ -174,7 +174,7 @@ public class NetworkController implements AutoCloseable {
      * @param listener The listener to use
      */
     private void setListener(SocketMessageListener listener) {
-        // Not in the constructor so that we can give it a callback from the network controller
+        // Not in the constructor so that we can give it a callback from the network controller itself
         this.listener = listener;
     }
 

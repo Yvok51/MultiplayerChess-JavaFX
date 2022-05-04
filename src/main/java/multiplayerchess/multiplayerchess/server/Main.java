@@ -1,15 +1,12 @@
 package multiplayerchess.multiplayerchess.server;
 
+import multiplayerchess.multiplayerchess.common.messages.MessageType;
 import multiplayerchess.multiplayerchess.common.networking.Networking;
-import multiplayerchess.multiplayerchess.common.messages.ClientMessage;
-import multiplayerchess.multiplayerchess.common.messages.JoinMatchMessage;
-import multiplayerchess.multiplayerchess.common.messages.StartGameMessage;
-import multiplayerchess.multiplayerchess.server.networking.JoinMatchThread;
 import multiplayerchess.multiplayerchess.server.networking.MatchesMap;
-import multiplayerchess.multiplayerchess.server.networking.StartMatchThread;
+import multiplayerchess.multiplayerchess.server.networking.PlayerConnectionController;
+import multiplayerchess.multiplayerchess.server.networking.PreMatchController;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -53,23 +50,17 @@ public class Main {
      */
     public static void dispatchMessage(Socket socket, MatchesMap controllers) {
         try {
-            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-            ClientMessage message = (ClientMessage) inputStream.readObject();
+            PlayerConnectionController controller = PlayerConnectionController.createController(socket);
 
-            if (message instanceof StartGameMessage) {
-                new Thread(new StartMatchThread(socket, controllers)).start();
-            } else if (message instanceof JoinMatchMessage joinMatchMessage) {
-                new Thread(new JoinMatchThread(socket, controllers, joinMatchMessage)).start();
-            } else {
-                SafePrint.printErr("Unexpected message"); // maybe start a new thread which sends an error message back
-            }
+            PreMatchController preMatchController = new PreMatchController(controller, controllers);
+
+            controller.addCallback(MessageType.START_GAME, preMatchController::startMatch);
+            controller.addCallback(MessageType.JOIN_GAME, preMatchController::joinMatch);
+
+            controller.start();
         }
         catch (IOException e) {
             SafePrint.printErr("Connection failed");
-            SafePrint.printErr(e.getMessage());
-        }
-        catch (ClassNotFoundException e) {
-            SafePrint.printErr("Input Messages have unknown format");
             SafePrint.printErr(e.getMessage());
         }
     }

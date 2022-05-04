@@ -74,6 +74,11 @@ public class PlayerConnectionController implements AutoCloseable {
     }
 
     /**
+     * Remove all callbacks
+     */
+    public synchronized void clearAllCallbacks() { callbackMap.clearAllCallbacks(); }
+
+    /**
      * Start the network controller.
      */
     public void start() {

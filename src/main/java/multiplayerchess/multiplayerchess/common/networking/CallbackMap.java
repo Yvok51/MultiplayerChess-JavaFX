@@ -47,6 +47,18 @@ public class CallbackMap<T, V> {
         callbackMap.remove(type);
     }
 
+    /**
+     * Remove all callbacks.
+     */
+    public void clearAllCallbacks() {
+        callbackMap.clear();
+    }
+
+    /**
+     * Get a list of all callbacks for the given type.
+     * @param type The type of message to get the callbacks for
+     * @return A list of callbacks for the given type
+     */
     public List<V> getCallbacks(T type) {
         var callbacks = callbackMap.get(type);
         if (callbacks != null) {
