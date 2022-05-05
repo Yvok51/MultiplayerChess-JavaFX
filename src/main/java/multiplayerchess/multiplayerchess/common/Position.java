@@ -31,6 +31,7 @@ public final class Position implements Serializable {
      * @param column The column of the position in chess notation.
      */
     public Position(int row, Character column) {
+        column = Character.toLowerCase(column);
         if (column < 'a' || column > 'h') {
             throw new IllegalArgumentException("Column out of range");
         }
@@ -49,7 +50,7 @@ public final class Position implements Serializable {
         }
 
         this.column = position.charAt(0) - 'a';
-        this.row = Integer.parseInt(position, 1, 2, 10);
+        this.row = Integer.parseInt(position, 1, 2, 10) - 1;
     }
 
     /**
