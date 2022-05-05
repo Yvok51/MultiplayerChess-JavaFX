@@ -6,7 +6,6 @@ import multiplayerchess.multiplayerchess.server.controller.Match;
 import multiplayerchess.multiplayerchess.server.controller.Move;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -18,6 +17,7 @@ public final class MatchController extends Thread {
     private PlayerConnectionController whitePlayerController;
     private PlayerConnectionController blackPlayerController;
     private final AtomicBoolean gameOngoing;
+    private final AtomicBoolean gameStarted;
 
     /**
      * The MatchController constructor
@@ -31,6 +31,7 @@ public final class MatchController extends Thread {
         bothPlayersPresentLatch = new CountDownLatch(1);
         this.matchID = matchID;
         gameOngoing = new AtomicBoolean(true);
+        gameStarted = new AtomicBoolean(false);
         this.controllers = controllers;
     }
 
@@ -51,7 +52,7 @@ public final class MatchController extends Thread {
      */
     @Override
     public void run() {
-        while (hasOpenSpot()) {
+        while (!gameStarted.get()) {
             try {
                 bothPlayersPresentLatch.await();
             }
@@ -59,9 +60,7 @@ public final class MatchController extends Thread {
             }
         }
 
-        broadcastMessage(new OpponentConnectedMessage());
-
-        final long fiveSeconds = 5000;
+        final long fiveSeconds = 5_000;
         while (gameOngoing.get()) {
             broadcastMessage(new HeartbeatMessage(matchID));
 
@@ -101,7 +100,6 @@ public final class MatchController extends Thread {
             whitePlayerController = playerController;
             whitePlayerController.addCallback(MessageType.RESIGNED, this::playerResignedHandler);
             whitePlayerController.addCallback(MessageType.TURN, this::playerTurnHandler);
-            whitePlayerController.start();
 
             return Player.WHITE;
         }
@@ -109,10 +107,8 @@ public final class MatchController extends Thread {
             blackPlayerController = playerController;
             blackPlayerController.addCallback(MessageType.RESIGNED, this::playerResignedHandler);
             blackPlayerController.addCallback(MessageType.TURN, this::playerTurnHandler);
-            blackPlayerController.start();
+            blackPlayerController.addCallback(MessageType.JOIN_GAME, this::joinedPlayerHasAcknowledgedConnectionHandler);
 
-            // When both players are present -> wake up the thread waiting in the run method
-            bothPlayersPresentLatch.countDown();
             return Player.BLACK;
         }
 
@@ -154,7 +150,15 @@ public final class MatchController extends Thread {
         else {
             sendMessage(reply, player);
         }
+    }
 
+    private void joinedPlayerHasAcknowledgedConnectionHandler(Message message) {
+        broadcastMessage(new OpponentConnectedMessage());
+        blackPlayerController.removeCallback(MessageType.JOIN_GAME, this::joinedPlayerHasAcknowledgedConnectionHandler);
+
+        // When both players are present -> wake up the thread waiting in the run method and start sending heartbeat messages
+        gameStarted.set(true);
+        bothPlayersPresentLatch.countDown();
     }
 
     /**

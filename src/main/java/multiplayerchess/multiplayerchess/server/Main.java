@@ -28,27 +28,24 @@ public class Main {
                 try {
                     Socket socket = serverSocket.accept();
                     SafePrint.print("Connection accepted");
-                    dispatchMessage(socket, controllers);
-                    // SafePrint.print("Connection dispatched");
+                    startConnection(socket, controllers);
                 }
                 catch (IOException e) {
-                    SafePrint.print("Client unexpectedly disconnected");
-                    SafePrint.print(e.getMessage());
+                    SafePrint.print("Client unexpectedly disconnected: " + e.getMessage());
                 }
             }
         }
         catch (IOException e) {
-            SafePrint.print("Server unexpectedly crashed");
-            SafePrint.print(e.getMessage());
+            SafePrint.print("Server unexpectedly crashed: " + e.getMessage());
         }
     }
 
     /**
-     * Dispatches the message received from the client to the appropriate handler
-     * @param socket the socket from which the message was received
-     * @param controllers the map of matches
+     * Starts a listener and writer for a client and sets up starting callbacks.
+     * @param socket the socket of the connection
+     * @param controllers the map of match controllers
      */
-    public static void dispatchMessage(Socket socket, MatchesMap controllers) {
+    public static void startConnection(Socket socket, MatchesMap controllers) {
         try {
             PlayerConnectionController controller = PlayerConnectionController.createController(socket);
 

@@ -39,6 +39,7 @@ public class MainMenuController {
             networkController = NetworkController.connect(Networking.SERVER_ADDRESS, Networking.SERVER_PORT);
 
             networkController.addCallback(MessageType.START_GAME, this::startGameReplyHandler);
+            networkController.addCallback(MessageType.CONNECTED, this::opponentConnectedHandler);
             networkController.requestNewMatch();
             networkController.start();
             Utility.addCloseable(networkController);
@@ -75,7 +76,7 @@ public class MainMenuController {
 
     private void startGameReplyHandler(Message message) {
         var reply = (StartGameReplyMessage) message;
-        networkController.clearCallbacks(MessageType.START_GAME);
+        networkController.clearAllCallbacks();
 
         if (reply.success) {
             Platform.runLater(() -> {
@@ -91,7 +92,7 @@ public class MainMenuController {
                 }
 
                 ChessGameController controller = loader.getController();
-                controller.setupController(startedMatch, networkController, stage);
+                controller.setupController(startedMatch, networkController, stage, opponentConnected);
             });
         }
         else {
@@ -99,6 +100,11 @@ public class MainMenuController {
         }
     }
 
+    private void opponentConnectedHandler(Message message) {
+        opponentConnected = true;
+    }
+
+    private boolean opponentConnected = false;
     private Stage stage;
     private NetworkController networkController;
 }

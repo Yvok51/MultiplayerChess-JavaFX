@@ -94,7 +94,9 @@ public class JoinGameController {
                 }
 
                 ChessGameController controller = loader.getController();
-                controller.setupController(startedMatch, networkController, stage);
+                controller.setupController(startedMatch, networkController, stage, true);
+
+                networkController.sendConnectionAcknowledgement();
             });
         }
         else {
@@ -103,7 +105,7 @@ public class JoinGameController {
                 try {
                     networkController.close();
                 } catch (IOException ex) {
-                    ex.printStackTrace(); //TODO: Check that socket is really closed
+                    ex.printStackTrace();
                 }
 
             });

@@ -75,6 +75,8 @@ public class NetworkController implements AutoCloseable {
         sendMessage(new ResignMessage(matchID, player));
     }
 
+    public void sendConnectionAcknowledgement() { sendMessage(new AcknowledgeConnectionMessage()); }
+
     /**
      * Add a callback to be called when a message of the given type is received.
      * @param type The type of message to listen for
@@ -100,6 +102,8 @@ public class NetworkController implements AutoCloseable {
     public synchronized void clearCallbacks(MessageType type) {
         callbackMap.clearCallbacks(type);
     }
+
+    public synchronized void clearAllCallbacks() { callbackMap.clearAllCallbacks(); }
 
     /**
      * Start the network controller.

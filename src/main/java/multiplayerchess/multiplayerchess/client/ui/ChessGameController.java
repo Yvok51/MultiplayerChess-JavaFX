@@ -63,14 +63,16 @@ public class ChessGameController {
      * @param match The match the controller handles.
      * @param networkController The network controller to use.
      */
-    public void setupController(Match match, NetworkController networkController, Stage stage) {
+    public void setupController(Match match, NetworkController networkController, Stage stage, boolean gameUnderWay) {
         this.networkController = networkController;
         this.match = match;
 
         networkController.addCallback(MessageType.TURN, this::turnHandler);
         networkController.addCallback(MessageType.RESIGNED, this::opponentResignedHandler);
         networkController.addCallback(MessageType.DISCONNECTED, this::opponentDisconnectedHandler);
-        networkController.addCallback(MessageType.CONNECTED, this::opponentJoinedHandler);
+        if (!gameUnderWay) {
+            networkController.addCallback(MessageType.CONNECTED, this::opponentJoinedHandler);
+        }
 
         board = new UIBoard(match.getPlayer(), this);
         board.setupBoard(match.getBoard());
@@ -102,6 +104,10 @@ public class ChessGameController {
         this.newTurn();
         matchIDLabel.setText("Match ID: " + match.getMatchID());
 
+        // TODO: This is ugly.
+        if (gameUnderWay) {
+            opponentJoinedHandler(null);
+        }
     }
 
     public void opponentResignedHandler(Message message) {
