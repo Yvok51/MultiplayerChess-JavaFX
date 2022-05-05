@@ -1,7 +1,9 @@
 package multiplayerchess.multiplayerchess.client.controller;
 
 import multiplayerchess.multiplayerchess.client.controller.parsing.FENParser;
+import multiplayerchess.multiplayerchess.common.PieceType;
 import multiplayerchess.multiplayerchess.common.Player;
+import multiplayerchess.multiplayerchess.common.Position;
 
 /**
  * This class represents a match between two players.
@@ -13,6 +15,8 @@ public final class Match {
     private final String matchID;
     private Board board;
     private boolean ourTurn;
+    private Position enPassant;
+    // TODO: add last move
 
     /**
      * Constructor for a match.
@@ -27,6 +31,7 @@ public final class Match {
         this.ourTurn = player == playerOnTurn;
         this.player = player;
         this.matchID = matchID;
+        this.enPassant = FENParser.getEnPassant(startingFEN);
     }
 
     /**
@@ -66,12 +71,25 @@ public final class Match {
     }
 
     /**
+     * Answers whether the move is a capturing move.
+     *
+     * @param pieceType The type of the piece that is moving.
+     * @param start The start position of the piece.
+     * @param end The end position of the piece.
+     * @return Whether the move is a capturing move.
+     */
+    public boolean isCapture(PieceType pieceType, Position start, Position end) {
+        return board.getPiece(end) != null || (pieceType == PieceType.PAWN && enPassant != null && enPassant.equals(end));
+    }
+
+    /**
      * Update the board to reflect the given FEN string.
      *
      * @param FEN The FEN string to update the board to.
      */
     public void nextTurn(String FEN) {
         ourTurn = !ourTurn;
+        enPassant = FENParser.getEnPassant(FEN);
         board = new Board(FEN);
     }
 }

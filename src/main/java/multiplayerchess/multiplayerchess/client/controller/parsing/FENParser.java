@@ -5,6 +5,7 @@ import multiplayerchess.multiplayerchess.client.controller.pieces.*;
 import multiplayerchess.multiplayerchess.common.BaseFENParser;
 import multiplayerchess.multiplayerchess.common.Color;
 import multiplayerchess.multiplayerchess.common.Player;
+import multiplayerchess.multiplayerchess.common.Position;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -70,5 +71,9 @@ public class FENParser {
 
     public static Player getCurrentPlayer(String FEN) {
         return BaseFENParser.getCurrentPlayer(FEN);
+    }
+
+    public static Position getEnPassant(String FEN) {
+        return BaseFENParser.getEnPassant(FEN);
     }
 }

@@ -13,6 +13,8 @@ import multiplayerchess.multiplayerchess.client.controller.Match;
 import multiplayerchess.multiplayerchess.client.controller.Move;
 import multiplayerchess.multiplayerchess.client.controller.Winner;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
+import multiplayerchess.multiplayerchess.common.PieceType;
+import multiplayerchess.multiplayerchess.common.Position;
 import multiplayerchess.multiplayerchess.common.messages.Message;
 import multiplayerchess.multiplayerchess.common.messages.MessageType;
 import multiplayerchess.multiplayerchess.common.messages.TurnReplyMessage;
@@ -172,6 +174,17 @@ public class ChessGameController {
 
         popupButton.setVisible(false);
         popupButton.setDisable(true);
+    }
+
+    /**
+     * Answers whether the move is a capturing move.
+     * @param type The type of the piece being moved.
+     * @param start The starting position of the piece.
+     * @param end The ending position of the piece.
+     * @return True if the move is a capturing move, false otherwise.
+     */
+    public boolean isCapture(PieceType type, Position start, Position end) {
+        return match.isCapture(type, start, end);
     }
 
     /**

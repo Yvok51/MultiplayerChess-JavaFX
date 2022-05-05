@@ -5,6 +5,7 @@ import multiplayerchess.multiplayerchess.client.controller.Board;
 import multiplayerchess.multiplayerchess.client.controller.Move;
 import multiplayerchess.multiplayerchess.common.Color;
 import multiplayerchess.multiplayerchess.common.Player;
+import multiplayerchess.multiplayerchess.common.Position;
 
 /**
  * The UIBoard class is responsible for displaying the board and the pieces.
@@ -93,9 +94,11 @@ public class UIBoard extends GridPane {
                 return;
             }
 
-            boolean isCapture = fields[row][column].getPiece() != null;
-            Move move = new Move(selectedField.getRow(), selectedField.getColumn(), row, column,
-                    selectedField.getPiece().getPieceType(), isCapture);
+            Position start = new Position(selectedField.getRow(), selectedField.getColumn());
+            Position end = new Position(row, column);
+            boolean isCapture = controller.isCapture(selectedField.getPiece().getPieceType(), start, end);
+
+            Move move = new Move(start, end, selectedField.getPiece().getPieceType(), isCapture);
             controller.movePiece(move);
 
         } else {
