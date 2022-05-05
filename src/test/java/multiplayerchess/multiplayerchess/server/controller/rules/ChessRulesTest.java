@@ -1,13 +1,11 @@
 package multiplayerchess.multiplayerchess.server.controller.rules;
 
-import com.sun.javafx.font.CompositeStrike;
-import javafx.geometry.Pos;
-import multiplayerchess.multiplayerchess.client.controller.parsing.FENParser;
 import multiplayerchess.multiplayerchess.common.PieceType;
 import multiplayerchess.multiplayerchess.common.Player;
 import multiplayerchess.multiplayerchess.common.Position;
 import multiplayerchess.multiplayerchess.server.controller.Board;
 import multiplayerchess.multiplayerchess.server.controller.Move;
+import multiplayerchess.multiplayerchess.server.controller.parsing.FENParser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +40,8 @@ class ChessRulesTest {
         Board board = new Board(enPassantFEN);
         Move enPassant = new Move(PieceType.PAWN, new Position(4, 4), new Position(5, 5), true);
 
-        assertTrue(chessRules.isMoveValid(board, enPassant, Player.WHITE, FENParser., Set.of()));
+        boolean isValid = chessRules.isMoveValid(board, enPassant, Player.WHITE, FENParser.getEnPassant(enPassantFEN), Set.of());
+        assertTrue(isValid);
     }
 
     @Test
