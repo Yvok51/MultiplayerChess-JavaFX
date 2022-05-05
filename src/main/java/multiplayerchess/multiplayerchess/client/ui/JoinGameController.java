@@ -9,10 +9,10 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import multiplayerchess.multiplayerchess.client.controller.Match;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
-import multiplayerchess.multiplayerchess.common.messages.Message;
-import multiplayerchess.multiplayerchess.common.networking.Networking;
 import multiplayerchess.multiplayerchess.common.messages.JoinMatchReplyMessage;
+import multiplayerchess.multiplayerchess.common.messages.Message;
 import multiplayerchess.multiplayerchess.common.messages.MessageType;
+import multiplayerchess.multiplayerchess.common.networking.Networking;
 
 import java.io.IOException;
 
@@ -26,9 +26,12 @@ public class JoinGameController {
 
     @FXML
     private Label errorLabel;
+    private NetworkController networkController;
+    private Stage stage;
 
     /**
      * Get the file path of the FXML file for this controller's scene.
+     *
      * @return The file path of the FXML file for this controller's scene.
      */
     public static String getFXMLFile() {
@@ -42,6 +45,7 @@ public class JoinGameController {
     /**
      * Handler for the join game button.
      * Attempts to join the game with the given match ID.
+     *
      * @param e The click event.
      */
     public void onJoinGame(ActionEvent e) {
@@ -54,7 +58,8 @@ public class JoinGameController {
             networkController.requestJoinMatch(matchID);
             networkController.start();
             Utility.addCloseable(networkController);
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             ex.printStackTrace();
             Platform.exit();
         }
@@ -63,6 +68,7 @@ public class JoinGameController {
     /**
      * Handler for the back button.
      * Returns the user to the main menu.
+     *
      * @param e The click event.
      */
     public void onBack(ActionEvent e) {
@@ -70,7 +76,8 @@ public class JoinGameController {
             FXMLLoader loader = Utility.loadNewScene(e, MainMenuController.getFXMLFile());
             MainMenuController controller = loader.getController();
             controller.setupController(stage);
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             ex.printStackTrace();
             Platform.exit();
         }
@@ -98,20 +105,17 @@ public class JoinGameController {
 
                 networkController.sendConnectionAcknowledgement();
             });
-        }
-        else {
+        } else {
             Platform.runLater(() -> {
                 errorLabel.setText("Game Not Found");
                 try {
                     networkController.close();
-                } catch (IOException ex) {
+                }
+                catch (IOException ex) {
                     ex.printStackTrace();
                 }
 
             });
         }
     }
-
-    private NetworkController networkController;
-    private Stage stage;
 }

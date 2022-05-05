@@ -54,6 +54,7 @@ public class FENParser {
 
     /**
      * Parses the FEN string into a board.
+     *
      * @param FEN The FEN string to parse and create a board from.
      * @return The board created from the FEN string.
      */
@@ -84,6 +85,7 @@ public class FENParser {
 
     /**
      * Get the player from the FEN string.
+     *
      * @param FEN The FEN string to parse.
      * @return The player parsed from the FEN string.
      */
@@ -95,6 +97,7 @@ public class FENParser {
 
     /**
      * Get the number of moves from the FEN string.
+     *
      * @param FEN The FEN string to parse.
      * @return The move count parsed from the FEN string.
      */
@@ -106,6 +109,7 @@ public class FENParser {
 
     /**
      * Get the number of half-moves from the FEN string.
+     *
      * @param FEN The FEN string to parse.
      * @return The half-move number parsed from the FEN string.
      */
@@ -117,6 +121,7 @@ public class FENParser {
 
     /**
      * Get the en passant tile from the FEN string.
+     *
      * @param FEN The FEN string to parse.
      * @return The en passant tile from the FEN string.
      */
@@ -128,12 +133,13 @@ public class FENParser {
 
     /**
      * Create a FEN string from the given state of the match
-     * @param board The board situation in the match
-     * @param currentPlayer The player whose turn it is
+     *
+     * @param board            The board situation in the match
+     * @param currentPlayer    The player whose turn it is
      * @param possibleCastling The possible castling options
-     * @param halfmoveClock The number of halfmoves since the last pawn move or capture
-     * @param moves The number of full moves since the start of the game
-     * @param enpassant The enpassant square
+     * @param halfmoveClock    The number of halfmoves since the last pawn move or capture
+     * @param moves            The number of full moves since the start of the game
+     * @param enpassant        The enpassant square
      * @return The FEN string
      */
     public static String FENStringFromBoard(
@@ -180,8 +186,9 @@ public class FENParser {
 
     /**
      * Add the board to the string builder
+     *
      * @param builder The string builder to add the board to
-     * @param board The board to add
+     * @param board   The board to add
      */
     private static void addBoardToBuilder(StringBuilder builder, Board board) {
         for (int rank = Board.MaxBoardRow; rank >= Board.MinBoardRow; --rank) {

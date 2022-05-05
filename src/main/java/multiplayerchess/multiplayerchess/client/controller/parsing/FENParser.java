@@ -1,9 +1,9 @@
 package multiplayerchess.multiplayerchess.client.controller.parsing;
 
+import multiplayerchess.multiplayerchess.client.controller.Board;
 import multiplayerchess.multiplayerchess.client.controller.pieces.*;
 import multiplayerchess.multiplayerchess.common.Color;
 import multiplayerchess.multiplayerchess.common.Player;
-import multiplayerchess.multiplayerchess.client.controller.Board;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,8 +54,7 @@ public class FENParser {
                         char secondDigit = fenBoard.charAt(i);
                         char originalChar = (char) (Character.digit(c, 10) * 10 + Character.digit(secondDigit, 10));
                         file += Character.digit(originalChar, 10);
-                    }
-                    else {
+                    } else {
                         file += Character.digit(c, 10);
                     }
                 } else {

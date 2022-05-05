@@ -15,6 +15,7 @@ public class Pawn extends Piece {
     public String getIconFilename() {
         return color == Color.WHITE ? whiteIconFilename : blackIconFilename;
     }
+
     @Override
     public PieceType getPieceType() {
         return PieceType.PAWN;

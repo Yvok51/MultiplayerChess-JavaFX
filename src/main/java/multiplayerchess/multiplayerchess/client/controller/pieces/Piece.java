@@ -10,6 +10,7 @@ public abstract class Piece {
 
     /**
      * Piece constructor
+     *
      * @param color the color of the piece
      */
     public Piece(Color color) {
@@ -18,18 +19,21 @@ public abstract class Piece {
 
     /**
      * Returns the path to the image of the piece
+     *
      * @return the path to the image of the piece
      */
     public abstract String getIconFilename();
 
     /**
      * Returns the type of the piece
+     *
      * @return the type of the piece
      */
     public abstract PieceType getPieceType();
 
     /**
      * Returns the color of the piece
+     *
      * @return the color of the piece
      */
     public Color getColor() {

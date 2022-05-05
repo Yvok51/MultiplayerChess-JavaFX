@@ -9,16 +9,17 @@ import multiplayerchess.multiplayerchess.common.Player;
 public final class Match {
     // public static final String NormalStartingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-    private Board board;
-    private boolean ourTurn;
     private final Player player;
     private final String matchID;
+    private Board board;
+    private boolean ourTurn;
 
     /**
      * Constructor for a match.
+     *
      * @param startingFEN The FEN string of the board.
-     * @param player Which player we are playing as.
-     * @param matchID The ID of the match.
+     * @param player      Which player we are playing as.
+     * @param matchID     The ID of the match.
      */
     public Match(String startingFEN, Player player, String matchID) {
         board = new Board(startingFEN);
@@ -30,6 +31,7 @@ public final class Match {
 
     /**
      * Returns the player who we are playing as.
+     *
      * @return The player who we are playing as.
      */
     public Player getPlayer() {
@@ -38,6 +40,7 @@ public final class Match {
 
     /**
      * Returns the board of the match.
+     *
      * @return The board of the match.
      */
     public Board getBoard() {
@@ -46,18 +49,25 @@ public final class Match {
 
     /**
      * Returns the ID of the match.
+     *
      * @return The ID of the match.
      */
-    public String getMatchID() { return matchID; }
+    public String getMatchID() {
+        return matchID;
+    }
 
     /**
      * Returns whether it is our turn.
+     *
      * @return Whether it is our turn.
      */
-    public boolean isOurTurn() { return ourTurn; }
+    public boolean isOurTurn() {
+        return ourTurn;
+    }
 
     /**
      * Update the board to reflect the given FEN string.
+     *
      * @param FEN The FEN string to update the board to.
      */
     public void nextTurn(String FEN) {

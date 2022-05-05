@@ -19,6 +19,7 @@ public class MatchesMap {
 
     /**
      * Adds a new match to the map.
+     *
      * @param matchID The ID of the match.
      * @return The controller of the match.
      */
@@ -30,6 +31,7 @@ public class MatchesMap {
 
     /**
      * Answers whether the match exists
+     *
      * @param matchID The ID of the match.
      * @return True if the match exists, false otherwise.
      */
@@ -39,6 +41,7 @@ public class MatchesMap {
 
     /**
      * Gets the match controller of the given match ID.
+     *
      * @param matchID The ID of the match.
      * @return The match controller with the given match ID.
      */
@@ -48,6 +51,7 @@ public class MatchesMap {
 
     /**
      * Disposes the match controller of the given match ID.
+     *
      * @param matchID The ID of the match to dispose of.
      */
     public synchronized void matchEnded(String matchID) {

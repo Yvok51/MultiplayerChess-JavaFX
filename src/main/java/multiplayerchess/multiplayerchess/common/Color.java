@@ -9,6 +9,7 @@ public enum Color {
 
     /**
      * Get the Player who is associated with this color.
+     *
      * @return The Player who is associated with this color.
      */
     public Player getPlayer() {

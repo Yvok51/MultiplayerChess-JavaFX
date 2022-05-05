@@ -15,7 +15,8 @@ public final class Position implements Serializable {
 
     /**
      * Position constructor from the zero indexed row and column.
-     * @param row The row of the position.
+     *
+     * @param row    The row of the position.
      * @param column The column of the position.
      */
     public Position(int row, int column) {
@@ -25,7 +26,8 @@ public final class Position implements Serializable {
 
     /**
      * Position constructor from parsed chess notation.
-     * @param row The row of the position.
+     *
+     * @param row    The row of the position.
      * @param column The column of the position in chess notation.
      */
     public Position(int row, Character column) {
@@ -38,6 +40,7 @@ public final class Position implements Serializable {
 
     /**
      * Position constructor from the chess notation.
+     *
      * @param position The position in chess notation.
      */
     public Position(String position) {
@@ -51,6 +54,7 @@ public final class Position implements Serializable {
 
     /**
      * Get this position in chess notation.
+     *
      * @return The position in chess notation.
      */
     public String getNotation() {
@@ -62,6 +66,7 @@ public final class Position implements Serializable {
 
     /**
      * Override equals to compare two positions.
+     *
      * @param o The object to compare to.
      * @return Whether the object o is a position equal to this Position.
      */
@@ -80,6 +85,7 @@ public final class Position implements Serializable {
 
     /**
      * Override hashCode.
+     *
      * @return The hashcode of this object.
      */
     @Override

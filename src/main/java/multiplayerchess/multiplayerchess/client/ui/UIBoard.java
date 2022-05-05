@@ -9,20 +9,21 @@ import multiplayerchess.multiplayerchess.common.Player;
 /**
  * The UIBoard class is responsible for displaying the board and the pieces.
  */
-public class UIBoard extends GridPane  {
+public class UIBoard extends GridPane {
 
     private static final int CHESSBOARD_ROW_SIZE = 8;
     private static final int CHESSBOARD_COLUMN_SIZE = 8;
 
     private final UIBoardField[][] fields = new UIBoardField[CHESSBOARD_ROW_SIZE][CHESSBOARD_COLUMN_SIZE];
-    private UIBoardField selectedField = null;
     private final Player player;
     private final ChessGameController controller;
+    private UIBoardField selectedField = null;
 
     /**
      * The UI board constructor.
+     *
      * @param currentPlayer Which player are we
-     * @param controller The controller of the game
+     * @param controller    The controller of the game
      */
     public UIBoard(Player currentPlayer, ChessGameController controller) {
         super();
@@ -53,6 +54,7 @@ public class UIBoard extends GridPane  {
 
     /**
      * Updates the UI board with the given board.
+     *
      * @param board the board to be updated to
      */
     public void setupBoard(Board board) {
@@ -60,8 +62,7 @@ public class UIBoard extends GridPane  {
             for (int y = 0; y < CHESSBOARD_COLUMN_SIZE; ++y) {
                 if (board.getPiece(x, y) != null) {
                     fields[x][y].setPiece(board.getPiece(x, y));
-                }
-                else {
+                } else {
                     fields[x][y].releasePiece();
                 }
             }
@@ -72,7 +73,8 @@ public class UIBoard extends GridPane  {
      * Handles the click on a field.
      * Selects the field if it is not already selected. Deselects the field if it is already selected.
      * Moves the piece if we think a move is possible.
-     * @param row the row of the field
+     *
+     * @param row    the row of the field
      * @param column the column of the field
      */
     private void onFieldClick(int row, int column) {
@@ -84,8 +86,7 @@ public class UIBoard extends GridPane  {
             if (clickedField.getPieceColor() == selectedField.getPieceColor()) {
                 if (clickedField == selectedField) {
                     this.deselectField();
-                }
-                else {
+                } else {
                     this.setSelectedField(clickedField); // change the focus
                 }
 
@@ -106,6 +107,7 @@ public class UIBoard extends GridPane  {
 
     /**
      * Sets the selected field.
+     *
      * @param selectedField the field to be selected
      */
     private void setSelectedField(UIBoardField selectedField) {

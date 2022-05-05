@@ -6,6 +6,7 @@ package multiplayerchess.multiplayerchess.server;
 public class SafePrint {
     /**
      * Print to standard output thread-safely.
+     *
      * @param s String to print.
      */
     public static synchronized void print(String s) {
@@ -14,6 +15,7 @@ public class SafePrint {
 
     /**
      * Print to standard error thread-safely.
+     *
      * @param s String to print.
      */
     public static synchronized void printErr(String s) {

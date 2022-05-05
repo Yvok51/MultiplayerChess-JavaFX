@@ -19,8 +19,9 @@ public class SocketMessageListener extends Thread {
 
     /**
      * SocketMessageListener constructor.
+     *
      * @param inputStream the input stream to listen on.
-     * @param callback the callback to call when a message is received.
+     * @param callback    the callback to call when a message is received.
      */
     public SocketMessageListener(InputStream inputStream, Consumer<Message> callback) {
         running = true;
@@ -56,7 +57,10 @@ public class SocketMessageListener extends Thread {
 
     /**
      * Answers whether the listener is still running.
+     *
      * @return Whether the listener is still running.
      */
-    public boolean isRunning() { return running; }
+    public boolean isRunning() {
+        return running;
+    }
 }

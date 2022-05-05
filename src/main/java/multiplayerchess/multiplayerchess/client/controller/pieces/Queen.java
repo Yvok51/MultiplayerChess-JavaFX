@@ -15,6 +15,7 @@ public class Queen extends Piece {
     public String getIconFilename() {
         return color == Color.WHITE ? whiteIconFilename : blackIconFilename;
     }
+
     @Override
     public PieceType getPieceType() {
         return PieceType.QUEEN;

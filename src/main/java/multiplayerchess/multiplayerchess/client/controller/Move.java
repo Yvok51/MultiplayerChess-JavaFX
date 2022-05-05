@@ -14,9 +14,10 @@ public final class Move {
 
     /**
      * The move constructor
-     * @param oldRow the old row position of the piece
+     *
+     * @param oldRow    the old row position of the piece
      * @param oldColumn the old column position of the piece
-     * @param newRow the new row position of the piece
+     * @param newRow    the new row position of the piece
      * @param newColumn the new column position of the piece
      * @param pieceType the type of piece that is moving
      * @param isCapture whether the move is a capture
@@ -30,10 +31,11 @@ public final class Move {
 
     /**
      * The move constructor
+     *
      * @param startPosition the start position of the move
-     * @param endPosition the end position of the move
-     * @param pieceType the type of piece that is moving
-     * @param isCapture whether the move is a capture
+     * @param endPosition   the end position of the move
+     * @param pieceType     the type of piece that is moving
+     * @param isCapture     whether the move is a capture
      */
     public Move(Position startPosition, Position endPosition, PieceType pieceType, boolean isCapture) {
         this.pieceType = pieceType;
@@ -44,6 +46,7 @@ public final class Move {
 
     /**
      * Returns the start position of the move
+     *
      * @return the start position of the move
      */
     public Position getStartPosition() {
@@ -52,6 +55,7 @@ public final class Move {
 
     /**
      * Returns the end position of the move
+     *
      * @return the end position of the move
      */
     public Position getEndPosition() {
@@ -60,13 +64,19 @@ public final class Move {
 
     /**
      * Returns the type of piece that is moving
+     *
      * @return the type of piece that is moving
      */
-    public PieceType getPieceType() { return pieceType; }
+    public PieceType getPieceType() {
+        return pieceType;
+    }
 
     /**
      * Returns whether the move is a capture
+     *
      * @return whether the move is a capture
      */
-    public boolean isCapture() { return isCapture; }
+    public boolean isCapture() {
+        return isCapture;
+    }
 }

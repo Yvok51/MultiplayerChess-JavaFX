@@ -23,7 +23,8 @@ public class PreMatchController {
 
     /**
      * The StartMatchThread constructor.
-     * @param controller The controller handling the player connection
+     *
+     * @param controller    The controller handling the player connection
      * @param controllerMap The map of match controllers to add the newly created match.
      */
     public PreMatchController(PlayerConnectionController controller, MatchesMap controllerMap) {
@@ -84,6 +85,7 @@ public class PreMatchController {
 
         /**
          * Constructor for the RandomStringGenerator.
+         *
          * @param availableCharacters The characters to generate the string from.
          */
         public RandomStringGenerator(String availableCharacters) {
@@ -93,6 +95,7 @@ public class PreMatchController {
 
         /**
          * Generates a random string of a given length.
+         *
          * @param length The length of the string to generate.
          * @return The generated string.
          */
@@ -111,6 +114,7 @@ public class PreMatchController {
 
         /**
          * Generates a random character.
+         *
          * @return The generated character.
          */
         private char nextChar() {

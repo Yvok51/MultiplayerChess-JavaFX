@@ -17,6 +17,7 @@ public final class Board {
 
     /**
      * The board constructor. Initializes the board with the given FEN string.
+     *
      * @param startingFEN The FEN string to initialize the board with
      */
     public Board(String startingFEN) {

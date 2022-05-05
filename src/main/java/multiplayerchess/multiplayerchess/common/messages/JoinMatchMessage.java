@@ -14,5 +14,7 @@ public final class JoinMatchMessage extends ClientMessage implements Serializabl
     }
 
     @Override
-    public MessageType getType() { return MessageType.JOIN_GAME; }
+    public MessageType getType() {
+        return MessageType.JOIN_GAME;
+    }
 }

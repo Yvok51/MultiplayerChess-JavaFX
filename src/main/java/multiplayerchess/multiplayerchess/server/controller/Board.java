@@ -17,6 +17,7 @@ public final class Board {
 
     /**
      * The board constructor
+     *
      * @param startingFEN The FEN to parse the board from
      */
     public Board(String startingFEN) {

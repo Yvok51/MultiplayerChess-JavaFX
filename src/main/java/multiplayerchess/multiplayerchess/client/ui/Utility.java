@@ -14,13 +14,14 @@ import java.util.*;
 
 public class Utility {
 
-    public static String css;
     // The map of all the images
     private final static Map<String, Image> pieceImages = new HashMap<>();
-    private static List<AutoCloseable> closeables = new ArrayList<>();
+    public static String css;
+    private static final List<AutoCloseable> closeables = new ArrayList<>();
 
     /**
      * Gets the image for a given piece.
+     *
      * @param piece The piece to get the image for.
      * @return The image for the piece.
      */
@@ -56,7 +57,8 @@ public class Utility {
 
     /**
      * Loads a new scene and sets the stage to the new scene.
-     * @param e The event that triggered the load.
+     *
+     * @param e        The event that triggered the load.
      * @param FXMLFile The FXML file to load.
      * @return The FXMLLoader for the new scene.
      * @throws IOException If the FXML file could not be loaded.
@@ -68,7 +70,8 @@ public class Utility {
 
     /**
      * Loads a new scene and sets the stage to the new scene.
-     * @param stage The stage to set the new scene to.
+     *
+     * @param stage    The stage to set the new scene to.
      * @param FXMLFile The FXML file to load.
      * @return The FXMLLoader for the new scene.
      * @throws IOException If the FXML file could not be loaded.

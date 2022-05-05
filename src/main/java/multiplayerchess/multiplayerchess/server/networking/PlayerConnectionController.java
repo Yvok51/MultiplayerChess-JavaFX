@@ -1,6 +1,8 @@
 package multiplayerchess.multiplayerchess.server.networking;
 
-import multiplayerchess.multiplayerchess.common.messages.*;
+import multiplayerchess.multiplayerchess.common.messages.Message;
+import multiplayerchess.multiplayerchess.common.messages.MessageType;
+import multiplayerchess.multiplayerchess.common.messages.ServerMessage;
 import multiplayerchess.multiplayerchess.common.networking.CallbackMap;
 import multiplayerchess.multiplayerchess.common.networking.MessageQueue;
 import multiplayerchess.multiplayerchess.common.networking.SocketMessageListener;
@@ -13,6 +15,23 @@ import java.util.function.Consumer;
 
 
 public class PlayerConnectionController implements AutoCloseable {
+
+    private final Socket playerSocket;
+    private final AtomicBoolean heartbeatOccurredFlag;
+    private final CallbackMap<MessageType, Consumer<Message>> callbackMap;
+    private final Consumer<Message> heartbeatCallback;
+    private SocketMessageWriter<ServerMessage> writer;
+    private SocketMessageListener listener;
+    private MessageQueue<ServerMessage> messageQueue;
+
+    private PlayerConnectionController(Socket playerSocket) {
+        this.playerSocket = playerSocket;
+        this.callbackMap = new CallbackMap<>();
+        this.heartbeatOccurredFlag = new AtomicBoolean(false);
+        this.heartbeatCallback = (message) -> heartbeatOccurredFlag.set(true);
+        // default heartbeat callback
+        callbackMap.addCallback(MessageType.HEARTBEAT, heartbeatCallback);
+    }
 
     public static PlayerConnectionController createController(Socket playerSocket) throws IOException {
         var controller = new PlayerConnectionController(playerSocket);
@@ -30,6 +49,7 @@ public class PlayerConnectionController implements AutoCloseable {
 
     /**
      * Sends a message to opposite side.
+     *
      * @param message The message to send
      */
     public void sendMessage(ServerMessage message) {
@@ -39,17 +59,23 @@ public class PlayerConnectionController implements AutoCloseable {
     /**
      * Clear the heartbeat occurred flag.
      */
-    public void clearHeartbeat() { heartbeatOccurredFlag.set(false); }
+    public void clearHeartbeat() {
+        heartbeatOccurredFlag.set(false);
+    }
 
     /**
      * Answer whether a heartbeat occurred in the last interval.
+     *
      * @return Whether a heartbeat occurred.
      */
-    public boolean hasHeartbeatOccurred() { return heartbeatOccurredFlag.get(); }
+    public boolean hasHeartbeatOccurred() {
+        return heartbeatOccurredFlag.get();
+    }
 
     /**
      * Add a callback to be called when a message of the given type is received.
-     * @param type The type of message to listen for
+     *
+     * @param type     The type of message to listen for
      * @param callback The callback to call when the message is received
      */
     public synchronized void addCallback(MessageType type, Consumer<Message> callback) {
@@ -58,7 +84,8 @@ public class PlayerConnectionController implements AutoCloseable {
 
     /**
      * Remove a callback from the list of callbacks for the given type.
-     * @param type The type of message to remove the callback from
+     *
+     * @param type     The type of message to remove the callback from
      * @param callback The callback to remove
      */
     public synchronized void removeCallback(MessageType type, Consumer<Message> callback) {
@@ -67,6 +94,7 @@ public class PlayerConnectionController implements AutoCloseable {
 
     /**
      * Remove all callbacks for the given type.
+     *
      * @param type The type of message to remove all callbacks from
      */
     public synchronized void clearCallbacks(MessageType type) {
@@ -96,6 +124,7 @@ public class PlayerConnectionController implements AutoCloseable {
 
     /**
      * Dispose of the network controller's resources.
+     *
      * @throws IOException If an I/O error occurs
      */
     @Override
@@ -111,6 +140,7 @@ public class PlayerConnectionController implements AutoCloseable {
      * The handler for received messages.
      * A unified callback which the listener calls for each message received.
      * It calls the appropriate callbacks for the message type.
+     *
      * @param message The message received
      */
     private synchronized void handleMessage(Message message) {
@@ -121,8 +151,9 @@ public class PlayerConnectionController implements AutoCloseable {
 
     /**
      * Set the writer for the network controller.
+     *
      * @param writer The writer to use
-     * @param queue The queue to use for sending messages to the writer
+     * @param queue  The queue to use for sending messages to the writer
      */
     private void setWriter(SocketMessageWriter<ServerMessage> writer, MessageQueue<ServerMessage> queue) {
         this.writer = writer;
@@ -131,31 +162,12 @@ public class PlayerConnectionController implements AutoCloseable {
 
     /**
      * Set the listener for the network controller.
+     *
      * @param listener The listener to use
      */
     private void setListener(SocketMessageListener listener) {
         // Not in the constructor so that we can give it a callback from the network controller
         this.listener = listener;
     }
-
-    private PlayerConnectionController(Socket playerSocket)
-    {
-        this.playerSocket = playerSocket;
-        this.callbackMap = new CallbackMap<>();
-        this.heartbeatOccurredFlag = new AtomicBoolean(false);
-        this.heartbeatCallback = (message) -> heartbeatOccurredFlag.set(true);
-        // default heartbeat callback
-        callbackMap.addCallback(MessageType.HEARTBEAT, heartbeatCallback);
-    }
-
-    private final Socket playerSocket;
-    private SocketMessageWriter<ServerMessage> writer;
-    private SocketMessageListener listener;
-    private MessageQueue<ServerMessage> messageQueue;
-
-    private final AtomicBoolean heartbeatOccurredFlag;
-
-    private final CallbackMap<MessageType, Consumer<Message>> callbackMap;
-    private final Consumer<Message> heartbeatCallback;
 
 }

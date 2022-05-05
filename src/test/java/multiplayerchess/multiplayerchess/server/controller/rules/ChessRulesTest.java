@@ -24,7 +24,7 @@ class ChessRulesTest {
     private static final String emptyBoardFEN = "8/8/8/8/8/8/8/8 w - - 0 1";
     private static final String beginningFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     private static final String earlyGameFEN = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
-        private static final String midGameFEN = "r4rk1/2p1bpp1/2nqbn1p/4p3/3pP2P/p2P1PPB/2PQN3/R1B1K2R w KQ - 2 19";
+    private static final String midGameFEN = "r4rk1/2p1bpp1/2nqbn1p/4p3/3pP2P/p2P1PPB/2PQN3/R1B1K2R w KQ - 2 19";
     private static final String endGameFEN = "7R/kp2R3/2p5/8/2pPp3/P3P1r1/K1P5/8 w - - 0 52";
 
     @BeforeEach
@@ -33,9 +33,7 @@ class ChessRulesTest {
     }
 
     @AfterEach
-    void tearDown() {
-        chessRules = null;
-    }
+    void tearDown() { chessRules = null; }
 
     @Test
     void isMoveValidWrongMove() {

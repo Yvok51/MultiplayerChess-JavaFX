@@ -9,5 +9,7 @@ public final class StartGameMessage extends ClientMessage implements Serializabl
     static final long serialVersionUID = 0x1234567;
 
     @Override
-    public MessageType getType() { return MessageType.START_GAME; }
+    public MessageType getType() {
+        return MessageType.START_GAME;
+    }
 }

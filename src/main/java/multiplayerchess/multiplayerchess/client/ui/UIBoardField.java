@@ -12,13 +12,14 @@ public class UIBoardField extends Button {
 
     private final int row;
     private final int column;
-    private Piece piece;
     private final Color color;
+    private Piece piece;
 
     /**
      * The UI board field constructor
-     * @param color the color of the field
-     * @param row the row where the field is located
+     *
+     * @param color  the color of the field
+     * @param row    the row where the field is located
      * @param column the column where the field is located
      */
     public UIBoardField(Color color, int row, int column) {
@@ -34,6 +35,7 @@ public class UIBoardField extends Button {
 
     /**
      * Set the field to be highlighted as active or not
+     *
      * @param active true if the field should be highlighted as active
      */
     public void setActive(boolean active) {
@@ -49,6 +51,7 @@ public class UIBoardField extends Button {
 
     /**
      * Release the piece from the field
+     *
      * @return the piece which was on the field
      */
     public Piece releasePiece() {
@@ -59,6 +62,7 @@ public class UIBoardField extends Button {
 
     /**
      * Get the color of the field
+     *
      * @return the color of the field
      */
     public Color getPieceColor() {
@@ -71,6 +75,7 @@ public class UIBoardField extends Button {
 
     /**
      * Check if the field is occupied
+     *
      * @return true if the field is occupied
      */
     public boolean isOccupied() {
@@ -79,6 +84,7 @@ public class UIBoardField extends Button {
 
     /**
      * Get the piece on the field
+     *
      * @return the piece on the field
      */
     public Piece getPiece() {
@@ -87,6 +93,7 @@ public class UIBoardField extends Button {
 
     /**
      * Set the piece on the field
+     *
      * @param piece the piece to set
      */
     public void setPiece(Piece piece) {
@@ -100,6 +107,7 @@ public class UIBoardField extends Button {
 
     /**
      * Get the row of the field
+     *
      * @return the row of the field
      */
     public int getRow() {
@@ -108,6 +116,7 @@ public class UIBoardField extends Button {
 
     /**
      * Get the column of the field
+     *
      * @return the column of the field
      */
     public int getColumn() {
@@ -116,6 +125,7 @@ public class UIBoardField extends Button {
 
     /**
      * Get the default css style which specifies the color of the field
+     *
      * @return the default css style of the field
      */
     private String getDefaultColorStyle() {

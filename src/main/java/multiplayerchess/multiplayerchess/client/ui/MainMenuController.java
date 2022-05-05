@@ -7,9 +7,9 @@ import javafx.stage.Stage;
 import multiplayerchess.multiplayerchess.client.controller.Match;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
 import multiplayerchess.multiplayerchess.common.messages.Message;
-import multiplayerchess.multiplayerchess.common.networking.Networking;
 import multiplayerchess.multiplayerchess.common.messages.MessageType;
 import multiplayerchess.multiplayerchess.common.messages.StartGameReplyMessage;
+import multiplayerchess.multiplayerchess.common.networking.Networking;
 
 import java.io.IOException;
 
@@ -18,8 +18,13 @@ import java.io.IOException;
  */
 public class MainMenuController {
 
+    private boolean opponentConnected = false;
+    private Stage stage;
+    private NetworkController networkController;
+
     /**
      * Get the file path of the FXML file for this controller's scene.
+     *
      * @return The file path of the FXML file for this controller's scene.
      */
     public static String getFXMLFile() {
@@ -32,6 +37,7 @@ public class MainMenuController {
 
     /**
      * Handler for the "Start Game" button.
+     *
      * @param e The click event.
      */
     public void onStartGame(ActionEvent e) {
@@ -45,13 +51,14 @@ public class MainMenuController {
             Utility.addCloseable(networkController);
         }
         catch (IOException ex) {
-           System.err.println(ex.getMessage());
+            System.err.println(ex.getMessage());
             Platform.exit();
         }
     }
 
     /**
      * Handler for the "Join Game" button.
+     *
      * @param e The click event.
      */
     public void onJoinGame(ActionEvent e) {
@@ -68,6 +75,7 @@ public class MainMenuController {
 
     /**
      * Handler for the "Quit" button.
+     *
      * @param e The click event.
      */
     public void onQuit(ActionEvent e) {
@@ -94,8 +102,7 @@ public class MainMenuController {
                 ChessGameController controller = loader.getController();
                 controller.setupController(startedMatch, networkController, stage, opponentConnected);
             });
-        }
-        else {
+        } else {
             //TODO: Signify to the user that the match could not be started
         }
     }
@@ -103,8 +110,4 @@ public class MainMenuController {
     private void opponentConnectedHandler(Message message) {
         opponentConnected = true;
     }
-
-    private boolean opponentConnected = false;
-    private Stage stage;
-    private NetworkController networkController;
 }

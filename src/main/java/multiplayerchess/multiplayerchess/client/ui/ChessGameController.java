@@ -51,6 +51,7 @@ public class ChessGameController {
 
     /**
      * Get the file path of the FXML file for this controller's scene.
+     *
      * @return The file path of the FXML file for this controller's scene.
      */
     public static String getFXMLFile() {
@@ -60,7 +61,8 @@ public class ChessGameController {
     /**
      * Setup this controller
      * Since the JavaFX framework calls the constructor we need to set up the board here.
-     * @param match The match the controller handles.
+     *
+     * @param match             The match the controller handles.
      * @param networkController The network controller to use.
      */
     public void setupController(Match match, NetworkController networkController, Stage stage, boolean gameUnderWay) {
@@ -95,7 +97,8 @@ public class ChessGameController {
                 FXMLLoader loader = Utility.loadNewScene(stage, MainMenuController.getFXMLFile());
                 MainMenuController controller = loader.getController();
                 controller.setupController(stage);
-            } catch (IOException ex) {
+            }
+            catch (IOException ex) {
                 ex.printStackTrace();
                 Platform.exit();
             }
@@ -131,8 +134,7 @@ public class ChessGameController {
                     endMatch(Winner.getWinnerFromPlayer(reply.winner), "Game over");
                 }
             });
-        }
-        else {
+        } else {
             Platform.runLater(() -> errorText.setText("Invalid move"));
         }
     }
@@ -146,6 +148,7 @@ public class ChessGameController {
      * Called when the user clicks on a square in order to move a selected piece.
      * Calls the server to perform the move and if everything is successful, updates the board,
      * otherwise displays an error message.
+     *
      * @param move The move to make.
      */
     public void movePiece(Move move) {
@@ -173,13 +176,15 @@ public class ChessGameController {
 
     /**
      * Ends the match and displays a message to the user.
+     *
      * @param winner The winner of the match.
      * @param reason The reason the match ended.
      */
     private void endMatch(Winner winner, String reason) {
         try {
             networkController.close();
-        } catch (IOException ignored) {
+        }
+        catch (IOException ignored) {
         }
         Utility.removeCloseable(networkController);
 
@@ -214,8 +219,7 @@ public class ChessGameController {
     private void setTurnLabel() {
         if (match.isOurTurn()) {
             turnLabel.setText("Your turn");
-        }
-        else {
+        } else {
             turnLabel.setText("Opponent's turn");
         }
     }

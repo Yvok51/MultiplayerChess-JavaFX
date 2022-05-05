@@ -16,10 +16,11 @@ public final class Move {
 
     /**
      * The Move constructor.
-     * @param pieceType the type of piece moved
+     *
+     * @param pieceType     the type of piece moved
      * @param startPosition The start position of the move
-     * @param endPosition The end position of the move
-     * @param isCapture Whether the move is a capture
+     * @param endPosition   The end position of the move
+     * @param isCapture     Whether the move is a capture
      */
     public Move(PieceType pieceType, Position startPosition, Position endPosition, boolean isCapture) {
         this.pieceType = pieceType;
@@ -30,6 +31,7 @@ public final class Move {
 
     /**
      * Get the row difference between the start and end position.
+     *
      * @return the row difference between the start and end position
      */
     public int getRowDifference() {
@@ -38,6 +40,7 @@ public final class Move {
 
     /**
      * Get the column difference between the start and end position.
+     *
      * @return the column difference between the start and end position
      */
     public int getColumnDifference() {
@@ -46,6 +49,7 @@ public final class Move {
 
     /**
      * Get the list of moves that the piece will go through.
+     *
      * @return the list of moves that the piece will go through
      */
     public List<Position> getMovePath() {
@@ -56,8 +60,7 @@ public final class Move {
         int column = startPosition.column + direction.column;
 
         while ((row != endPosition.row || column != endPosition.column) && row < ChessRules.RowCount && row >= 0 &&
-                column < ChessRules.ColumnCount && column >= 0)
-        {
+                column < ChessRules.ColumnCount && column >= 0) {
             path.add(new Position(row, column));
             row += direction.row;
             column += direction.column;
@@ -69,6 +72,7 @@ public final class Move {
     /**
      * Get the direction of the move i.e. from (7, 7) we get (1, 1) or (5, 0) we get (1, 0).
      * Does not change the knight movement direction.
+     *
      * @return the direction of the move
      */
     private Position getMovedDirection() {
@@ -87,6 +91,7 @@ public final class Move {
 
     /**
      * The override of the equals method.
+     *
      * @param o The object to compare to
      * @return Whether this object and o are equal
      */
@@ -106,6 +111,7 @@ public final class Move {
 
     /**
      * The override of the hashCode method.
+     *
      * @return The hashCode of this object
      */
     @Override

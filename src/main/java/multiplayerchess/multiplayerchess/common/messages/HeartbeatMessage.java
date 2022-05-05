@@ -1,6 +1,6 @@
 package multiplayerchess.multiplayerchess.common.messages;
 
-public final class HeartbeatMessage extends ServerOngoingMatchMessage{
+public final class HeartbeatMessage extends ServerOngoingMatchMessage {
     static final long serialVersionUID = 0x1234567;
 
     public HeartbeatMessage(String matchID) {

@@ -13,6 +13,7 @@ public enum Player implements Serializable {
 
     /**
      * Returns the other type of player.
+     *
      * @return The other type of player.
      */
     public Player opposite() {
@@ -21,6 +22,7 @@ public enum Player implements Serializable {
 
     /**
      * Returns the color associated with the player.
+     *
      * @return The color associated with the player.
      */
     public Color getColor() {

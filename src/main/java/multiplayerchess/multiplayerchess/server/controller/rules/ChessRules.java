@@ -37,8 +37,7 @@ public class ChessRules {
      * @return Whether the given move is valid in the current state of the board
      */
     public boolean isMoveValid(Board board, Move move, Player currentPlayer,
-                               Position enPassant, Set<Castling> possibleCastles)
-    {
+                               Position enPassant, Set<Castling> possibleCastles) {
         Piece piece = board.getPiece(move.startPosition);
         if (piece == null || piece.color.getPlayer() != currentPlayer) {
             return false;
@@ -78,7 +77,7 @@ public class ChessRules {
      * Answers whether the move is an en passant move
      *
      * @param board     The current board
-     * @param move      The move that is to be performed and is  checked whether it is an en passant move
+     * @param move      The move that is to be performed and is checked whether it is an en passant move
      * @param enPassant The possible en passant move in the current ply (half-move)
      * @return Whether the move is an en passant move
      */
@@ -97,8 +96,7 @@ public class ChessRules {
      * @return Whether the move is a valid castle move
      */
     public boolean isCastle(Board board, Move move, Player currentPlayer,
-            Set<Castling> possibleCastles, Position enPassant)
-    {
+                            Set<Castling> possibleCastles, Position enPassant) {
         var movedPiece = board.getPiece(move.startPosition);
         if (move.pieceType != PieceType.KING || movedPiece == null || movedPiece.getType() != PieceType.KING) {
             return false;
@@ -208,15 +206,14 @@ public class ChessRules {
     /**
      * Generate all the possible moves of a player.
      *
-     * @param board     The current board
-     * @param player    The players whose moves we are searching for
-     * @param enPassant The possible en passant move in the current ply (half-move)
+     * @param board               The current board
+     * @param player              The players whose moves we are searching for
+     * @param enPassant           The possible en passant move in the current ply (half-move)
      * @param ignoreOwnKingSafety Whether to ignore our own king's safety
      * @return The list of all moves that the given player can make
      */
     List<Move> generatePlayerPossibleMoves(Board board, Player player,
-            Position enPassant,boolean ignoreOwnKingSafety)
-    {
+                                           Position enPassant, boolean ignoreOwnKingSafety) {
         List<Move> moves = new ArrayList<>();
 
         for (var position : getPlayerPiecePositions(board, player)) {
@@ -244,16 +241,16 @@ public class ChessRules {
     /**
      * Generates all possible moves for the piece on the given position.
      *
-     * @param board         The current board
-     * @param piecePosition The position of the piece we are generating moves for
-     * @param player        The player whose turn it is
-     * @param isCapture     Decides whether the moves will be captures - if true - only captures are included, if false - only non-captures
-     * @param enPassant     The possible en passant move in the current ply (half-move)
+     * @param board               The current board
+     * @param piecePosition       The position of the piece we are generating moves for
+     * @param player              The player whose turn it is
+     * @param isCapture           Decides whether the moves will be captures - if true - only captures are included, if false - only non-captures
+     * @param enPassant           The possible en passant move in the current ply (half-move)
      * @param ignoreOwnKingSafety Whether to ignore our own king's safety
      * @return List of possible moves
      */
     List<Move> generatePossibleMovesForPiece(Board board, Position piecePosition, Player player,
-            boolean isCapture, Position enPassant, boolean ignoreOwnKingSafety) {
+                                             boolean isCapture, Position enPassant, boolean ignoreOwnKingSafety) {
         Piece piece = board.getPiece(piecePosition);
         List<Move> allMoves = piece.generateMoveList(piecePosition, isCapture);    // List of all possible moves for the piece
         return removeInvalidMoves(board, allMoves, player, enPassant, ignoreOwnKingSafety);
@@ -270,8 +267,7 @@ public class ChessRules {
      * @return List of possible moves
      */
     List<Move> generatePossibleMovesForPiece(Board board, Position piecePosition, Player player,
-            boolean isCapture, Position enPassant)
-    {
+                                             boolean isCapture, Position enPassant) {
         return generatePossibleMovesForPiece(board, piecePosition, player, isCapture, enPassant, false);
     }
 
@@ -286,12 +282,11 @@ public class ChessRules {
      * @return Filtered list of legal moves
      */
     List<Move> removeInvalidMoves(Board board, List<Move> moves, Player player,
-            Position enPassant, boolean ignoreOwnKingSafety) {
+                                  Position enPassant, boolean ignoreOwnKingSafety) {
         List<Move> validMoves = new ArrayList<>();
         for (Move move : moves) {
             if (!anyPieceInPath(board, move) && isValidDestination(board, move, enPassant)
-                    && (ignoreOwnKingSafety || !kingIsInCheckAfterMove(board, move, player, enPassant)))
-            {
+                    && (ignoreOwnKingSafety || !kingIsInCheckAfterMove(board, move, player, enPassant))) {
                 validMoves.add(move);
             }
         }
@@ -350,9 +345,9 @@ public class ChessRules {
     /**
      * Answers whether the player's king is in check
      *
-     * @param board     The board to check on
-     * @param whoseKing Player whose king we are looking at for the check
-     * @param enPassant The possible en passant in the current move
+     * @param board               The board to check on
+     * @param whoseKing           Player whose king we are looking at for the check
+     * @param enPassant           The possible en passant in the current move
      * @param ignoreOwnKingSafety Whether to ignore our own king's safety
      * @return Whether the player's king is in check
      */
@@ -400,15 +395,15 @@ public class ChessRules {
     /**
      * Answers whether the given tile is threatened by the pieces of the given player
      *
-     * @param board     The board to use
-     * @param tile      The tile to test whether it is threatened
-     * @param player    Whose piece to check whether they threaten the tile
-     * @param enPassant The current en passant possible on the board
+     * @param board               The board to use
+     * @param tile                The tile to test whether it is threatened
+     * @param player              Whose piece to check whether they threaten the tile
+     * @param enPassant           The current en passant possible on the board
      * @param ignoreOwnKingSafety Whether to ignore our own king's safety
      * @return Whether the tile is threatened by the pieces of the player
      */
     boolean TileIsThreatened(Board board, Position tile, Player player,
-                                     Position enPassant, boolean ignoreOwnKingSafety) {
+                             Position enPassant, boolean ignoreOwnKingSafety) {
         return generatePlayerPossibleMoves(board, player, enPassant, ignoreOwnKingSafety).stream().parallel().anyMatch(
                 move -> move.isCapture && move.endPosition.equals(tile)
         );

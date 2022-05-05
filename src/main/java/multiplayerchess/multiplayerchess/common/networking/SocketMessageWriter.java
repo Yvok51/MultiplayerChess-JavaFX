@@ -16,6 +16,7 @@ public class SocketMessageWriter<T> extends Thread {
 
     /**
      * The SocketMessageWriter constructor.
+     *
      * @param outputStream The output stream to write to.
      * @param messageQueue The message queue to get the messages from.
      */
@@ -35,8 +36,8 @@ public class SocketMessageWriter<T> extends Thread {
             try {
                 T message = messageQueue.get();
                 if (message != null) {
-                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-                        objectOutputStream.writeObject(message);
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                    objectOutputStream.writeObject(message);
                 }
             }
             catch (InterruptedException | IOException e) {
@@ -54,7 +55,10 @@ public class SocketMessageWriter<T> extends Thread {
 
     /**
      * Answers whether the writer is still running
+     *
      * @return Whether the writer is still running
      */
-    public boolean isRunning() { return running;}
+    public boolean isRunning() {
+        return running;
+    }
 }

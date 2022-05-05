@@ -14,14 +14,15 @@ public final class MatchController extends Thread {
     private final CountDownLatch bothPlayersPresentLatch;
     private final String matchID;
     private final MatchesMap controllers;
-    private PlayerConnectionController whitePlayerController;
-    private PlayerConnectionController blackPlayerController;
     private final AtomicBoolean gameOngoing;
     private final AtomicBoolean gameStarted;
+    private PlayerConnectionController whitePlayerController;
+    private PlayerConnectionController blackPlayerController;
 
     /**
      * The MatchController constructor
-     * @param matchID The match ID
+     *
+     * @param matchID     The match ID
      * @param controllers The MatchesMap to which this MatchController belongs
      */
     public MatchController(String matchID, MatchesMap controllers) {
@@ -37,6 +38,7 @@ public final class MatchController extends Thread {
 
     /**
      * Get a Move representing the move to be performed according to the TurnMessage
+     *
      * @param message The TurnMessage on which to base the move
      * @return The move to be performed
      */
@@ -84,6 +86,7 @@ public final class MatchController extends Thread {
 
     /**
      * Answers whether there is still room for a new player to join
+     *
      * @return true if there is room for a new player to join, false otherwise
      */
     public boolean hasOpenSpot() {
@@ -92,6 +95,7 @@ public final class MatchController extends Thread {
 
     /**
      * Add a player to the match
+     *
      * @param playerController The controller of the connection of the player to add
      * @return The player color of the player added
      */
@@ -102,8 +106,7 @@ public final class MatchController extends Thread {
             whitePlayerController.addCallback(MessageType.TURN, this::playerTurnHandler);
 
             return Player.WHITE;
-        }
-        else if (blackPlayerController == null) {
+        } else if (blackPlayerController == null) {
             blackPlayerController = playerController;
             blackPlayerController.addCallback(MessageType.RESIGNED, this::playerResignedHandler);
             blackPlayerController.addCallback(MessageType.TURN, this::playerTurnHandler);
@@ -117,6 +120,7 @@ public final class MatchController extends Thread {
 
     /**
      * Get the FEN representation of the current match situation
+     *
      * @return The FEN representation
      */
     public String getMatchFEN() {
@@ -125,12 +129,16 @@ public final class MatchController extends Thread {
 
     /**
      * Get the match ID of this match
+     *
      * @return the match ID
      */
-    public String getMatchID() { return matchID; }
+    public String getMatchID() {
+        return matchID;
+    }
 
     /**
      * Handle a turn message sent by a player
+     *
      * @param message The turn message to handle
      */
     private void playerTurnHandler(Message message) {
@@ -146,8 +154,7 @@ public final class MatchController extends Thread {
             if (reply.gameOver) {
                 endGame();
             }
-        }
-        else {
+        } else {
             sendMessage(reply, player);
         }
     }
@@ -163,6 +170,7 @@ public final class MatchController extends Thread {
 
     /**
      * Handles when a player resigns
+     *
      * @param message The message containing the player's resignation
      */
     private void playerResignedHandler(Message message) {
@@ -173,6 +181,7 @@ public final class MatchController extends Thread {
 
     /**
      * Handle when a player disconnects
+     *
      * @param player The player who disconnected
      */
     private void playerDisconnected(Player player) {
@@ -183,6 +192,7 @@ public final class MatchController extends Thread {
     /**
      * Handles a turn message from a player.
      * Translate the message into a Move and performs it on the match
+     *
      * @param message The message to handle
      * @return The reply to send to the player
      */
@@ -210,11 +220,13 @@ public final class MatchController extends Thread {
     private void endGame() {
         try {
             whitePlayerController.close();
-        } catch (IOException ignored) {
+        }
+        catch (IOException ignored) {
         }
         try {
             blackPlayerController.close();
-        } catch (IOException ignored) {
+        }
+        catch (IOException ignored) {
         }
 
         controllers.matchEnded(matchID);
@@ -223,6 +235,7 @@ public final class MatchController extends Thread {
 
     /**
      * Sends a message to the both players
+     *
      * @param message The message to send
      */
     private void broadcastMessage(ServerMessage message) {
@@ -232,8 +245,9 @@ public final class MatchController extends Thread {
 
     /**
      * Send a message to one player
+     *
      * @param message The message to send
-     * @param player The player to send the message to
+     * @param player  The player to send the message to
      */
     private void sendMessage(ServerMessage message, Player player) {
         if (player == Player.WHITE) {

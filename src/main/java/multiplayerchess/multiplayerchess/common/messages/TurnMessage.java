@@ -19,8 +19,7 @@ public final class TurnMessage extends ClientOngoingMatchMessage implements Seri
     public final Color playerColor;
 
     public TurnMessage(PieceType pieceType, Position startingPosition, Position endingPosition,
-            Color playerColor, boolean isCapture, String matchID)
-    {
+                       Color playerColor, boolean isCapture, String matchID) {
         super(matchID);
         this.pieceType = pieceType;
         this.startingPosition = startingPosition;
@@ -30,5 +29,7 @@ public final class TurnMessage extends ClientOngoingMatchMessage implements Seri
     }
 
     @Override
-    public MessageType getType() { return MessageType.TURN; }
+    public MessageType getType() {
+        return MessageType.TURN;
+    }
 }

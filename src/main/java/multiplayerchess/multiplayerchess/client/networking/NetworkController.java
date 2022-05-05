@@ -1,6 +1,9 @@
 package multiplayerchess.multiplayerchess.client.networking;
 
-import multiplayerchess.multiplayerchess.common.*;
+import multiplayerchess.multiplayerchess.common.Color;
+import multiplayerchess.multiplayerchess.common.PieceType;
+import multiplayerchess.multiplayerchess.common.Player;
+import multiplayerchess.multiplayerchess.common.Position;
 import multiplayerchess.multiplayerchess.common.messages.*;
 import multiplayerchess.multiplayerchess.common.networking.CallbackMap;
 import multiplayerchess.multiplayerchess.common.networking.MessageQueue;
@@ -16,8 +19,33 @@ import java.util.function.Consumer;
  */
 public class NetworkController implements AutoCloseable {
 
+    private final Socket socket;
+    private final CallbackMap<MessageType, Consumer<Message>> callbackMap;
+    private final Consumer<Message> heartbeatCallback;
+    private SocketMessageWriter<ClientMessage> writer;
+    private SocketMessageListener listener;
+    private MessageQueue<ClientMessage> messageQueue;
+
+    /**
+     * Private constructor to prevent instantiation.
+     *
+     * @param socket The socket to use for communication
+     */
+    private NetworkController(Socket socket) {
+        this.callbackMap = new CallbackMap<>();
+        this.socket = socket;
+        this.heartbeatCallback = (message) -> {
+            var heartbeat = (HeartbeatMessage) message;
+            sendMessage(new HeartbeatReplyMessage(heartbeat.matchID));
+        };
+
+        // Add default callback for heartbeat messages
+        this.addCallback(MessageType.HEARTBEAT, this.heartbeatCallback);
+    }
+
     /**
      * Factory method to construct a NetworkController.
+     *
      * @param host The hostname of the server
      * @param port The port of the server
      * @return A NetworkController
@@ -47,6 +75,7 @@ public class NetworkController implements AutoCloseable {
 
     /**
      * Sends a request to join a match to the server.
+     *
      * @param matchID The ID of the match to join
      */
     public void requestJoinMatch(String matchID) {
@@ -55,12 +84,13 @@ public class NetworkController implements AutoCloseable {
 
     /**
      * Sends a turn message to the server.
-     * @param pieceType The type of piece moved
+     *
+     * @param pieceType     The type of piece moved
      * @param startPosition The starting position of the piece
-     * @param endPosition The ending position of the piece
-     * @param color The color of the piece
-     * @param isCapture Whether the move resulted in a capture
-     * @param matchID The ID of the match
+     * @param endPosition   The ending position of the piece
+     * @param color         The color of the piece
+     * @param isCapture     Whether the move resulted in a capture
+     * @param matchID       The ID of the match
      */
     public void sendTurn(PieceType pieceType, Position startPosition, Position endPosition,
                          Color color, boolean isCapture, String matchID) {
@@ -69,17 +99,21 @@ public class NetworkController implements AutoCloseable {
 
     /**
      * Send a resignation message to the server.
+     *
      * @param matchID The ID of the match
      */
     public void sendResign(String matchID, Player player) {
         sendMessage(new ResignMessage(matchID, player));
     }
 
-    public void sendConnectionAcknowledgement() { sendMessage(new AcknowledgeConnectionMessage()); }
+    public void sendConnectionAcknowledgement() {
+        sendMessage(new AcknowledgeConnectionMessage());
+    }
 
     /**
      * Add a callback to be called when a message of the given type is received.
-     * @param type The type of message to listen for
+     *
+     * @param type     The type of message to listen for
      * @param callback The callback to call when the message is received
      */
     public synchronized void addCallback(MessageType type, Consumer<Message> callback) {
@@ -88,7 +122,8 @@ public class NetworkController implements AutoCloseable {
 
     /**
      * Remove a callback from the list of callbacks for the given type.
-     * @param type The type of message to remove the callback from
+     *
+     * @param type     The type of message to remove the callback from
      * @param callback The callback to remove
      */
     public synchronized void removeCallback(MessageType type, Consumer<Message> callback) {
@@ -97,6 +132,7 @@ public class NetworkController implements AutoCloseable {
 
     /**
      * Remove all callbacks for the given type.
+     *
      * @param type The type of message to remove all callbacks from
      */
     public synchronized void clearCallbacks(MessageType type) {
@@ -119,6 +155,7 @@ public class NetworkController implements AutoCloseable {
 
     /**
      * Dispose of the network controller's resources.
+     *
      * @throws IOException If an I/O error occurs
      */
     @Override
@@ -134,6 +171,7 @@ public class NetworkController implements AutoCloseable {
 
     /**
      * Sends a message to the server.
+     *
      * @param message The message to send
      */
     private void sendMessage(ClientMessage message) {
@@ -144,6 +182,7 @@ public class NetworkController implements AutoCloseable {
      * The handler for messages received from the server.
      * A unified callback which the listener calls for each message received.
      * It calls the appropriate callbacks for the message type.
+     *
      * @param message The message received
      */
     private synchronized void handleServerMessage(Message message) {
@@ -153,25 +192,10 @@ public class NetworkController implements AutoCloseable {
     }
 
     /**
-     * Private constructor to prevent instantiation.
-     * @param socket The socket to use for communication
-     */
-    private NetworkController(Socket socket) {
-        this.callbackMap = new CallbackMap<>();
-        this.socket = socket;
-        this.heartbeatCallback = (message) -> {
-            var heartbeat = (HeartbeatMessage) message;
-            sendMessage(new HeartbeatReplyMessage(heartbeat.matchID));
-        };
-
-        // Add default callback for heartbeat messages
-        this.addCallback(MessageType.HEARTBEAT, this.heartbeatCallback);
-    }
-
-    /**
      * Set the writer for the network controller.
+     *
      * @param writer The writer to use
-     * @param queue The queue to use for sending messages to the writer
+     * @param queue  The queue to use for sending messages to the writer
      */
     private void setWriter(SocketMessageWriter<ClientMessage> writer, MessageQueue<ClientMessage> queue) {
         this.writer = writer;
@@ -180,19 +204,12 @@ public class NetworkController implements AutoCloseable {
 
     /**
      * Set the listener for the network controller.
+     *
      * @param listener The listener to use
      */
     private void setListener(SocketMessageListener listener) {
         // Not in the constructor so that we can give it a callback from the network controller itself
         this.listener = listener;
     }
-
-    private final Socket socket;
-    private SocketMessageWriter<ClientMessage> writer;
-    private SocketMessageListener listener;
-    private MessageQueue<ClientMessage> messageQueue;
-
-    private final CallbackMap<MessageType, Consumer<Message>> callbackMap;
-    private final Consumer<Message> heartbeatCallback;
 
 }

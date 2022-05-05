@@ -14,6 +14,7 @@ public class Main {
     /**
      * Starts the server. The server listens for incoming connections and dispatches
      * the messages received from the clients.
+     *
      * @param args Arguments are ignored
      */
     public static void main(String[] args) {
@@ -42,7 +43,8 @@ public class Main {
 
     /**
      * Starts a listener and writer for a client and sets up starting callbacks.
-     * @param socket the socket of the connection
+     *
+     * @param socket      the socket of the connection
      * @param controllers the map of match controllers
      */
     public static void startConnection(Socket socket, MatchesMap controllers) {
