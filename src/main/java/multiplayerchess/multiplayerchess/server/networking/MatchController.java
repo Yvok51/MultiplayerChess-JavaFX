@@ -70,11 +70,11 @@ public final class MatchController extends Thread {
             catch (InterruptedException ignored) {
             }
 
-            if (!whitePlayerController.isRunning() || !whitePlayerController.hasHeartbeatOccurred()) {
-                playerDisconnected(Player.WHITE);
-            }
             if (!blackPlayerController.isRunning() || !blackPlayerController.hasHeartbeatOccurred()) {
                 playerDisconnected(Player.BLACK);
+            }
+            if (!whitePlayerController.isRunning() || !whitePlayerController.hasHeartbeatOccurred()) {
+                playerDisconnected(Player.WHITE);
             }
 
             whitePlayerController.clearHeartbeat();

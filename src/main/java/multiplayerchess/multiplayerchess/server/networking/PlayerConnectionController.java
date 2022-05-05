@@ -76,7 +76,11 @@ public class PlayerConnectionController implements AutoCloseable {
     /**
      * Remove all callbacks
      */
-    public synchronized void clearAllCallbacks() { callbackMap.clearAllCallbacks(); }
+    public synchronized void clearAllCallbacks() {
+        callbackMap.clearAllCallbacks();
+        // Bring back the default heartbeat callback
+        callbackMap.addCallback(MessageType.HEARTBEAT, heartbeatCallback);
+    }
 
     /**
      * Start the network controller.
@@ -139,8 +143,9 @@ public class PlayerConnectionController implements AutoCloseable {
         this.playerSocket = playerSocket;
         this.callbackMap = new CallbackMap<>();
         this.heartbeatOccurredFlag = new AtomicBoolean(false);
+        this.heartbeatCallback = (message) -> heartbeatOccurredFlag.set(true);
         // default heartbeat callback
-        callbackMap.addCallback(MessageType.HEARTBEAT, (message) -> heartbeatOccurredFlag.set(true));
+        callbackMap.addCallback(MessageType.HEARTBEAT, heartbeatCallback);
     }
 
     private final Socket playerSocket;
@@ -151,5 +156,6 @@ public class PlayerConnectionController implements AutoCloseable {
     private final AtomicBoolean heartbeatOccurredFlag;
 
     private final CallbackMap<MessageType, Consumer<Message>> callbackMap;
+    private final Consumer<Message> heartbeatCallback;
 
 }

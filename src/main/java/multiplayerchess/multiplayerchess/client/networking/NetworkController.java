@@ -103,7 +103,11 @@ public class NetworkController implements AutoCloseable {
         callbackMap.clearCallbacks(type);
     }
 
-    public synchronized void clearAllCallbacks() { callbackMap.clearAllCallbacks(); }
+    public synchronized void clearAllCallbacks() {
+        callbackMap.clearAllCallbacks();
+        // Add back the default callback for heartbeat messages
+        this.addCallback(MessageType.HEARTBEAT, this.heartbeatCallback);
+    }
 
     /**
      * Start the network controller.
@@ -155,12 +159,13 @@ public class NetworkController implements AutoCloseable {
     private NetworkController(Socket socket) {
         this.callbackMap = new CallbackMap<>();
         this.socket = socket;
+        this.heartbeatCallback = (message) -> {
+            var heartbeat = (HeartbeatMessage) message;
+            sendMessage(new HeartbeatReplyMessage(heartbeat.matchID));
+        };
 
         // Add default callback for heartbeat messages
-        callbackMap.addCallback(MessageType.HEARTBEAT, (message) -> {
-            var heartbeat = (HeartbeatMessage) message;
-           sendMessage(new HeartbeatReplyMessage(heartbeat.matchID));
-        });
+        this.addCallback(MessageType.HEARTBEAT, this.heartbeatCallback);
     }
 
     /**
@@ -188,5 +193,6 @@ public class NetworkController implements AutoCloseable {
     private MessageQueue<ClientMessage> messageQueue;
 
     private final CallbackMap<MessageType, Consumer<Message>> callbackMap;
+    private final Consumer<Message> heartbeatCallback;
 
 }
