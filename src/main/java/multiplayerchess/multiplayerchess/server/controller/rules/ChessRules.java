@@ -78,12 +78,12 @@ public class ChessRules {
      * Answers whether the move is an en passant move
      *
      * @param board     The current board
-     * @param move      The move that is to be performed and is checked whether it is an en passant move
+     * @param move      The move that is to be performed and is  checked whether it is an en passant move
      * @param enPassant The possible en passant move in the current ply (half-move)
      * @return Whether the move is an en passant move
      */
     public boolean isEnPassant(Board board, Move move, Position enPassant) {
-        return move.isCapture && board.getPiece(move.startPosition).getType() == PieceType.PAWN && enPassant.equals(move.endPosition);
+        return isEnPassant(board.getPiece(move.startPosition), move, enPassant);
     }
 
     /**
@@ -488,7 +488,7 @@ public class ChessRules {
      * @return Is the move an en passant move
      */
     boolean isEnPassant(Piece movedPiece, Move move, Position enPassant) {
-        return move.isCapture && movedPiece.getType() == PieceType.PAWN &&
+        return movedPiece != null && move.isCapture && movedPiece.getType() == PieceType.PAWN &&
                 movedPiece.getType() == move.pieceType && move.endPosition.equals(enPassant);
     }
 }
