@@ -2,6 +2,7 @@ package multiplayerchess.multiplayerchess.client.controller.parsing;
 
 import multiplayerchess.multiplayerchess.client.controller.Board;
 import multiplayerchess.multiplayerchess.client.controller.pieces.*;
+import multiplayerchess.multiplayerchess.common.BaseFENParser;
 import multiplayerchess.multiplayerchess.common.Color;
 import multiplayerchess.multiplayerchess.common.Player;
 
@@ -68,8 +69,6 @@ public class FENParser {
     }
 
     public static Player getCurrentPlayer(String FEN) {
-        String currentPlayer = FEN.split("\\s+")[1];
-
-        return currentPlayer.equals("w") ? Player.WHITE : Player.BLACK;
+        return BaseFENParser.getCurrentPlayer(FEN);
     }
 }

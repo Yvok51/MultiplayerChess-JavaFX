@@ -1,9 +1,6 @@
 package multiplayerchess.multiplayerchess.server.controller.parsing;
 
-import multiplayerchess.multiplayerchess.common.Color;
-import multiplayerchess.multiplayerchess.common.PieceType;
-import multiplayerchess.multiplayerchess.common.Player;
-import multiplayerchess.multiplayerchess.common.Position;
+import multiplayerchess.multiplayerchess.common.*;
 import multiplayerchess.multiplayerchess.server.controller.Board;
 import multiplayerchess.multiplayerchess.server.controller.pieces.*;
 
@@ -90,9 +87,7 @@ public class FENParser {
      * @return The player parsed from the FEN string.
      */
     public static Player getCurrentPlayer(String FEN) {
-        String currentPlayer = FEN.split("\\s+")[1];
-
-        return currentPlayer.equals("w") ? Player.WHITE : Player.BLACK;
+        return BaseFENParser.getCurrentPlayer(FEN);
     }
 
     /**
@@ -102,9 +97,7 @@ public class FENParser {
      * @return The move count parsed from the FEN string.
      */
     public static int getMoves(String FEN) {
-        String moves = FEN.split("\\s+")[5];
-
-        return Integer.parseInt(moves);
+        return BaseFENParser.getMoves(FEN);
     }
 
     /**
@@ -114,9 +107,7 @@ public class FENParser {
      * @return The half-move number parsed from the FEN string.
      */
     public static int getHalfMoves(String FEN) {
-        String halfmoves = FEN.split("\\s+")[4];
-
-        return Integer.parseInt(halfmoves);
+        return BaseFENParser.getHalfMoves(FEN);
     }
 
     /**
@@ -126,9 +117,7 @@ public class FENParser {
      * @return The en passant tile from the FEN string.
      */
     public static Position getEnPassant(String FEN) {
-        String enPassant = FEN.split("\\s+")[3];
-
-        return enPassant.equals("-") ? null : new Position(enPassant);
+        return BaseFENParser.getEnPassant(FEN);
     }
 
     /**
