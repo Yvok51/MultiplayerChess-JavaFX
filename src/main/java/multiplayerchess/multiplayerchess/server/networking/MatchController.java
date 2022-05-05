@@ -64,12 +64,12 @@ public final class MatchController extends Thread {
             }
         }
 
-        final long fiveSeconds = 5_000;
+        final long tenSeconds = 10_000;
         while (gameOngoing.get()) {
             broadcastMessage(new HeartbeatMessage(matchID));
 
             try {
-                Thread.sleep(fiveSeconds);
+                Thread.sleep(100_000);
             }
             catch (InterruptedException ignored) {
             }

@@ -19,7 +19,6 @@ import java.util.function.Consumer;
  */
 public class NetworkController implements AutoCloseable {
 
-    private final Socket socket;
     private final CallbackMap<MessageType, Consumer<Message>> callbackMap;
     private final Consumer<Message> heartbeatCallback;
     private SocketMessageWriter<ClientMessage> writer;
@@ -28,12 +27,9 @@ public class NetworkController implements AutoCloseable {
 
     /**
      * Private constructor to prevent instantiation.
-     *
-     * @param socket The socket to use for communication
      */
-    private NetworkController(Socket socket) {
+    private NetworkController() {
         this.callbackMap = new CallbackMap<>();
-        this.socket = socket;
         this.heartbeatCallback = (message) -> {
             var heartbeat = (HeartbeatMessage) message;
             sendMessage(new HeartbeatReplyMessage(heartbeat.matchID));
@@ -53,10 +49,10 @@ public class NetworkController implements AutoCloseable {
      */
     public static NetworkController connect(String host, int port) throws IOException {
         Socket socket = new Socket(host, port);
-        var controller = new NetworkController(socket);
+        var controller = new NetworkController();
 
         MessageQueue<ClientMessage> queue = new MessageQueue<>();
-        SocketMessageWriter<ClientMessage> writer = new SocketMessageWriter<>(socket.getOutputStream(), queue);
+        SocketMessageWriter<ClientMessage> writer = new SocketMessageWriter<>(socket, queue);
         SocketMessageListener listener = new SocketMessageListener(
                 socket.getInputStream(), controller::handleServerMessage);
 
@@ -164,9 +160,6 @@ public class NetworkController implements AutoCloseable {
         writer.stopRunning();
         writer.interrupt();
         listener.interrupt();
-        if (!socket.isClosed()) {
-            socket.close();
-        }
     }
 
     /**

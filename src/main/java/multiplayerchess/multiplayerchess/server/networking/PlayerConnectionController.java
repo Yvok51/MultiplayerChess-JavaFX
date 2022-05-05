@@ -16,7 +16,6 @@ import java.util.function.Consumer;
 
 public class PlayerConnectionController implements AutoCloseable {
 
-    private final Socket playerSocket;
     private final AtomicBoolean heartbeatOccurredFlag;
     private final CallbackMap<MessageType, Consumer<Message>> callbackMap;
     private final Consumer<Message> heartbeatCallback;
@@ -24,8 +23,7 @@ public class PlayerConnectionController implements AutoCloseable {
     private SocketMessageListener listener;
     private MessageQueue<ServerMessage> messageQueue;
 
-    private PlayerConnectionController(Socket playerSocket) {
-        this.playerSocket = playerSocket;
+    private PlayerConnectionController() {
         this.callbackMap = new CallbackMap<>();
         this.heartbeatOccurredFlag = new AtomicBoolean(false);
         this.heartbeatCallback = (message) -> heartbeatOccurredFlag.set(true);
@@ -34,10 +32,10 @@ public class PlayerConnectionController implements AutoCloseable {
     }
 
     public static PlayerConnectionController createController(Socket playerSocket) throws IOException {
-        var controller = new PlayerConnectionController(playerSocket);
+        var controller = new PlayerConnectionController();
 
         MessageQueue<ServerMessage> queue = new MessageQueue<>();
-        SocketMessageWriter<ServerMessage> writer = new SocketMessageWriter<>(playerSocket.getOutputStream(), queue);
+        SocketMessageWriter<ServerMessage> writer = new SocketMessageWriter<>(playerSocket, queue);
         SocketMessageListener listener = new SocketMessageListener(
                 playerSocket.getInputStream(), controller::handleMessage);
 
@@ -131,9 +129,8 @@ public class PlayerConnectionController implements AutoCloseable {
     public void close() throws IOException {
         listener.stopRunning();
         writer.stopRunning();
-        if (!playerSocket.isClosed()) {
-            playerSocket.close();
-        }
+        listener.interrupt();
+        writer.interrupt();
     }
 
     /**

@@ -3,25 +3,27 @@ package multiplayerchess.multiplayerchess.common.networking;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.net.Socket;
 
 /**
  * Writer for messages to opposite side.
  * Writes all messages that appear in the message queue.
+ * Is the owner of the socket and the output stream, is responsible for closing the socket.
  */
 public class SocketMessageWriter<T> extends Thread {
 
-    private final OutputStream outputStream;
+    private final Socket socket;
     private final MessageQueue<T> messageQueue;
     boolean running;
 
     /**
      * The SocketMessageWriter constructor.
      *
-     * @param outputStream The output stream to write to.
+     * @param socket The socket to write to.
      * @param messageQueue The message queue to get the messages from.
      */
-    public SocketMessageWriter(OutputStream outputStream, MessageQueue<T> messageQueue) {
-        this.outputStream = outputStream;
+    public SocketMessageWriter(Socket socket, MessageQueue<T> messageQueue) {
+        this.socket = socket;
         this.messageQueue = messageQueue;
         this.running = true;
     }
@@ -32,17 +34,25 @@ public class SocketMessageWriter<T> extends Thread {
     @Override
     public void run() {
         // Creates a new ObjectOutputStream to write to the server for every message to avoid problems with the headers
-        while (running) {
+        while (running || !messageQueue.isEmpty()) {
             try {
                 T message = messageQueue.get();
                 if (message != null) {
-                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
                     objectOutputStream.writeObject(message);
                 }
             }
             catch (InterruptedException | IOException e) {
                 running = false;
             }
+        }
+
+        try {
+            if (!socket.isClosed()) {
+                socket.close();
+            }
+        }
+        catch (IOException ignored) {
         }
     }
 

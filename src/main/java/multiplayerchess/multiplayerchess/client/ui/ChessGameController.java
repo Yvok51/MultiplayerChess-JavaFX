@@ -96,6 +96,7 @@ public class ChessGameController {
             popupPane.setVisible(false);
             // Go back to main menu
             try {
+                Utility.removeCloseable(networkController);
                 FXMLLoader loader = Utility.loadNewScene(stage, MainMenuController.getFXMLFile());
                 MainMenuController controller = loader.getController();
                 controller.setupController(stage);
@@ -199,7 +200,6 @@ public class ChessGameController {
         }
         catch (IOException ignored) {
         }
-        Utility.removeCloseable(networkController);
 
         String winText = getWinnerText(winner) + ": " + reason;
         popupLabel.setText(winText);
