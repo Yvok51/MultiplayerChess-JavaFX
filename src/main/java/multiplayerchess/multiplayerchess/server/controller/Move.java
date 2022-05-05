@@ -47,6 +47,10 @@ public final class Move {
         return endPosition.column - startPosition.column;
     }
 
+    public boolean isEnPassant() {
+        return pieceType == PieceType.PAWN && Math.abs(getRowDifference()) == 2 && !isCapture;
+    }
+
     /**
      * Get the list of moves that the piece will go through.
      *

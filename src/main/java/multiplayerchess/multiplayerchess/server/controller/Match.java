@@ -146,7 +146,9 @@ public final class Match {
         // Check whether move is an en passant
         else if (rules.isEnPassant(board, move, enPassant)) {
             performEnPassant(board, move, movedPiece);
-        } else { // Normal move
+        }
+        // Normal move
+        else {
             performNormalMove(board, move, movedPiece);
         }
     }
@@ -236,7 +238,7 @@ public final class Match {
      */
     private Position nextEnPassant(Move move, Piece movedPiece) {
         Position nextEnPassant = null;
-        if (movedPiece.getType() == PieceType.PAWN && move.getRowDifference() == 2) {
+        if (move.isEnPassant()) {
             int rowOffset = movedPiece.color == Color.WHITE ? -1 : 1;
             nextEnPassant = new Position(move.endPosition.row + rowOffset, move.endPosition.column);
         }
