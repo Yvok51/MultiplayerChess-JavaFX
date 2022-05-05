@@ -2,12 +2,14 @@ package multiplayerchess.multiplayerchess.server.networking;
 
 import multiplayerchess.multiplayerchess.common.Player;
 import multiplayerchess.multiplayerchess.common.messages.*;
+import multiplayerchess.multiplayerchess.server.SafeLog;
 import multiplayerchess.multiplayerchess.server.controller.Match;
 import multiplayerchess.multiplayerchess.server.controller.Move;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
 
 public final class MatchController extends Thread {
     private final Match match;
@@ -199,6 +201,9 @@ public final class MatchController extends Thread {
     private TurnReplyMessage handleTurnMessage(TurnMessage message) {
         Move move = createMoveFromTurnMessage(message);
         boolean success = match.makeMove(move);
+
+        SafeLog.log(Level.INFO, "FEN After move attempt: " + match.getFEN());
+
         if (!success) {
             return new TurnReplyMessage(false, match.getFEN(), false, null, message.matchID);
         }

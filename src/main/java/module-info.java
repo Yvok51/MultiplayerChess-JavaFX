@@ -1,6 +1,7 @@
 module multiplayerchess.multiplayerchess {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.logging;
 
 
     opens multiplayerchess.multiplayerchess to javafx.fxml;

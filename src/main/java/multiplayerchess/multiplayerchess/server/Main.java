@@ -9,6 +9,7 @@ import multiplayerchess.multiplayerchess.server.networking.PreMatchController;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
 
 public class Main {
     /**
@@ -19,25 +20,25 @@ public class Main {
      */
     public static void main(String[] args) {
         MatchesMap controllers = new MatchesMap();
-        SafePrint.print("Starting server...");
+        SafeLog.log(Level.INFO, "Starting server...");
         try (ServerSocket serverSocket = new ServerSocket(Networking.SERVER_PORT)) {
 
-            SafePrint.print("Server started");
-            SafePrint.print("Listening for connections...");
+            SafeLog.log(Level.INFO, "Server started");
+            SafeLog.log(Level.INFO, "Listening for connections...");
             serverSocket.setReuseAddress(true);
             while (true) {
                 try {
                     Socket socket = serverSocket.accept();
-                    SafePrint.print("Connection accepted");
+                    SafeLog.log(Level.INFO, "Connection accepted");
                     startConnection(socket, controllers);
                 }
                 catch (IOException e) {
-                    SafePrint.print("Client unexpectedly disconnected: " + e.getMessage());
+                    SafeLog.log(Level.WARNING, "Client unexpectedly disconnected: " + e.getMessage());
                 }
             }
         }
         catch (IOException e) {
-            SafePrint.print("Server unexpectedly crashed: " + e.getMessage());
+            SafeLog.log(Level.SEVERE, "Server unexpectedly crashed: " + e.getMessage());
         }
     }
 
@@ -59,8 +60,7 @@ public class Main {
             controller.start();
         }
         catch (IOException e) {
-            SafePrint.printErr("Connection failed");
-            SafePrint.printErr(e.getMessage());
+            SafeLog.log(Level.WARNING, "Connection failed: " + e.getMessage());
         }
     }
 }
