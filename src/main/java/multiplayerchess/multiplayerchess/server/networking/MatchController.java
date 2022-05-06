@@ -69,7 +69,7 @@ public final class MatchController extends Thread {
             broadcastMessage(new HeartbeatMessage(matchID));
 
             try {
-                Thread.sleep(100_000);
+                Thread.sleep(tenSeconds);
             }
             catch (InterruptedException ignored) {
             }

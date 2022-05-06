@@ -1,9 +1,7 @@
 package multiplayerchess.multiplayerchess.server.controller.rules;
 
-import multiplayerchess.multiplayerchess.common.Color;
-import multiplayerchess.multiplayerchess.common.PieceType;
-import multiplayerchess.multiplayerchess.common.Player;
-import multiplayerchess.multiplayerchess.common.Position;
+import javafx.geometry.Pos;
+import multiplayerchess.multiplayerchess.common.*;
 import multiplayerchess.multiplayerchess.server.controller.Board;
 import multiplayerchess.multiplayerchess.server.controller.Move;
 import multiplayerchess.multiplayerchess.server.controller.pieces.Castling;
@@ -96,49 +94,62 @@ public class ChessRules {
      * @return Whether the move is a valid castle move
      */
     public boolean isCastle(Board board, Move move, Player currentPlayer,
-                            Set<Castling> possibleCastles, Position enPassant) {
+            Set<Castling> possibleCastles, Position enPassant)
+    {
         var movedPiece = board.getPiece(move.startPosition);
         if (move.pieceType != PieceType.KING || movedPiece == null || movedPiece.getType() != PieceType.KING) {
+            return false;
+        }
+
+        // Cannot castle while in check
+        if (kingIsInCheck(board, currentPlayer, enPassant, true)) {
             return false;
         }
 
         Position whiteKingStartingPosition = new Position(MinBoardRow, MinBoardColumn + 4);
         Position blackKingStartingPosition = new Position(MaxBoardRow, MinBoardColumn + 4);
 
-        Position whiteShortCastlePosition = new Position(MinBoardRow, MinBoardColumn + 6);
-        Position whiteLongCastlePosition = new Position(MinBoardRow, MinBoardColumn + 2);
-        Position blackShortCastlePosition = new Position(MaxBoardRow, MinBoardColumn + 6);
-        Position blackLongCastlePosition = new Position(MaxBoardRow, MinBoardColumn + 2);
+        Position whiteShortCastlePosition = new Position(whiteKingStartingPosition.row, whiteKingStartingPosition.column + 2);
+        Position whiteLongCastlePosition = new Position(whiteShortCastlePosition.row, whiteKingStartingPosition.column - 2);
+        Position blackShortCastlePosition = new Position(blackKingStartingPosition.row, blackKingStartingPosition.column + 2);
+        Position blackLongCastlePosition = new Position(blackShortCastlePosition.row, blackKingStartingPosition.column - 2);
+
+        Func4<Castling, List<Position>, List<Position>, Boolean> isCastle = (castling, kingMoves, pathToBeOpen) -> {
+            boolean castlePossible = possibleCastles.contains(castling);
+            boolean kingInDanger = TilesAreThreatened(board, kingMoves, currentPlayer, enPassant);
+            boolean pathBlocked = anyPieceInPath(board, pathToBeOpen);
+            return castlePossible && !kingInDanger && !pathBlocked;
+        };
 
         if (currentPlayer == Player.WHITE && move.startPosition.equals(whiteKingStartingPosition) && whiteShortCastlePosition.equals(move.endPosition)) {
-            List<Position> kingsMoveTiles = new ArrayList<>(List.of(new Position(MinBoardRow, MinBoardColumn + 5), whiteShortCastlePosition));
-            boolean castlePossible = possibleCastles.contains(Castling.WhiteKingside);
-            boolean kingInDanger = TilesAreThreatened(board, kingsMoveTiles, currentPlayer, enPassant);
-            boolean pathFree = anyPieceInPath(board, kingsMoveTiles);
-            return castlePossible && !kingInDanger && pathFree;
+            List<Position> kingsMoveTiles = new ArrayList<>(List.of(
+                    new Position(whiteShortCastlePosition.row, whiteShortCastlePosition.column - 1),
+                    whiteShortCastlePosition));
+
+            return isCastle.call(Castling.WhiteKingside, kingsMoveTiles, kingsMoveTiles);
         }
         if (currentPlayer == Player.WHITE && move.startPosition.equals(whiteKingStartingPosition) && whiteLongCastlePosition.equals(move.endPosition)) {
-            List<Position> kingsMoveTiles = new ArrayList<>(List.of(new Position(MinBoardRow, MinBoardColumn + 3), whiteLongCastlePosition));
-            boolean castlePossible = possibleCastles.contains(Castling.WhiteQueenside);
-            boolean kingInDanger = TilesAreThreatened(board, kingsMoveTiles, currentPlayer, enPassant);
-            kingsMoveTiles.add(new Position(MinBoardRow, MinBoardColumn + 1));
-            boolean pathFree = anyPieceInPath(board, kingsMoveTiles);
-            return castlePossible && !kingInDanger && pathFree;
+            List<Position> kingsMoveTiles = new ArrayList<>(List.of(
+                    new Position(whiteLongCastlePosition.row, whiteLongCastlePosition.column + 1),
+                    whiteLongCastlePosition));
+            List<Position> pathToBeOpen = new ArrayList<>(kingsMoveTiles);
+            pathToBeOpen.add(new Position(MinBoardRow, MinBoardColumn + 1));
+
+            return isCastle.call(Castling.WhiteQueenside, kingsMoveTiles, pathToBeOpen);
         }
         if (currentPlayer == Player.BLACK && move.startPosition.equals(blackKingStartingPosition) && blackShortCastlePosition.equals(move.endPosition)) {
-            List<Position> kingsMoveTiles = new ArrayList<>(List.of(new Position(MaxBoardRow, MinBoardColumn + 5), blackShortCastlePosition));
-            boolean castlePossible = possibleCastles.contains(Castling.BlackKingside);
-            boolean kingInDanger = TilesAreThreatened(board, kingsMoveTiles, currentPlayer, enPassant);
-            boolean pathFree = anyPieceInPath(board, kingsMoveTiles);
-            return castlePossible && !kingInDanger && pathFree;
+            List<Position> kingsMoveTiles = new ArrayList<>(List.of(
+                    new Position(blackKingStartingPosition.row, blackKingStartingPosition.column + 1),
+                    blackShortCastlePosition));
+
+            return isCastle.call(Castling.BlackKingside, kingsMoveTiles, kingsMoveTiles);
         }
         if (currentPlayer == Player.BLACK && move.startPosition.equals(blackKingStartingPosition) && blackLongCastlePosition.equals(move.endPosition)) {
             List<Position> kingsMoveTiles = new ArrayList<>(List.of(new Position(MaxBoardRow, MinBoardColumn + 3), blackLongCastlePosition));
-            boolean castlePossible = possibleCastles.contains(Castling.BlackQueenside);
-            boolean kingInDanger = TilesAreThreatened(board, kingsMoveTiles, currentPlayer, enPassant);
-            kingsMoveTiles.add(new Position(MaxBoardRow, MinBoardColumn + 1));
-            boolean pathFree = anyPieceInPath(board, kingsMoveTiles);
-            return castlePossible && !kingInDanger && pathFree;
+            List<Position> pathToBeOpen = new ArrayList<>(kingsMoveTiles);
+            pathToBeOpen.add(new Position(MinBoardRow, MinBoardColumn + 1));
+
+            return isCastle.call(Castling.BlackQueenside, kingsMoveTiles, pathToBeOpen);
         }
 
         return false;
