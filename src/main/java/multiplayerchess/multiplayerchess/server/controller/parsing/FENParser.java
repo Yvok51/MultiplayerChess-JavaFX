@@ -4,10 +4,7 @@ import multiplayerchess.multiplayerchess.common.*;
 import multiplayerchess.multiplayerchess.server.controller.Board;
 import multiplayerchess.multiplayerchess.server.controller.pieces.*;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -118,6 +115,32 @@ public class FENParser {
      */
     public static Position getEnPassant(String FEN) {
         return BaseFENParser.getEnPassant(FEN);
+    }
+
+    /**
+     * Get the castling rights from the FEN string.
+     *
+     * @param FEN The FEN string to parse.
+     * @return The castling rights from the FEN string.
+     */
+    public static Set<Castling> getCastling(String FEN) {
+        String castling = FEN.split("\\s+")[2];
+
+        Set<Castling> possibleCastling = new HashSet<>();
+        if (castling.contains("K")) {
+            possibleCastling.add(Castling.WhiteKingside);
+        }
+        if (castling.contains("Q")) {
+            possibleCastling.add(Castling.WhiteQueenside);
+        }
+        if (castling.contains("k")) {
+            possibleCastling.add(Castling.BlackKingside);
+        }
+        if (castling.contains("q")) {
+            possibleCastling.add(Castling.BlackQueenside);
+        }
+
+        return possibleCastling;
     }
 
     /**

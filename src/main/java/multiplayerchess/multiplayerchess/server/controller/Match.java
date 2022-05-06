@@ -140,7 +140,7 @@ public final class Match {
         Piece movedPiece = board.getPiece(move.startPosition);
 
         // Check whether move is a castle
-        if (rules.isCastle(board, move, currentPlayer, possibleCastles, enPassant)) {
+        if (rules.isCastle(board, move, currentPlayer, possibleCastles)) {
             performCastle(board, move);
         }
         // Check whether move is an en passant

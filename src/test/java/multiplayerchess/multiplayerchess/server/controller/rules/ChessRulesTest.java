@@ -26,6 +26,7 @@ class ChessRulesTest {
     private static final String midGameFEN = "r4rk1/2p1bpp1/2nqbn1p/4p3/3pP2P/p2P1PPB/2PQN3/R1B1K2R w KQ - 2 19";
     private static final String endGameFEN = "7R/kp2R3/2p5/8/2pPp3/P3P1r1/K1P5/8 w - - 0 52";
     private static final String enPassantFEN = "rnbqkbnr/ppp1p1pp/8/3pPp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 3";
+    private static final String castleFEN = "r3k3/8/8/4B2b/8/8/8/R3K2R w KQq - 0 1";
 
     @BeforeEach
     void setUp() {
@@ -34,6 +35,65 @@ class ChessRulesTest {
 
     @AfterEach
     void tearDown() { chessRules = null; }
+
+    @Test
+    void generatePlayerPossibleMoves() {
+        Board board = new Board(castleFEN);
+
+        List<Move> expectedMoves = new ArrayList<>();
+        expectedMoves.add(new Move(PieceType.KING, new Position(7, 4), new Position(7, 5), false));
+        expectedMoves.add(new Move(PieceType.KING, new Position(7, 4), new Position(7, 3), false));
+        expectedMoves.add(new Move(PieceType.KING, new Position(7, 4), new Position(6, 3), false));
+        expectedMoves.add(new Move(PieceType.KING, new Position(7, 4), new Position(6, 4), false));
+        expectedMoves.add(new Move(PieceType.KING, new Position(7, 4), new Position(6, 5), false));
+
+        expectedMoves.add(new Move(PieceType.BISHOP, new Position(4, 7), new Position(3, 6), false));
+        expectedMoves.add(new Move(PieceType.BISHOP, new Position(4, 7), new Position(2, 5), false));
+        expectedMoves.add(new Move(PieceType.BISHOP, new Position(4, 7), new Position(1, 4), false));
+        expectedMoves.add(new Move(PieceType.BISHOP, new Position(4, 7), new Position(0, 3), false));
+        expectedMoves.add(new Move(PieceType.BISHOP, new Position(4, 7), new Position(5, 6), false));
+        expectedMoves.add(new Move(PieceType.BISHOP, new Position(4, 7), new Position(6, 5), false));
+
+        expectedMoves.add(new Move(PieceType.ROOK, new Position(7, 0), new Position(7, 1), false));
+        expectedMoves.add(new Move(PieceType.ROOK, new Position(7, 0), new Position(7, 2), false));
+        expectedMoves.add(new Move(PieceType.ROOK, new Position(7, 0), new Position(7, 3), false));
+        expectedMoves.add(new Move(PieceType.ROOK, new Position(7, 0), new Position(6, 0), false));
+        expectedMoves.add(new Move(PieceType.ROOK, new Position(7, 0), new Position(5, 0), false));
+        expectedMoves.add(new Move(PieceType.ROOK, new Position(7, 0), new Position(4, 0), false));
+        expectedMoves.add(new Move(PieceType.ROOK, new Position(7, 0), new Position(3, 0), false));
+        expectedMoves.add(new Move(PieceType.ROOK, new Position(7, 0), new Position(2, 0), false));
+        expectedMoves.add(new Move(PieceType.ROOK, new Position(7, 0), new Position(1, 0), false));
+        expectedMoves.add(new Move(PieceType.ROOK, new Position(7, 0), new Position(0, 0), true));
+
+        List<Move> actualMoves = chessRules.generatePlayerPossibleMoves(board, Player.BLACK, null);
+
+        assertTrue(actualMoves.containsAll(expectedMoves) && expectedMoves.containsAll(actualMoves) && actualMoves.size() == expectedMoves.size());
+    }
+
+    @Test
+    void isCastleCastleNotBlockedByThreatOnlyOnRook() {
+        Board board = new Board(castleFEN);
+        Move baseCastle = new Move(PieceType.KING, new Position(7, 4), new Position(7, 2), false);
+
+        assertTrue(chessRules.isCastle(board, baseCastle, Player.BLACK, FENParser.getCastling(castleFEN)));
+    }
+
+    @Test
+    void isCastleCastleBlockedByThreat() {
+        Board board = new Board(castleFEN);
+        Move baseCastle = new Move(PieceType.KING, new Position(0, 4), new Position(0, 2), false);
+
+        boolean isCastle = chessRules.isCastle(board, baseCastle, Player.WHITE, FENParser.getCastling(castleFEN));
+        assertFalse(isCastle);
+    }
+
+    @Test
+    void isCastleBaseTest() {
+        Board board = new Board(castleFEN);
+        Move baseCastle = new Move(PieceType.KING, new Position(0, 4), new Position(0, 6), false);
+
+        assertTrue(chessRules.isCastle(board, baseCastle, Player.WHITE, FENParser.getCastling(castleFEN)));
+    }
 
     @Test
     void isMoveValidEnPassant() {
@@ -97,7 +157,7 @@ class ChessRulesTest {
         assertEquals(kingExpectedMoves, kingPossibleMoves);
         assertEquals(pawnExpectedMoves, pawnPossibleMoves);
     }
-
+/*
     @Test
     void generatePossibleMovesForPieceCastling() {
         Board board = new Board(midGameFEN);
@@ -118,7 +178,7 @@ class ChessRulesTest {
         assertEquals(notCaptureExpectedMoves, notCapturePossibleMoves);
         assertEquals(captureExpectedMoves, capturePossibleMoves);
     }
-
+*/
     @Test
     void generatePossibleMovesForPiece() {
         Board board = new Board(beginningFEN);
