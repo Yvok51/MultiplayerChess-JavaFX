@@ -13,7 +13,9 @@ import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-
+/**
+ * The PlayerConnectionController class is responsible for handling the connection between the server and the client.
+ */
 public class PlayerConnectionController implements AutoCloseable {
 
     private final AtomicBoolean heartbeatOccurredFlag;
@@ -23,6 +25,10 @@ public class PlayerConnectionController implements AutoCloseable {
     private SocketMessageListener listener;
     private MessageQueue<ServerMessage> messageQueue;
 
+    /**
+     * PlayerConnectionController constructor.
+     * Starts handling heartbeat messages.
+     */
     private PlayerConnectionController() {
         this.callbackMap = new CallbackMap<>();
         this.heartbeatOccurredFlag = new AtomicBoolean(false);
@@ -31,6 +37,13 @@ public class PlayerConnectionController implements AutoCloseable {
         callbackMap.addCallback(MessageType.HEARTBEAT, heartbeatCallback);
     }
 
+    /**
+     * Create a new network controller.
+     *
+     * @param playerSocket The socket to use for communication
+     * @return The new network controller
+     * @throws IOException If an error occurs while accessing the socket streams
+     */
     public static PlayerConnectionController createController(Socket playerSocket) throws IOException {
         var controller = new PlayerConnectionController();
 
@@ -116,6 +129,11 @@ public class PlayerConnectionController implements AutoCloseable {
         writer.start();
     }
 
+    /**
+     * Whether the network controller is running.
+     *
+     * @return Whether the network controller is running.
+     */
     public boolean isRunning() {
         return listener.isRunning() && writer.isRunning();
     }

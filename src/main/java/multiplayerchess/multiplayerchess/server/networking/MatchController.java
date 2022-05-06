@@ -11,6 +11,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 
+/**
+ * The MatchController is the main class handling the match.
+ * It is responsible for handling the messages sent by the clients and the game logic.
+ */
 public final class MatchController extends Thread {
     private final Match match;
     private final CountDownLatch bothPlayersPresentLatch;
@@ -161,6 +165,12 @@ public final class MatchController extends Thread {
         }
     }
 
+    /**
+     * Handle a an acknowledgement message sent by a player that he has connected.
+     * This is used to synchronize the server with both players
+     *
+     * @param message The acknowledgement message to handle
+     */
     private void joinedPlayerHasAcknowledgedConnectionHandler(Message message) {
         broadcastMessage(new OpponentConnectedMessage());
         blackPlayerController.removeCallback(MessageType.JOIN_GAME, this::joinedPlayerHasAcknowledgedConnectionHandler);

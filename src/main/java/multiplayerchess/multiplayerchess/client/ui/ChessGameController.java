@@ -21,6 +21,9 @@ import multiplayerchess.multiplayerchess.common.messages.TurnReplyMessage;
 
 import java.io.IOException;
 
+/**
+ * The controller for the chess game.
+ */
 public class ChessGameController {
 
     @FXML
@@ -113,14 +116,30 @@ public class ChessGameController {
         }
     }
 
+    /**
+     * Handler for the {@link multiplayerchess.multiplayerchess.common.messages.OpponentResignedMessage}
+     *
+     * @param message The message to handle.
+     */
     public void opponentResignedHandler(Message message) {
         Platform.runLater(() -> endMatch(Winner.getWinnerFromPlayer(match.getPlayer()), "Opponent resigned"));
     }
 
+    /**
+     * Handler for the {@link multiplayerchess.multiplayerchess.common.messages.OpponentDisconnectedMessage}
+     *
+     * @param message The message to handle.
+     */
     public void opponentDisconnectedHandler(Message message) {
         Platform.runLater(() -> endMatch(Winner.getWinnerFromPlayer(match.getPlayer()), "Opponent disconnected"));
     }
 
+    /**
+     * Handler for the {@link multiplayerchess.multiplayerchess.common.messages.TurnReplyMessage}
+     * Depending on the message, the match is updated.
+     *
+     * @param message The message to handle.
+     */
     public void turnHandler(Message message) {
         TurnReplyMessage reply = (TurnReplyMessage) message;
 
@@ -139,6 +158,12 @@ public class ChessGameController {
         }
     }
 
+    /**
+     * Handler for the {@link multiplayerchess.multiplayerchess.common.messages.OpponentConnectedMessage}
+     * Starts the game.
+     *
+     * @param message The message to handle.
+     */
     public void opponentJoinedHandler(Message message) {
         popupPane.setVisible(false);
         this.setDisable(false);
@@ -156,11 +181,17 @@ public class ChessGameController {
                 move.getEndPosition(), match.getPlayer().getColor(), move.isCapture(), match.getMatchID());
     }
 
+    /**
+     * Called when the user clicks the resign button.
+     */
     public void onResignAndQuit() {
         networkController.sendResign(match.getMatchID(), match.getPlayer());
         endMatch(Winner.getWinnerFromPlayer(match.getPlayer().opposite()), "Resignation");
     }
 
+    /**
+     * Set the popup pane to visible and disable the game for the case we are still waiting for an opponent.
+     */
     private void setWaitingForOpponent() {
         board.setDisable(true);
 
@@ -209,6 +240,12 @@ public class ChessGameController {
         this.setDisable(true);
     }
 
+    /**
+     * Returns the winner text for the given winner.
+     *
+     * @param winner The winner of the match.
+     * @return The winner text for the given winner.
+     */
     private String getWinnerText(Winner winner) {
         String winText = winner.toString();
         if (winner != Winner.NONE) {
@@ -217,16 +254,27 @@ public class ChessGameController {
         return winText;
     }
 
+    /**
+     * Sets whether everything is disabled or not.
+     *
+     * @param disable True if everything is to be disabled, false otherwise.
+     */
     private void setDisable(boolean disable) {
         board.setDisable(disable);
         resignButton.setDisable(disable);
     }
 
+    /**
+     * Starts a new turn
+     */
     private void newTurn() {
         errorText.setText("");
         setTurnLabel();
     }
 
+    /**
+     * Sets the turn label to the player whose turn it is.
+     */
     private void setTurnLabel() {
         if (match.isOurTurn()) {
             turnLabel.setText("Your turn");

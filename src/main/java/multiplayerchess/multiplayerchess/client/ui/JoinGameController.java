@@ -83,6 +83,11 @@ public class JoinGameController {
         }
     }
 
+    /**
+     * Handler for the join game reply message.
+     *
+     * @param message The message to handle.
+     */
     private void joinGameReplyHandler(Message message) {
         var reply = (JoinMatchReplyMessage) message;
         networkController.clearCallbacks(MessageType.JOIN_GAME);

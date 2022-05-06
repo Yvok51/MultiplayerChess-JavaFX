@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/**
+ * Class used to parse the FEN strings.
+ */
 public class FENParser {
     private static final Map<Character, Supplier<Piece>> pieceTranslation;
 
@@ -34,6 +37,12 @@ public class FENParser {
 
     }
 
+    /**
+     * Get an in-memory representation of the board from the FEN string.
+     *
+     * @param FEN The FEN string to parse.
+     * @return The board.
+     */
     public static Piece[][] ParseBoard(String FEN) {
         String fenBoard = FEN.split("\\s+")[0];
         Piece[][] board =
@@ -69,10 +78,22 @@ public class FENParser {
         return board;
     }
 
+    /**
+     * Get the current player from the FEN string.
+     *
+     * @param FEN The FEN string to parse.
+     * @return The current player.
+     */
     public static Player getCurrentPlayer(String FEN) {
         return BaseFENParser.getCurrentPlayer(FEN);
     }
 
+    /**
+     * Get the possible en passant move from the FEN string.
+     *
+     * @param FEN The FEN string to parse.
+     * @return The possible en passant move.
+     */
     public static Position getEnPassant(String FEN) {
         return BaseFENParser.getEnPassant(FEN);
     }

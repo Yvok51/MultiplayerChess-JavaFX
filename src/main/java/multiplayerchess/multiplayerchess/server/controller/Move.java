@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Represents a move in the game.
+ */
 public final class Move {
     public final boolean isCapture;
     public final PieceType pieceType;

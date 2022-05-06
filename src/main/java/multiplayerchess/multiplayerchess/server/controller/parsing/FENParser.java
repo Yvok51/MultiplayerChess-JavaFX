@@ -218,6 +218,12 @@ public class FENParser {
         }
     }
 
+    /**
+     * Add the castling options to the string builder
+     *
+     * @param builder The string builder to add the castling options to
+     * @param possibleCastling The castling options to add
+     */
     private static void addCastlingToBuilder(StringBuilder builder, Set<Castling> possibleCastling) {
         boolean anyAdded = false;
         if (possibleCastling.contains(Castling.WHITE_KINGSIDE)) {

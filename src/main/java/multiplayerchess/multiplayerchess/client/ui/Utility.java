@@ -35,14 +35,27 @@ public class Utility {
         return image;
     }
 
+    /**
+     * Removes a resource from the list of resources to close.
+     *
+     * @param closeable The resource to remove.
+     */
     public static void removeCloseable(AutoCloseable closeable) {
         closeables.remove(closeable);
     }
 
+    /**
+     * Adds a resource to the list of resources to close.
+     *
+     * @param closeable The resource to close eventually.
+     */
     public static void addCloseable(AutoCloseable closeable) {
         closeables.add(closeable);
     }
 
+    /**
+     * Closes all the registered resources.
+     */
     public static void closeAll() {
         for (var closeable : closeables) {
             try {

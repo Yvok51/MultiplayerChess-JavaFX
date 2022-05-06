@@ -107,6 +107,12 @@ public class MainMenuController {
         }
     }
 
+    /**
+     * Handler for the {@link multiplayerchess.multiplayerchess.common.messages.OpponentConnectedMessage} message.
+     * Used for the case we did not have the time to setup the next controller before receiving the message.
+     *
+     * @param message The message to handle.
+     */
     private void opponentConnectedHandler(Message message) {
         opponentConnected = true;
     }

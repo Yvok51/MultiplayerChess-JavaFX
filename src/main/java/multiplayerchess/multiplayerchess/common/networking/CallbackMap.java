@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A class that manages callbacks for a specific type of event.
+ *
+ * @param <T> The type of event that the callback is for.
+ * @param <V> The type of callback that is being managed.
+ */
 public class CallbackMap<T, V> {
 
     private final Map<T, List<V>> callbackMap;

@@ -3,6 +3,9 @@ package multiplayerchess.multiplayerchess.client.controller.pieces;
 import multiplayerchess.multiplayerchess.common.Color;
 import multiplayerchess.multiplayerchess.common.PieceType;
 
+/**
+ * The base class for all pieces.
+ */
 public abstract class Piece {
     protected final static String basePiecePath = "/multiplayerchess/multiplayerchess/images/";
 
