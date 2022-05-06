@@ -146,16 +146,7 @@ public class FENParser {
         }
 
         builder.append(' ');
-
-        if (possibleCastling.contains(Castling.WhiteKingside))
-            builder.append('K');
-        if (possibleCastling.contains(Castling.WhiteQueenside))
-            builder.append('Q');
-        if (possibleCastling.contains(Castling.BlackKingside))
-            builder.append('k');
-        if (possibleCastling.contains(Castling.BlackQueenside))
-            builder.append('q');
-
+        addCastlingToBuilder(builder, possibleCastling);
         builder.append(' ');
 
         if (enpassant != null) {
@@ -201,6 +192,30 @@ public class FENParser {
             if (rank > Board.MinBoardRow) {
                 builder.append('/');
             }
+        }
+    }
+
+    private static void addCastlingToBuilder(StringBuilder builder, Set<Castling> possibleCastling) {
+        boolean anyAdded = false;
+        if (possibleCastling.contains(Castling.WhiteKingside)) {
+            builder.append('K');
+            anyAdded = true;
+        }
+        if (possibleCastling.contains(Castling.WhiteQueenside)) {
+            builder.append('Q');
+            anyAdded = true;
+        }
+        if (possibleCastling.contains(Castling.BlackKingside)) {
+            builder.append('k');
+            anyAdded = true;
+        }
+        if (possibleCastling.contains(Castling.BlackQueenside)) {
+            builder.append('q');
+            anyAdded = true;
+        }
+
+        if (!anyAdded) {
+            builder.append('-');
         }
     }
 }
