@@ -16,8 +16,8 @@ public class Utility {
 
     // The map of all the images
     private final static Map<String, Image> pieceImages = new HashMap<>();
-    public static String css;
     private static final List<AutoCloseable> closeables = new ArrayList<>();
+    public static String css;
 
     /**
      * Gets the image for a given piece.
@@ -29,7 +29,7 @@ public class Utility {
         var image = pieceImages.get(piece.getIconFilename());
         if (image == null) {
             var resource = Utility.class.getResourceAsStream(piece.getIconFilename());
-            image = new Image(resource);
+            image = new Image(resource); // TODO: what if it is null?
             pieceImages.put(piece.getIconFilename(), image);
         }
         return image;

@@ -74,8 +74,8 @@ public final class Match {
      * Answers whether the move is a capturing move.
      *
      * @param pieceType The type of the piece that is moving.
-     * @param start The start position of the piece.
-     * @param end The end position of the piece.
+     * @param start     The start position of the piece.
+     * @param end       The end position of the piece.
      * @return Whether the move is a capturing move.
      */
     public boolean isCapture(PieceType pieceType, Position start, Position end) {

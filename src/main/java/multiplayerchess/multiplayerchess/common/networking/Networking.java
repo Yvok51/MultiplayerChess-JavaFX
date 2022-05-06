@@ -6,5 +6,5 @@ package multiplayerchess.multiplayerchess.common.networking;
 public class Networking {
     public static final String SERVER_ADDRESS = "127.0.0.1";
     public static final int SERVER_PORT = 8888;
-    public static final String DEBUG_MATCH_ID = "ABCDEFGH";
+    // public static final String DEBUG_MATCH_ID = "ABCDEFGH";
 }

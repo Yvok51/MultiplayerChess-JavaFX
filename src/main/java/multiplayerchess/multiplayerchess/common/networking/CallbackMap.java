@@ -1,6 +1,9 @@
 package multiplayerchess.multiplayerchess.common.networking;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CallbackMap<T, V> {
 
@@ -53,24 +56,6 @@ public class CallbackMap<T, V> {
      */
     public void clearAllCallbacks() {
         callbackMap.clear();
-    }
-
-    /**
-     * Get a set of all keys and their corresponding callbacks.
-     *
-     * @return A set of all keys and their corresponding callbacks
-     */
-    public Set<Map.Entry<T, List<V>>> entrySet() {
-        return callbackMap.entrySet();
-    }
-
-    /**
-     * Get a set of all keys.
-     *
-     * @return A set of all keys
-     */
-    public Set<T> keySet() {
-        return callbackMap.keySet();
     }
 
     /**

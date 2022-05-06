@@ -2,13 +2,11 @@ package multiplayerchess.multiplayerchess.server.controller;
 
 import multiplayerchess.multiplayerchess.common.PieceType;
 import multiplayerchess.multiplayerchess.common.Position;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MoveTest {
 

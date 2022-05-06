@@ -22,7 +22,6 @@ public final class Knight extends Piece {
     },
             false
     );
-    private static final String IconFilename = "Knight.png";
 
     public Knight(Color color) {
         super(color);

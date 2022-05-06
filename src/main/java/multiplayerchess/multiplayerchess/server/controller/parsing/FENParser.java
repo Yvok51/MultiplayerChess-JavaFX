@@ -128,16 +128,16 @@ public class FENParser {
 
         Set<Castling> possibleCastling = new HashSet<>();
         if (castling.contains("K")) {
-            possibleCastling.add(Castling.WhiteKingside);
+            possibleCastling.add(Castling.WHITE_KINGSIDE);
         }
         if (castling.contains("Q")) {
-            possibleCastling.add(Castling.WhiteQueenside);
+            possibleCastling.add(Castling.WHITE_QUEENSIDE);
         }
         if (castling.contains("k")) {
-            possibleCastling.add(Castling.BlackKingside);
+            possibleCastling.add(Castling.BLACK_KINGSIDE);
         }
         if (castling.contains("q")) {
-            possibleCastling.add(Castling.BlackQueenside);
+            possibleCastling.add(Castling.BLACK_QUEENSIDE);
         }
 
         return possibleCastling;
@@ -220,19 +220,19 @@ public class FENParser {
 
     private static void addCastlingToBuilder(StringBuilder builder, Set<Castling> possibleCastling) {
         boolean anyAdded = false;
-        if (possibleCastling.contains(Castling.WhiteKingside)) {
+        if (possibleCastling.contains(Castling.WHITE_KINGSIDE)) {
             builder.append('K');
             anyAdded = true;
         }
-        if (possibleCastling.contains(Castling.WhiteQueenside)) {
+        if (possibleCastling.contains(Castling.WHITE_QUEENSIDE)) {
             builder.append('Q');
             anyAdded = true;
         }
-        if (possibleCastling.contains(Castling.BlackKingside)) {
+        if (possibleCastling.contains(Castling.BLACK_KINGSIDE)) {
             builder.append('k');
             anyAdded = true;
         }
-        if (possibleCastling.contains(Castling.BlackQueenside)) {
+        if (possibleCastling.contains(Castling.BLACK_QUEENSIDE)) {
             builder.append('q');
             anyAdded = true;
         }

@@ -2,7 +2,6 @@ package multiplayerchess.multiplayerchess.common.networking;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 
 /**
@@ -19,7 +18,7 @@ public class SocketMessageWriter<T> extends Thread {
     /**
      * The SocketMessageWriter constructor.
      *
-     * @param socket The socket to write to.
+     * @param socket       The socket to write to.
      * @param messageQueue The message queue to get the messages from.
      */
     public SocketMessageWriter(Socket socket, MessageQueue<T> messageQueue) {

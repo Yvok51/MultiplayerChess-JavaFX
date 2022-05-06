@@ -91,8 +91,7 @@ public class ChessRules {
      * @param possibleCastles All the possible castles that can be performed
      * @return Whether the move is a valid castle move
      */
-    public boolean isCastle(Board board, Move move, Player currentPlayer, Set<Castling> possibleCastles)
-    {
+    public boolean isCastle(Board board, Move move, Player currentPlayer, Set<Castling> possibleCastles) {
         var movedPiece = board.getPiece(move.startPosition);
         if (move.pieceType != PieceType.KING || movedPiece == null || movedPiece.getType() != PieceType.KING) {
             return false;
@@ -123,7 +122,7 @@ public class ChessRules {
                     new Position(whiteShortCastlePosition.row, whiteShortCastlePosition.column - 1),
                     whiteShortCastlePosition));
 
-            return isCastle.call(Castling.WhiteKingside, kingsMoveTiles, kingsMoveTiles);
+            return isCastle.call(Castling.WHITE_KINGSIDE, kingsMoveTiles, kingsMoveTiles);
         }
         if (currentPlayer == Player.WHITE && move.startPosition.equals(whiteKingStartingPosition) && whiteLongCastlePosition.equals(move.endPosition)) {
             List<Position> kingsMoveTiles = new ArrayList<>(List.of(
@@ -132,14 +131,14 @@ public class ChessRules {
             List<Position> pathToBeOpen = new ArrayList<>(kingsMoveTiles);
             pathToBeOpen.add(new Position(whiteLongCastlePosition.row, whiteLongCastlePosition.column - 1));
 
-            return isCastle.call(Castling.WhiteQueenside, kingsMoveTiles, pathToBeOpen);
+            return isCastle.call(Castling.WHITE_QUEENSIDE, kingsMoveTiles, pathToBeOpen);
         }
         if (currentPlayer == Player.BLACK && move.startPosition.equals(blackKingStartingPosition) && blackShortCastlePosition.equals(move.endPosition)) {
             List<Position> kingsMoveTiles = new ArrayList<>(List.of(
                     new Position(blackKingStartingPosition.row, blackShortCastlePosition.column - 1),
                     blackShortCastlePosition));
 
-            return isCastle.call(Castling.BlackKingside, kingsMoveTiles, kingsMoveTiles);
+            return isCastle.call(Castling.BLACK_KINGSIDE, kingsMoveTiles, kingsMoveTiles);
         }
         if (currentPlayer == Player.BLACK && move.startPosition.equals(blackKingStartingPosition) && blackLongCastlePosition.equals(move.endPosition)) {
             List<Position> kingsMoveTiles = new ArrayList<>(List.of(
@@ -148,7 +147,7 @@ public class ChessRules {
             List<Position> pathToBeOpen = new ArrayList<>(kingsMoveTiles);
             pathToBeOpen.add(new Position(blackKingStartingPosition.row, blackKingStartingPosition.column - 1));
 
-            return isCastle.call(Castling.BlackQueenside, kingsMoveTiles, pathToBeOpen);
+            return isCastle.call(Castling.BLACK_QUEENSIDE, kingsMoveTiles, pathToBeOpen);
         }
 
         return false;
@@ -216,9 +215,9 @@ public class ChessRules {
     /**
      * Generate all the possible moves of a player.
      *
-     * @param board               The current board
-     * @param player              The players whose moves we are searching for
-     * @param enPassant           The possible en passant move in the current ply (half-move)
+     * @param board     The current board
+     * @param player    The players whose moves we are searching for
+     * @param enPassant The possible en passant move in the current ply (half-move)
      * @return The list of all moves that the given player can make
      */
     List<Move> generatePlayerPossibleMoves(Board board, Player player, Position enPassant) {
@@ -235,7 +234,7 @@ public class ChessRules {
     /**
      * Generate all moves for a piece, even ones not possible due to king safety or whether it is a capture.
      *
-     * @param board The current board
+     * @param board  The current board
      * @param player The player whose moves we are searching for
      * @return The list of all moves that the given player can make
      */
@@ -253,11 +252,11 @@ public class ChessRules {
     /**
      * Generates all possible moves for the piece on the given position.
      *
-     * @param board               The current board
-     * @param piecePosition       The position of the piece we are generating moves for
-     * @param player              The player whose turn it is
-     * @param isCapture           Decides whether the moves will be captures - if true - only captures are included, if false - only non-captures
-     * @param enPassant           The possible en passant move in the current ply (half-move)
+     * @param board         The current board
+     * @param piecePosition The position of the piece we are generating moves for
+     * @param player        The player whose turn it is
+     * @param isCapture     Decides whether the moves will be captures - if true - only captures are included, if false - only non-captures
+     * @param enPassant     The possible en passant move in the current ply (half-move)
      * @return List of possible moves
      */
     List<Move> generatePossibleMovesForPiece(Board board, Position piecePosition, Player player,
@@ -286,11 +285,10 @@ public class ChessRules {
      * @return Filtered list of legal moves
      */
     List<Move> removeInvalidMoves(Board board, List<Move> moves, Player player,
-            Position enPassant)
-    {
+                                  Position enPassant) {
         return moves.stream().filter((move) ->
                 !anyPieceInPath(board, move) && isValidDestination(board, move, enPassant)
-                && !kingIsInCheckAfterMove(board, move, player)
+                        && !kingIsInCheckAfterMove(board, move, player)
         ).toList();
     }
 
@@ -331,9 +329,9 @@ public class ChessRules {
     /**
      * Answers whether after the move is performed on the board, the king of the specified player will be in check
      *
-     * @param board     The board before the move
-     * @param move      The moved to be performed on the board
-     * @param player    The player whose king we are checking
+     * @param board  The board before the move
+     * @param move   The moved to be performed on the board
+     * @param player The player whose king we are checking
      * @return Whether the given player's king will be in check after the move
      */
     boolean kingIsInCheckAfterMove(Board board, Move move, Player player) {
@@ -355,8 +353,8 @@ public class ChessRules {
     /**
      * Answers whether the player's king is in check
      *
-     * @param board               The board to check on
-     * @param whoseKing           Player whose king we are looking at for the check
+     * @param board     The board to check on
+     * @param whoseKing Player whose king we are looking at for the check
      * @return Whether the player's king is in check
      */
     boolean kingIsInCheck(Board board, Player whoseKing) {
@@ -389,9 +387,9 @@ public class ChessRules {
     /**
      * Answers whether the given tile is threatened by the pieces of the given player
      *
-     * @param board               The board to use
-     * @param tile                The tile to test whether it is threatened
-     * @param player              Whose piece to check whether they threaten the tile
+     * @param board  The board to use
+     * @param tile   The tile to test whether it is threatened
+     * @param player Whose piece to check whether they threaten the tile
      * @return Whether the tile is threatened by the pieces of the player
      */
     boolean TileIsThreatened(Board board, Position tile, Player player) {
@@ -403,9 +401,9 @@ public class ChessRules {
     /**
      * Answers whether ANY of the given tiles are threatened by the pieces of the given player
      *
-     * @param board     The board to use
-     * @param tiles     The tiles to test whether they are threatened
-     * @param player    Whose piece's to check whether they threaten the tiles
+     * @param board  The board to use
+     * @param tiles  The tiles to test whether they are threatened
+     * @param player Whose piece's to check whether they threaten the tiles
      * @return Whether ANY of the tile are threatened by the pieces of the player
      */
     boolean TilesAreThreatened(Board board, List<Position> tiles, Player player) {

@@ -18,8 +18,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ChessRulesTest {
 
-    private ChessRules chessRules;
-
     private static final String emptyBoardFEN = "8/8/8/8/8/8/8/8 w - - 0 1";
     private static final String beginningFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     private static final String earlyGameFEN = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
@@ -27,6 +25,7 @@ class ChessRulesTest {
     private static final String endGameFEN = "7R/kp2R3/2p5/8/2pPp3/P3P1r1/K1P5/8 w - - 0 52";
     private static final String enPassantFEN = "rnbqkbnr/ppp1p1pp/8/3pPp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 3";
     private static final String castleFEN = "r3k3/8/8/4B2b/8/8/8/R3K2R w KQq - 0 1";
+    private ChessRules chessRules;
 
     @BeforeEach
     void setUp() {
@@ -34,7 +33,9 @@ class ChessRulesTest {
     }
 
     @AfterEach
-    void tearDown() { chessRules = null; }
+    void tearDown() {
+        chessRules = null;
+    }
 
     @Test
     void generatePlayerPossibleMoves() {
@@ -157,28 +158,29 @@ class ChessRulesTest {
         assertEquals(kingExpectedMoves, kingPossibleMoves);
         assertEquals(pawnExpectedMoves, pawnPossibleMoves);
     }
-/*
-    @Test
-    void generatePossibleMovesForPieceCastling() {
-        Board board = new Board(midGameFEN);
 
-        List<Move> notCapturePossibleMoves = chessRules.generatePossibleMovesForPiece(
-                board, new Position(0, 4), Player.WHITE, false, null);
-        List<Move> notCaptureExpectedMoves = List.of(
-                new Move(PieceType.PAWN, new Position(0, 4), new Position(0, 3), false),
-                new Move(PieceType.PAWN, new Position(0, 4), new Position(0, 5), false),
-                new Move(PieceType.PAWN, new Position(0, 4), new Position(0, 6), false),
-                new Move(PieceType.PAWN, new Position(0, 4), new Position(1, 5), false)
-        );
+    /*
+        @Test
+        void generatePossibleMovesForPieceCastling() {
+            Board board = new Board(midGameFEN);
 
-        List<Move> capturePossibleMoves = chessRules.generatePossibleMovesForPiece(
-                board, new Position(1, 4), Player.WHITE, true, null);
-        List<Move> captureExpectedMoves = List.of();
+            List<Move> notCapturePossibleMoves = chessRules.generatePossibleMovesForPiece(
+                    board, new Position(0, 4), Player.WHITE, false, null);
+            List<Move> notCaptureExpectedMoves = List.of(
+                    new Move(PieceType.PAWN, new Position(0, 4), new Position(0, 3), false),
+                    new Move(PieceType.PAWN, new Position(0, 4), new Position(0, 5), false),
+                    new Move(PieceType.PAWN, new Position(0, 4), new Position(0, 6), false),
+                    new Move(PieceType.PAWN, new Position(0, 4), new Position(1, 5), false)
+            );
 
-        assertEquals(notCaptureExpectedMoves, notCapturePossibleMoves);
-        assertEquals(captureExpectedMoves, capturePossibleMoves);
-    }
-*/
+            List<Move> capturePossibleMoves = chessRules.generatePossibleMovesForPiece(
+                    board, new Position(1, 4), Player.WHITE, true, null);
+            List<Move> captureExpectedMoves = List.of();
+
+            assertEquals(notCaptureExpectedMoves, notCapturePossibleMoves);
+            assertEquals(captureExpectedMoves, capturePossibleMoves);
+        }
+    */
     @Test
     void generatePossibleMovesForPiece() {
         Board board = new Board(beginningFEN);

@@ -36,10 +36,10 @@ public final class Match {
         enPassant = FENParser.getEnPassant(StartingFEN);
 
         possibleCastles = new HashSet<>();
-        possibleCastles.add(Castling.WhiteKingside);
-        possibleCastles.add(Castling.WhiteQueenside);
-        possibleCastles.add(Castling.BlackKingside);
-        possibleCastles.add(Castling.BlackQueenside);
+        possibleCastles.add(Castling.WHITE_KINGSIDE);
+        possibleCastles.add(Castling.WHITE_QUEENSIDE);
+        possibleCastles.add(Castling.BLACK_KINGSIDE);
+        possibleCastles.add(Castling.BLACK_QUEENSIDE);
     }
 
     /**
@@ -256,11 +256,11 @@ public final class Match {
 
         if (movedPiece.getType() == PieceType.KING) {
             if (movedPiece.color == Color.WHITE) {
-                possibleCastles.remove(Castling.WhiteKingside);
-                possibleCastles.remove(Castling.WhiteQueenside);
+                possibleCastles.remove(Castling.WHITE_KINGSIDE);
+                possibleCastles.remove(Castling.WHITE_QUEENSIDE);
             } else {
-                possibleCastles.remove(Castling.BlackKingside);
-                possibleCastles.remove(Castling.BlackQueenside);
+                possibleCastles.remove(Castling.BLACK_KINGSIDE);
+                possibleCastles.remove(Castling.BLACK_QUEENSIDE);
             }
         }
         if (movedPiece.getType() == PieceType.ROOK) {
@@ -268,17 +268,17 @@ public final class Match {
                 Position whiteKingsideRookPosition = new Position(ChessRules.MinBoardRow, ChessRules.MaxBoardColumn);
                 Position whiteQueensideRookPosition = new Position(ChessRules.MinBoardRow, ChessRules.MinBoardColumn);
                 if (whiteKingsideRookPosition.equals(move.startPosition)) {
-                    possibleCastles.remove(Castling.WhiteKingside);
+                    possibleCastles.remove(Castling.WHITE_KINGSIDE);
                 } else if (whiteQueensideRookPosition.equals(move.startPosition)) {
-                    possibleCastles.remove(Castling.WhiteQueenside);
+                    possibleCastles.remove(Castling.WHITE_QUEENSIDE);
                 }
             } else {
                 Position blackKingsideRookPosition = new Position(ChessRules.MaxBoardRow, ChessRules.MaxBoardColumn);
                 Position blackQueensideRookPosition = new Position(ChessRules.MaxBoardRow, ChessRules.MinBoardColumn);
                 if (blackKingsideRookPosition.equals(move.startPosition)) {
-                    possibleCastles.remove(Castling.BlackKingside);
+                    possibleCastles.remove(Castling.BLACK_KINGSIDE);
                 } else if (blackQueensideRookPosition.equals(move.startPosition)) {
-                    possibleCastles.remove(Castling.BlackQueenside);
+                    possibleCastles.remove(Castling.BLACK_QUEENSIDE);
                 }
             }
         }

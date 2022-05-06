@@ -58,7 +58,7 @@ public final class Board {
     /**
      * Clear any piece that is on the given position
      *
-     * @param position The positon to clear
+     * @param position The position to clear
      */
     public void clearPiece(Position position) {
         board[position.row][position.column] = null;

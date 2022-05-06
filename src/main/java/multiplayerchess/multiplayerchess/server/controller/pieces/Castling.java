@@ -4,10 +4,10 @@ package multiplayerchess.multiplayerchess.server.controller.pieces;
  * The enumeration of all the possible castling moves.
  */
 public enum Castling {
-    WhiteKingside(0b0001),
-    WhiteQueenside(0b0010),
-    BlackKingside(0b0100),
-    BlackQueenside(0b1000);
+    WHITE_KINGSIDE(0b0001),
+    WHITE_QUEENSIDE(0b0010),
+    BLACK_KINGSIDE(0b0100),
+    BLACK_QUEENSIDE(0b1000);
 
     public final int id;
 

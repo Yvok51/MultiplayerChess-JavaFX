@@ -46,10 +46,7 @@ public class ChessGameController {
     private Match match;
     private NetworkController networkController;
 
-    // private Stage stage;
     private UIBoard board;
-
-    // private UIPopup popup;
 
     /**
      * Get the file path of the FXML file for this controller's scene.
@@ -179,9 +176,10 @@ public class ChessGameController {
 
     /**
      * Answers whether the move is a capturing move.
-     * @param type The type of the piece being moved.
+     *
+     * @param type  The type of the piece being moved.
      * @param start The starting position of the piece.
-     * @param end The ending position of the piece.
+     * @param end   The ending position of the piece.
      * @return True if the move is a capturing move, false otherwise.
      */
     public boolean isCapture(PieceType type, Position start, Position end) {

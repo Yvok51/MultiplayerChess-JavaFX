@@ -4,13 +4,11 @@ import multiplayerchess.multiplayerchess.common.Color;
 import multiplayerchess.multiplayerchess.common.PieceType;
 import multiplayerchess.multiplayerchess.common.Position;
 import multiplayerchess.multiplayerchess.server.controller.Move;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PawnTest {
 

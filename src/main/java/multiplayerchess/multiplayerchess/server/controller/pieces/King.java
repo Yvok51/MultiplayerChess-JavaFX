@@ -22,7 +22,6 @@ public final class King extends Piece {
     },
             false
     );
-    private static final String IconFilename = "King.png";
 
     public King(Color color) {
         super(color);
