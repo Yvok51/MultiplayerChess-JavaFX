@@ -18,6 +18,16 @@ public final class TurnMessage extends ClientOngoingMatchMessage implements Seri
     public final Position endingPosition;
     public final Color playerColor;
 
+    /**
+     * Constructs a new TurnMessage.
+     *
+     * @param pieceType        The type of piece that is being moved.
+     * @param startingPosition The starting position of the piece.
+     * @param endingPosition   The ending position of the piece.
+     * @param playerColor      The color of the player who made the move.
+     * @param isCapture        Whether the move is a capture.
+     * @param matchID          The ID of the match.
+     */
     public TurnMessage(PieceType pieceType, Position startingPosition, Position endingPosition,
                        Color playerColor, boolean isCapture, String matchID) {
         super(matchID);

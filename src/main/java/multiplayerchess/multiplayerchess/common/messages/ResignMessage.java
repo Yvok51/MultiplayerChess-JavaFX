@@ -12,6 +12,12 @@ public final class ResignMessage extends ClientOngoingMatchMessage implements Se
 
     public final Player player;
 
+    /**
+     * Constructs a new ResignMessage.
+     *
+     * @param matchID the ID of the match.
+     * @param player  the player who resigned.
+     */
     public ResignMessage(String matchID, Player player) {
         super(matchID);
 

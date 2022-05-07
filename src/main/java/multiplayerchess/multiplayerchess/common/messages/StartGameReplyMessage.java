@@ -15,6 +15,14 @@ public final class StartGameReplyMessage extends ServerMessage implements Serial
     public final String startingFEN;
     public final Player player;
 
+    /**
+     * Constructs a new StartGameReplyMessage.
+     *
+     * @param success     true if the game was started successfully, false otherwise.
+     * @param matchID     the match ID.
+     * @param startingFEN the starting state of the game given by a FEN string.
+     * @param player      the player we play as.
+     */
     public StartGameReplyMessage(boolean success, String matchID, String startingFEN, Player player) {
         this.success = success;
         this.matchID = matchID;

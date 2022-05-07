@@ -15,6 +15,14 @@ public final class JoinMatchReplyMessage extends ServerMessage implements Serial
     public final Player player;
     public final String matchID;
 
+    /**
+     * Constructs a new JoinMatchReplyMessage.
+     *
+     * @param success      Whether the join was successful.
+     * @param gameStateFEN The state of the game given by a FEN string.
+     * @param player       The player we joined the match as.
+     * @param matchID      The ID of the match we joined.
+     */
     public JoinMatchReplyMessage(boolean success, String gameStateFEN, Player player, String matchID) {
         this.success = success;
         this.gameStateFEN = gameStateFEN;

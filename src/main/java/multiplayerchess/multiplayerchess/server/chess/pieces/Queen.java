@@ -9,6 +9,9 @@ import multiplayerchess.multiplayerchess.server.chess.rules.ChessRules;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the queen piece.
+ */
 public final class Queen extends Piece {
     private static final Movement movement = new Movement(new MovementDirection[]{
             MovementDirection.UP,
@@ -23,7 +26,11 @@ public final class Queen extends Piece {
             true
     );
 
-
+    /**
+     * The Queen constructor.
+     *
+     * @param color The color of the queen.
+     */
     public Queen(Color color) {
         super(color);
     }

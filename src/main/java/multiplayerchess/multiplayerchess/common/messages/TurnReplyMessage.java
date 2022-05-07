@@ -15,6 +15,15 @@ public final class TurnReplyMessage extends ServerOngoingMatchMessage implements
     public final boolean gameOver;
     public final Player winner;
 
+    /**
+     * Constructs a new TurnReplyMessage.
+     *
+     * @param success      Whether the turn was successful.
+     * @param gameStateFEN The game state FEN after the turn.
+     * @param gameOver     Whether the game is over.
+     * @param winner       The winner of the game in case the game has ended.
+     * @param matchID      The match ID.
+     */
     public TurnReplyMessage(boolean success, String gameStateFEN, boolean gameOver, Player winner, String matchID) {
         super(matchID);
         this.success = success;

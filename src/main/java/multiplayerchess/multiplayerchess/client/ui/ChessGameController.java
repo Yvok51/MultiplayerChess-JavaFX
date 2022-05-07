@@ -66,6 +66,8 @@ public class ChessGameController {
      *
      * @param match             The match the controller handles.
      * @param networkController The network controller to use.
+     * @param stage             The stage the scene is displayed on.
+     * @param gameUnderWay      Whether the match is already under way or not.
      */
     public void setupController(Match match, NetworkController networkController, Stage stage, boolean gameUnderWay) {
         this.networkController = networkController;

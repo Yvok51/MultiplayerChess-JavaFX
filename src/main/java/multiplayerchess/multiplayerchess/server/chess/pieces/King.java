@@ -9,6 +9,9 @@ import multiplayerchess.multiplayerchess.server.chess.rules.ChessRules;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the king piece.
+ */
 public final class King extends Piece {
     private static final Movement movement = new Movement(new MovementDirection[]{
             MovementDirection.UP,
@@ -23,6 +26,11 @@ public final class King extends Piece {
             false
     );
 
+    /**
+     * The King constructor.
+     *
+     * @param color The color of the king.
+     */
     public King(Color color) {
         super(color);
     }

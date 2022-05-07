@@ -8,6 +8,11 @@ import java.io.Serializable;
 public final class OpponentDisconnectedMessage extends ServerOngoingMatchMessage implements Serializable {
     static final long serialVersionUID = 0x1234567;
 
+    /**
+     * Constructs a new OpponentDisconnectedMessage.
+     *
+     * @param matchID the ID of the match
+     */
     public OpponentDisconnectedMessage(String matchID) {
         super(matchID);
     }

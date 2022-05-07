@@ -9,6 +9,9 @@ import multiplayerchess.multiplayerchess.server.chess.rules.ChessRules;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the bishop piece.
+ */
 public final class Bishop extends Piece {
     private static final Movement movement = new Movement(new MovementDirection[]{
             MovementDirection.UP_LEFT,
@@ -19,6 +22,11 @@ public final class Bishop extends Piece {
             true
     );
 
+    /**
+     * The Bishop constructor.
+     *
+     * @param color The color of the bishop.
+     */
     public Bishop(Color color) {
         super(color);
     }

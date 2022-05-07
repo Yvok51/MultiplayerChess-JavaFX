@@ -9,6 +9,9 @@ import multiplayerchess.multiplayerchess.server.chess.rules.ChessRules;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the knight piece.
+ */
 public final class Knight extends Piece {
     private static final Movement movement = new Movement(new MovementDirection[]{
             MovementDirection.KNIGHT_DOWN_LEFT,
@@ -23,6 +26,11 @@ public final class Knight extends Piece {
             false
     );
 
+    /**
+     * The Knight constructor.
+     *
+     * @param color The color of the knight.
+     */
     public Knight(Color color) {
         super(color);
     }

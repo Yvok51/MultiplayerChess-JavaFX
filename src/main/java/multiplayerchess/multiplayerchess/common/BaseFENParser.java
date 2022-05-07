@@ -1,5 +1,8 @@
 package multiplayerchess.multiplayerchess.common;
 
+/**
+ * The base FEN parser which has methods used by both the client and server parser.
+ */
 public class BaseFENParser {
 
     /**

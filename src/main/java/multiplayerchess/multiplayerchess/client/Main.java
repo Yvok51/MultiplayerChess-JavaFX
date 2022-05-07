@@ -9,7 +9,15 @@ import multiplayerchess.multiplayerchess.client.ui.Utility;
 
 import java.io.IOException;
 
+/**
+ * The main class of the client. It is responsible for loading the main menu.
+ */
 public class Main extends Application {
+    /**
+     * The main method launches the application.
+     *
+     * @param args The arguments passed to the application. Not used.
+     */
     public static void main(String[] args) {
         launch();
     }

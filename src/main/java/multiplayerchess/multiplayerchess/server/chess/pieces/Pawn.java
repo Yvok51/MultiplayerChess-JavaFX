@@ -9,6 +9,9 @@ import multiplayerchess.multiplayerchess.server.chess.rules.ChessRules;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the pawn piece.
+ */
 public final class Pawn extends Piece {
     private static final Movement captureMovementWhite = new Movement(new MovementDirection[]{
             MovementDirection.UP_LEFT,
@@ -46,6 +49,12 @@ public final class Pawn extends Piece {
     );
     private final boolean hasMoved;
 
+    /**
+     * The Pawn constructor.
+     *
+     * @param color    The color of the pawn.
+     * @param hasMoved Whether the pawn has moved yet.
+     */
     public Pawn(Color color, boolean hasMoved) {
         super(color);
         this.hasMoved = hasMoved;

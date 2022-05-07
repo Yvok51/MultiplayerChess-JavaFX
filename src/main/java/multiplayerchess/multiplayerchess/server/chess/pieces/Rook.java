@@ -9,6 +9,9 @@ import multiplayerchess.multiplayerchess.server.chess.rules.ChessRules;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the rook piece.
+ */
 public final class Rook extends Piece {
     private static final Movement movement = new Movement(new MovementDirection[]{
             MovementDirection.UP,
@@ -19,6 +22,11 @@ public final class Rook extends Piece {
             true
     );
 
+    /**
+     * The Rook constructor.
+     *
+     * @param color The color of the rook.
+     */
     public Rook(Color color) {
         super(color);
     }

@@ -31,6 +31,11 @@ public class MainMenuController {
         return "/multiplayerchess/multiplayerchess/MainMenu.fxml";
     }
 
+    /**
+     * Setup the controller after its construction, since the constructor is called by the JavFX framework.
+     *
+     * @param stage The stage the scene is displayed on.
+     */
     public void setupController(Stage stage) {
         this.stage = stage;
     }
@@ -82,6 +87,11 @@ public class MainMenuController {
         Platform.exit();
     }
 
+    /**
+     * Handles to the {@link StartGameReplyMessage}. Starts the match and switches to the game scene.
+     *
+     * @param message The message to handle.
+     */
     private void startGameReplyHandler(Message message) {
         var reply = (StartGameReplyMessage) message;
         networkController.clearAllCallbacks();

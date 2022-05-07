@@ -11,6 +11,11 @@ public abstract sealed class ServerOngoingMatchMessage extends ServerMessage imp
 
     public final String matchID;
 
+    /**
+     * Constructs a new ServerOngoingMatchMessage.
+     *
+     * @param matchID the ID of the match
+     */
     public ServerOngoingMatchMessage(String matchID) {
         this.matchID = matchID;
     }
