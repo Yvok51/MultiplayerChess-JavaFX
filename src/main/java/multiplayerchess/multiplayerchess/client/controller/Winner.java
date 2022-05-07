@@ -11,7 +11,7 @@ public enum Winner {
     NONE;
 
     /**
-     * Translate from the player enum to the winner enum.
+     * Translates from the player enum to the winner enum.
      *
      * @param player The player.
      * @return The winner.

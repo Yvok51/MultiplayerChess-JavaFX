@@ -16,7 +16,7 @@ public class SafeLog {
     }
 
     /**
-     * Print to standard output thread-safely.
+     * Prints to standard output thread-safely.
      *
      * @param s String to print.
      */

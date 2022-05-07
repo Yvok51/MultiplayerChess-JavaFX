@@ -78,7 +78,7 @@ public class FENParser {
     }
 
     /**
-     * Get the player from the FEN string.
+     * Gets the player from the FEN string.
      *
      * @param FEN The FEN string to parse.
      * @return The player parsed from the FEN string.
@@ -88,7 +88,7 @@ public class FENParser {
     }
 
     /**
-     * Get the number of moves from the FEN string.
+     * Gets the number of moves from the FEN string.
      *
      * @param FEN The FEN string to parse.
      * @return The move count parsed from the FEN string.
@@ -98,7 +98,7 @@ public class FENParser {
     }
 
     /**
-     * Get the number of half-moves from the FEN string.
+     * Gets the number of half-moves from the FEN string.
      *
      * @param FEN The FEN string to parse.
      * @return The half-move number parsed from the FEN string.
@@ -108,7 +108,7 @@ public class FENParser {
     }
 
     /**
-     * Get the en passant tile from the FEN string.
+     * Gets the en passant tile from the FEN string.
      *
      * @param FEN The FEN string to parse.
      * @return The en passant tile from the FEN string.
@@ -118,7 +118,7 @@ public class FENParser {
     }
 
     /**
-     * Get the castling rights from the FEN string.
+     * Gets the castling rights from the FEN string.
      *
      * @param FEN The FEN string to parse.
      * @return The castling rights from the FEN string.
@@ -144,7 +144,7 @@ public class FENParser {
     }
 
     /**
-     * Create a FEN string from the given state of the match
+     * Creates a FEN string from the given state of the match
      *
      * @param board            The board situation in the match
      * @param currentPlayer    The player whose turn it is
@@ -188,7 +188,7 @@ public class FENParser {
     }
 
     /**
-     * Add the board to the string builder
+     * Adds the board to the string builder
      *
      * @param builder The string builder to add the board to
      * @param board   The board to add
@@ -219,9 +219,9 @@ public class FENParser {
     }
 
     /**
-     * Add the castling options to the string builder
+     * Adds the castling options to the string builder
      *
-     * @param builder The string builder to add the castling options to
+     * @param builder          The string builder to add the castling options to
      * @param possibleCastling The castling options to add
      */
     private static void addCastlingToBuilder(StringBuilder builder, Set<Castling> possibleCastling) {

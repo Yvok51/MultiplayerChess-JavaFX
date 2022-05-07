@@ -16,7 +16,7 @@ public final class Board {
     private final Piece[][] board;
 
     /**
-     * The board constructor
+     * The Board constructor
      *
      * @param startingFEN The FEN to parse the board from
      */
@@ -25,7 +25,7 @@ public final class Board {
     }
 
     /**
-     * Get the piece on the position
+     * Gets the piece on the position
      *
      * @param position The position to get the piece from
      * @return The piece on the position
@@ -35,7 +35,7 @@ public final class Board {
     }
 
     /**
-     * Get the piece on the position
+     * Gets the piece on the position
      *
      * @param row    The row of the position
      * @param column The column of the position
@@ -46,7 +46,7 @@ public final class Board {
     }
 
     /**
-     * Set the piece on the given position
+     * Sets the piece on the given position
      *
      * @param position Position to put the piece on
      * @param piece    The piece to put down
@@ -56,7 +56,7 @@ public final class Board {
     }
 
     /**
-     * Clear any piece that is on the given position
+     * Clears any piece that is on the given position
      *
      * @param position The position to clear
      */

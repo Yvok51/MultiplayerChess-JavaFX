@@ -44,6 +44,7 @@ public class Main {
 
     /**
      * Starts a listener and writer for a client and sets up starting callbacks.
+     * The socket ownership is transferred and the socket should not be used further by the caller.
      *
      * @param socket      the socket of the connection
      * @param controllers the map of match controllers

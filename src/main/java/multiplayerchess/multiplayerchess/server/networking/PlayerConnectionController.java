@@ -38,7 +38,7 @@ public class PlayerConnectionController implements AutoCloseable {
     }
 
     /**
-     * Create a new network controller.
+     * Creates a new network controller.
      *
      * @param playerSocket The socket to use for communication
      * @return The new network controller
@@ -68,14 +68,14 @@ public class PlayerConnectionController implements AutoCloseable {
     }
 
     /**
-     * Clear the heartbeat occurred flag.
+     * Clears the heartbeat occurred flag.
      */
     public void clearHeartbeat() {
         heartbeatOccurredFlag.set(false);
     }
 
     /**
-     * Answer whether a heartbeat occurred in the last interval.
+     * Answers whether a heartbeat occurred in the last interval.
      *
      * @return Whether a heartbeat occurred.
      */
@@ -84,7 +84,7 @@ public class PlayerConnectionController implements AutoCloseable {
     }
 
     /**
-     * Add a callback to be called when a message of the given type is received.
+     * Adds a callback to be called when a message of the given type is received.
      *
      * @param type     The type of message to listen for
      * @param callback The callback to call when the message is received
@@ -94,7 +94,7 @@ public class PlayerConnectionController implements AutoCloseable {
     }
 
     /**
-     * Remove a callback from the list of callbacks for the given type.
+     * Removes a callback from the list of callbacks for the given type.
      *
      * @param type     The type of message to remove the callback from
      * @param callback The callback to remove
@@ -104,7 +104,7 @@ public class PlayerConnectionController implements AutoCloseable {
     }
 
     /**
-     * Remove all callbacks for the given type.
+     * Removes all callbacks for the given type.
      *
      * @param type The type of message to remove all callbacks from
      */
@@ -113,7 +113,7 @@ public class PlayerConnectionController implements AutoCloseable {
     }
 
     /**
-     * Remove all callbacks
+     * Removes all callbacks
      */
     public synchronized void clearAllCallbacks() {
         callbackMap.clearAllCallbacks();
@@ -122,7 +122,7 @@ public class PlayerConnectionController implements AutoCloseable {
     }
 
     /**
-     * Start the network controller.
+     * Starts the network controller.
      */
     public void start() {
         listener.start();
@@ -130,7 +130,7 @@ public class PlayerConnectionController implements AutoCloseable {
     }
 
     /**
-     * Whether the network controller is running.
+     * Answers whether the network controller is running.
      *
      * @return Whether the network controller is running.
      */
@@ -139,7 +139,7 @@ public class PlayerConnectionController implements AutoCloseable {
     }
 
     /**
-     * Dispose of the network controller's resources.
+     * Disposes of the network controller's resources.
      *
      * @throws IOException If an I/O error occurs
      */
@@ -152,7 +152,7 @@ public class PlayerConnectionController implements AutoCloseable {
     }
 
     /**
-     * The handler for received messages.
+     * Handles the received messages.
      * A unified callback which the listener calls for each message received.
      * It calls the appropriate callbacks for the message type.
      *
@@ -165,7 +165,7 @@ public class PlayerConnectionController implements AutoCloseable {
     }
 
     /**
-     * Set the writer for the network controller.
+     * Sets the writer for the network controller.
      *
      * @param writer The writer to use
      * @param queue  The queue to use for sending messages to the writer
@@ -176,7 +176,7 @@ public class PlayerConnectionController implements AutoCloseable {
     }
 
     /**
-     * Set the listener for the network controller.
+     * Sets the listener for the network controller.
      *
      * @param listener The listener to use
      */

@@ -25,7 +25,7 @@ public final class Match {
     private Position enPassant;
 
     /**
-     * The match constructor. Creates a new match from the StartingFen string
+     * The Match constructor. Creates a new match from the StartingFen string
      */
     public Match() {
         board = new Board(StartingFEN);
@@ -79,7 +79,7 @@ public final class Match {
     }
 
     /**
-     * Get the FEN representation of the current state of the match
+     * Gets the FEN representation of the current state of the match
      *
      * @return The FEN string representation
      */
@@ -88,7 +88,7 @@ public final class Match {
     }
 
     /**
-     * Get the player whose turn it is to move
+     * Gets the player whose turn it is to move
      *
      * @return The player whose turn it is to move
      */
@@ -247,7 +247,7 @@ public final class Match {
     }
 
     /**
-     * Remove the castling options that were discarded by the current move
+     * Removes the castling options that were discarded by the current move
      *
      * @param move       The move that has happened
      * @param movedPiece The piece that was moved

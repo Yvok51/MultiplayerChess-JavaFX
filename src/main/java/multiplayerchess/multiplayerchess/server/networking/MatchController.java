@@ -43,7 +43,8 @@ public final class MatchController extends Thread {
     }
 
     /**
-     * Get a Move representing the move to be performed according to the TurnMessage
+     * Gets a {@link multiplayerchess.multiplayerchess.server.controller.Move} representing the move to be performed
+     * according to the {@link TurnMessage}
      *
      * @param message The TurnMessage on which to base the move
      * @return The move to be performed
@@ -125,7 +126,7 @@ public final class MatchController extends Thread {
     }
 
     /**
-     * Get the FEN representation of the current match situation
+     * Gets the FEN representation of the current match situation
      *
      * @return The FEN representation
      */
@@ -134,7 +135,7 @@ public final class MatchController extends Thread {
     }
 
     /**
-     * Get the match ID of this match
+     * Gets the match ID of this match
      *
      * @return the match ID
      */
@@ -143,7 +144,7 @@ public final class MatchController extends Thread {
     }
 
     /**
-     * Handle a turn message sent by a player
+     * Handles a turn message sent by a player
      *
      * @param message The turn message to handle
      */
@@ -166,7 +167,7 @@ public final class MatchController extends Thread {
     }
 
     /**
-     * Handle a an acknowledgement message sent by a player that he has connected.
+     * Handles an acknowledgement message sent by a player that he has connected.
      * This is used to synchronize the server with both players
      *
      * @param message The acknowledgement message to handle
@@ -192,7 +193,7 @@ public final class MatchController extends Thread {
     }
 
     /**
-     * Handle when a player disconnects
+     * Handles a situation when a player disconnects
      *
      * @param player The player who disconnected
      */
@@ -230,7 +231,7 @@ public final class MatchController extends Thread {
     }
 
     /**
-     * End the game, get rid of resources
+     * Ends the game, gets rid of all resources
      */
     private void endGame() {
         try {
@@ -259,7 +260,7 @@ public final class MatchController extends Thread {
     }
 
     /**
-     * Send a message to one player
+     * Sends a message to one player
      *
      * @param message The message to send
      * @param player  The player to send the message to

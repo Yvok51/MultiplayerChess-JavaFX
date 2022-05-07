@@ -7,6 +7,9 @@ import multiplayerchess.multiplayerchess.server.controller.Move;
 
 import java.util.List;
 
+/**
+ * The base class for all pieces.
+ */
 public abstract class Piece {
     public final Color color;
 
@@ -20,7 +23,7 @@ public abstract class Piece {
     }
 
     /**
-     * Get the possible moves of the piece.
+     * Gets the possible moves of the piece.
      *
      * @param start     Position of the piece.
      * @param isCapture Whether the moves are to be capture moves
@@ -29,14 +32,14 @@ public abstract class Piece {
     public abstract List<Move> generateMoveList(Position start, boolean isCapture);
 
     /**
-     * Get the type of the piece.
+     * Gets the type of the piece.
      *
      * @return Type of the piece.
      */
     public abstract PieceType getType();
 
     /**
-     * Get the version of the piece after it has been moved.
+     * Gets the version of the piece after it has been moved.
      *
      * @return Piece after it has been moved.
      */
@@ -45,16 +48,16 @@ public abstract class Piece {
     }
 
     /**
-     * Get the movement of the piece.
+     * Gets the movement of the piece.
      *
      * @return Movement of the piece.
      */
-    abstract Movement getMovement();
+    protected abstract Movement getMovement();
 
     /**
-     * Get the movement of the piece in which the piece can capture
+     * Gets the movement of the piece in which the piece can capture
      *
      * @return Movement of the piece in which the piece can capture
      */
-    abstract Movement getCaptureMovement();
+    protected abstract Movement getCaptureMovement();
 }

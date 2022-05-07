@@ -33,7 +33,7 @@ public final class Move {
     }
 
     /**
-     * Get the row difference between the start and end position.
+     * Gets the row difference between the start and end position.
      *
      * @return the row difference between the start and end position
      */
@@ -42,7 +42,7 @@ public final class Move {
     }
 
     /**
-     * Get the column difference between the start and end position.
+     * Gets the column difference between the start and end position.
      *
      * @return the column difference between the start and end position
      */
@@ -55,7 +55,7 @@ public final class Move {
     }
 
     /**
-     * Get the list of moves that the piece will go through.
+     * Gets the list of moves that the piece will go through.
      *
      * @return the list of moves that the piece will go through
      */
@@ -77,7 +77,7 @@ public final class Move {
     }
 
     /**
-     * Get the direction of the move i.e. from (7, 7) we get (1, 1) or (5, 0) we get (1, 0).
+     * Gets the direction of the move i.e. from (7, 7) we get (1, 1) or (5, 0) we get (1, 0).
      * Does not change the knight movement direction.
      *
      * @return the direction of the move
@@ -96,12 +96,6 @@ public final class Move {
         return new Position(rowDirection, columnDirection);
     }
 
-    /**
-     * The override of the equals method.
-     *
-     * @param o The object to compare to
-     * @return Whether this object and o are equal
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -116,11 +110,6 @@ public final class Move {
                 && pieceType == move.pieceType && isCapture == move.isCapture;
     }
 
-    /**
-     * The override of the hashCode method.
-     *
-     * @return The hashCode of this object
-     */
     @Override
     public int hashCode() {
         return Objects.hash(startPosition, endPosition, isCapture, pieceType);

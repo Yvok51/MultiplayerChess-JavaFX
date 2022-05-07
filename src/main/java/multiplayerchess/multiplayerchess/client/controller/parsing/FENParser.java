@@ -38,7 +38,7 @@ public class FENParser {
     }
 
     /**
-     * Get an in-memory representation of the board from the FEN string.
+     * Gets an in-memory representation of the board from the FEN string.
      *
      * @param FEN The FEN string to parse.
      * @return The board.
@@ -79,7 +79,7 @@ public class FENParser {
     }
 
     /**
-     * Get the current player from the FEN string.
+     * Gets the current player from the FEN string.
      *
      * @param FEN The FEN string to parse.
      * @return The current player.
@@ -89,7 +89,7 @@ public class FENParser {
     }
 
     /**
-     * Get the possible en passant move from the FEN string.
+     * Gets the possible en passant move from the FEN string.
      *
      * @param FEN The FEN string to parse.
      * @return The possible en passant move.

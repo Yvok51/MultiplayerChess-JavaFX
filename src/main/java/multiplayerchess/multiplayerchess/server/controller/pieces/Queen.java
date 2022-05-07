@@ -29,12 +29,12 @@ public final class Queen extends Piece {
     }
 
     @Override
-    Movement getMovement() {
+    protected Movement getMovement() {
         return movement;
     }
 
     @Override
-    Movement getCaptureMovement() {
+    protected Movement getCaptureMovement() {
         return movement;
     }
 

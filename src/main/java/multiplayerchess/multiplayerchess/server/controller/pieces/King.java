@@ -28,12 +28,12 @@ public final class King extends Piece {
     }
 
     @Override
-    Movement getMovement() {
+    protected Movement getMovement() {
         return movement;
     }
 
     @Override
-    Movement getCaptureMovement() {
+    protected Movement getCaptureMovement() {
         return movement;
     }
 

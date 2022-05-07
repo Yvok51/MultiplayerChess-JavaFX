@@ -83,7 +83,7 @@ public final class Match {
     }
 
     /**
-     * Update the board to reflect the given FEN string.
+     * Updates the board to reflect the given FEN string.
      *
      * @param FEN The FEN string to update the board to.
      */

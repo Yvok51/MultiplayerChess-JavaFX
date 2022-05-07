@@ -56,7 +56,7 @@ public class SocketMessageWriter<T> extends Thread {
     }
 
     /**
-     * Set the thread to stop
+     * Sets the thread to stop
      */
     public void stopRunning() {
         running = false;

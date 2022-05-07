@@ -3,7 +3,7 @@ package multiplayerchess.multiplayerchess.common;
 public class BaseFENParser {
 
     /**
-     * Get the player from the FEN string.
+     * Gets the player from the FEN string.
      *
      * @param FEN The FEN string to parse.
      * @return The player parsed from the FEN string.
@@ -15,7 +15,7 @@ public class BaseFENParser {
     }
 
     /**
-     * Get the number of moves from the FEN string.
+     * Gets the number of moves from the FEN string.
      *
      * @param FEN The FEN string to parse.
      * @return The move count parsed from the FEN string.
@@ -27,7 +27,7 @@ public class BaseFENParser {
     }
 
     /**
-     * Get the number of half-moves from the FEN string.
+     * Gets the number of half-moves from the FEN string.
      *
      * @param FEN The FEN string to parse.
      * @return The half-move number parsed from the FEN string.
@@ -39,7 +39,7 @@ public class BaseFENParser {
     }
 
     /**
-     * Get the en passant tile from the FEN string.
+     * Gets the en passant tile from the FEN string.
      *
      * @param FEN The FEN string to parse.
      * @return The en passant tile from the FEN string.

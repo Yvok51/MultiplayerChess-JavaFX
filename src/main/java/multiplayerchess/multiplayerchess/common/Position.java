@@ -54,7 +54,7 @@ public final class Position implements Serializable {
     }
 
     /**
-     * Get this position in chess notation.
+     * Gets this position in chess notation.
      *
      * @return The position in chess notation.
      */
@@ -65,12 +65,6 @@ public final class Position implements Serializable {
         return Character.toString(columnChar) + rowChar;
     }
 
-    /**
-     * Override equals to compare two positions.
-     *
-     * @param o The object to compare to.
-     * @return Whether the object o is a position equal to this Position.
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -84,11 +78,6 @@ public final class Position implements Serializable {
         return row == position.row && column == position.column;
     }
 
-    /**
-     * Override hashCode.
-     *
-     * @return The hashcode of this object.
-     */
     @Override
     public int hashCode() {
         return Objects.hash(row, column);

@@ -24,7 +24,7 @@ public class ChessRules {
     public static final int ColumnCount = MaxBoardColumn + 1;
 
     /**
-     * Whether the move is legal in the current board state
+     * Answers whether the move is legal in the current board state
      *
      * @param board           The current board
      * @param move            The move that is to be checked
@@ -45,7 +45,7 @@ public class ChessRules {
     }
 
     /**
-     * Returned the piece which has moved - marks the piece as moved
+     * Returns the piece which has moved - marks the piece as moved
      *
      * @param piece       The piece that has moved
      * @param isPromotion Whether the piece is to be promoted
@@ -56,7 +56,7 @@ public class ChessRules {
     }
 
     /**
-     * Whether the current move results in a promotion
+     * Answers whether the current move results in a promotion
      *
      * @param move          The move that is checked
      * @param movedPiece    The piece that is to be moved
@@ -83,7 +83,7 @@ public class ChessRules {
     }
 
     /**
-     * Check whether the given move is a castle move and whether it is valid as well
+     * Checks whether the given move is a castle move and whether it is valid as well
      *
      * @param board           The current board
      * @param move            The move that is to be checked
@@ -213,7 +213,7 @@ public class ChessRules {
     }
 
     /**
-     * Generate all the possible moves of a player.
+     * Generates all the possible moves of a player.
      *
      * @param board     The current board
      * @param player    The players whose moves we are searching for
@@ -232,7 +232,7 @@ public class ChessRules {
     }
 
     /**
-     * Generate all moves for a piece, even ones not possible due to king safety or whether it is a capture.
+     * Generates all moves for a piece, even ones not possible due to king safety or whether it is a capture.
      *
      * @param board  The current board
      * @param player The player whose moves we are searching for
@@ -250,7 +250,7 @@ public class ChessRules {
     }
 
     /**
-     * Generates all possible moves for the piece on the given position.
+     * Generates all valid moves for the piece on the given position. Respects king safety and whether it is a capture.
      *
      * @param board         The current board
      * @param piecePosition The position of the piece we are generating moves for
@@ -266,6 +266,13 @@ public class ChessRules {
         return removeInvalidMoves(board, allMoves, player, enPassant);
     }
 
+    /**
+     * Generates all possible moves for the piece on the given position.
+     *
+     * @param board         The current board
+     * @param piecePosition The position of the piece we are generating moves for
+     * @return List of possible moves
+     */
     List<Move> generateAllMovesForPiece(Board board, Position piecePosition) {
         Piece piece = board.getPiece(piecePosition);
         // List of all possible moves for the piece
@@ -293,7 +300,7 @@ public class ChessRules {
     }
 
     /**
-     * Remove moves which are blocked by another piece
+     * Removes moves which are blocked by another piece
      *
      * @param board The current board
      * @param moves The list of moves to filter
@@ -304,7 +311,7 @@ public class ChessRules {
     }
 
     /**
-     * Get the positions of all the player's pieces
+     * Gets the positions of all the player's pieces
      *
      * @param board  The current board
      * @param player The player whose pieces we search for
@@ -362,7 +369,7 @@ public class ChessRules {
     }
 
     /**
-     * Get the position of the player's king on the board.
+     * Gets the position of the player's king on the board.
      * Presumes the board is valid, i.e. there is only one king
      *
      * @param board     The board where to look
@@ -463,7 +470,7 @@ public class ChessRules {
     }
 
     /**
-     * Answer whether the move is en passant
+     * Answers whether the move is en passant
      *
      * @param movedPiece The piece moved
      * @param move       The move to check

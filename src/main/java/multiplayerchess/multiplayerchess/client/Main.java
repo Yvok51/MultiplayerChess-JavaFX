@@ -44,9 +44,6 @@ public class Main extends Application {
         stage.show();
     }
 
-    /**
-     * Called when the application is about to be closed.
-     */
     @Override
     public void stop() {
         // end all threads still running

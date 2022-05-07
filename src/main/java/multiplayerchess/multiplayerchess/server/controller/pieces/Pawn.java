@@ -52,7 +52,7 @@ public final class Pawn extends Piece {
     }
 
     @Override
-    Movement getMovement() {
+    protected Movement getMovement() {
         if (hasMoved) {
             return color == Color.WHITE ? normalMovementWhite : normalMovementBlack;
         } else {
@@ -61,7 +61,7 @@ public final class Pawn extends Piece {
     }
 
     @Override
-    Movement getCaptureMovement() {
+    protected Movement getCaptureMovement() {
         return color == Color.WHITE ? captureMovementWhite : captureMovementBlack;
     }
 

@@ -20,7 +20,7 @@ public class CallbackMap<T, V> {
     }
 
     /**
-     * Add a callback to be called when a message of the given type is received.
+     * Adds a callback to be called when a message of the given type is received.
      *
      * @param type     The type of message to listen for
      * @param callback The callback to call when the message is received
@@ -36,7 +36,7 @@ public class CallbackMap<T, V> {
     }
 
     /**
-     * Remove a callback from the list of callbacks for the given type.
+     * Removes a callback from the list of callbacks for the given type.
      *
      * @param type     The type of message to remove the callback from
      * @param callback The callback to remove
@@ -49,7 +49,7 @@ public class CallbackMap<T, V> {
     }
 
     /**
-     * Remove all callbacks for the given type.
+     * Removes all callbacks for the given type.
      *
      * @param type The type of message to remove all callbacks from
      */
@@ -58,14 +58,14 @@ public class CallbackMap<T, V> {
     }
 
     /**
-     * Remove all callbacks.
+     * Removes all callbacks.
      */
     public void clearAllCallbacks() {
         callbackMap.clear();
     }
 
     /**
-     * Get a list of all callbacks for the given type.
+     * Gets a list of all callbacks for the given type.
      *
      * @param type The type of message to get the callbacks for
      * @return A list of callbacks for the given type

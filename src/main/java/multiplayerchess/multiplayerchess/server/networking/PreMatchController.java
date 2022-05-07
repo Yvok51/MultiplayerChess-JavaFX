@@ -95,6 +95,7 @@ public class PreMatchController {
 
         /**
          * Generates a random string of a given length.
+         * If a length of less than 1 is given, an empty string is returned.
          *
          * @param length The length of the string to generate.
          * @return The generated string.

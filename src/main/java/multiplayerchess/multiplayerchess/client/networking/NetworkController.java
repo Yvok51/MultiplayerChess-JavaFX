@@ -63,7 +63,7 @@ public class NetworkController implements AutoCloseable {
     }
 
     /**
-     * Send a request to start a match to the server.
+     * Sends a request to start a match to the server.
      */
     public void requestNewMatch() {
         sendMessage(new StartGameMessage());
@@ -107,7 +107,7 @@ public class NetworkController implements AutoCloseable {
     }
 
     /**
-     * Add a callback to be called when a message of the given type is received.
+     * Adds a callback to be called when a message of the given type is received.
      *
      * @param type     The type of message to listen for
      * @param callback The callback to call when the message is received
@@ -117,7 +117,7 @@ public class NetworkController implements AutoCloseable {
     }
 
     /**
-     * Remove a callback from the list of callbacks for the given type.
+     * Removes a callback from the list of callbacks for the given type.
      *
      * @param type     The type of message to remove the callback from
      * @param callback The callback to remove
@@ -127,7 +127,7 @@ public class NetworkController implements AutoCloseable {
     }
 
     /**
-     * Remove all callbacks for the given type.
+     * Removes all callbacks for the given type.
      *
      * @param type The type of message to remove all callbacks from
      */
@@ -142,7 +142,7 @@ public class NetworkController implements AutoCloseable {
     }
 
     /**
-     * Start the network controller.
+     * Starts the network controller.
      */
     public void start() {
         writer.start();
@@ -150,7 +150,7 @@ public class NetworkController implements AutoCloseable {
     }
 
     /**
-     * Dispose of the network controller's resources.
+     * Disposes of the network controller's resources.
      *
      * @throws IOException If an I/O error occurs
      */
@@ -185,7 +185,7 @@ public class NetworkController implements AutoCloseable {
     }
 
     /**
-     * Set the writer for the network controller.
+     * Sets the writer for the network controller.
      *
      * @param writer The writer to use
      * @param queue  The queue to use for sending messages to the writer
@@ -196,7 +196,7 @@ public class NetworkController implements AutoCloseable {
     }
 
     /**
-     * Set the listener for the network controller.
+     * Sets the listener for the network controller.
      *
      * @param listener The listener to use
      */

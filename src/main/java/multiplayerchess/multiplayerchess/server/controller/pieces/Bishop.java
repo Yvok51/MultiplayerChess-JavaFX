@@ -24,12 +24,12 @@ public final class Bishop extends Piece {
     }
 
     @Override
-    Movement getMovement() {
+    protected Movement getMovement() {
         return movement;
     }
 
     @Override
-    Movement getCaptureMovement() {
+    protected Movement getCaptureMovement() {
         return movement;
     }
 
