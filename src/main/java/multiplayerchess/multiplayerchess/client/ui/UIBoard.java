@@ -1,8 +1,8 @@
 package multiplayerchess.multiplayerchess.client.ui;
 
 import javafx.scene.layout.GridPane;
-import multiplayerchess.multiplayerchess.client.controller.Board;
-import multiplayerchess.multiplayerchess.client.controller.Move;
+import multiplayerchess.multiplayerchess.client.chess.Board;
+import multiplayerchess.multiplayerchess.client.chess.Move;
 import multiplayerchess.multiplayerchess.common.Color;
 import multiplayerchess.multiplayerchess.common.Player;
 import multiplayerchess.multiplayerchess.common.Position;

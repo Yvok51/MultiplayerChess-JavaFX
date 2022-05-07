@@ -4,7 +4,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
-import multiplayerchess.multiplayerchess.client.controller.Match;
+import multiplayerchess.multiplayerchess.client.chess.Match;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
 import multiplayerchess.multiplayerchess.common.messages.Message;
 import multiplayerchess.multiplayerchess.common.messages.MessageType;

@@ -1,3 +1,6 @@
+/**
+ * Contains both the server and client applications.
+ */
 module multiplayerchess.multiplayerchess {
     requires javafx.controls;
     requires javafx.fxml;

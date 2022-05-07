@@ -7,7 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import multiplayerchess.multiplayerchess.client.controller.Match;
+import multiplayerchess.multiplayerchess.client.chess.Match;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
 import multiplayerchess.multiplayerchess.common.messages.JoinMatchReplyMessage;
 import multiplayerchess.multiplayerchess.common.messages.Message;

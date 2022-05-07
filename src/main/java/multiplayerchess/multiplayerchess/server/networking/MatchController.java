@@ -3,8 +3,8 @@ package multiplayerchess.multiplayerchess.server.networking;
 import multiplayerchess.multiplayerchess.common.Player;
 import multiplayerchess.multiplayerchess.common.messages.*;
 import multiplayerchess.multiplayerchess.server.SafeLog;
-import multiplayerchess.multiplayerchess.server.controller.Match;
-import multiplayerchess.multiplayerchess.server.controller.Move;
+import multiplayerchess.multiplayerchess.server.chess.Match;
+import multiplayerchess.multiplayerchess.server.chess.Move;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -43,7 +43,7 @@ public final class MatchController extends Thread {
     }
 
     /**
-     * Gets a {@link multiplayerchess.multiplayerchess.server.controller.Move} representing the move to be performed
+     * Gets a {@link multiplayerchess.multiplayerchess.server.chess.Move} representing the move to be performed
      * according to the {@link TurnMessage}
      *
      * @param message The TurnMessage on which to base the move

@@ -2,7 +2,7 @@ package multiplayerchess.multiplayerchess.client.ui;
 
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
-import multiplayerchess.multiplayerchess.client.controller.pieces.Piece;
+import multiplayerchess.multiplayerchess.client.chess.pieces.Piece;
 import multiplayerchess.multiplayerchess.common.Color;
 
 /**
