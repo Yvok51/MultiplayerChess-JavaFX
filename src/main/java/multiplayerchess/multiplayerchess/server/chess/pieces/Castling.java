@@ -11,6 +11,11 @@ public enum Castling {
 
     public final int id;
 
+    /**
+     * Constructs a castling enum.
+     *
+     * @param id the id of the castling
+     */
     Castling(int id) {
         this.id = id;
     }

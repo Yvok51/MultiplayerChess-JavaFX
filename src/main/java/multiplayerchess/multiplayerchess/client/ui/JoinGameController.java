@@ -38,6 +38,11 @@ public class JoinGameController {
         return "/multiplayerchess/multiplayerchess/JoinGame.fxml";
     }
 
+    /**
+     * Sets up the controller after its construction, since the constructor is called by the JavFX framework.
+     *
+     * @param stage The stage the scene is displayed on.
+     */
     public void setupController(Stage stage) {
         this.stage = stage;
     }

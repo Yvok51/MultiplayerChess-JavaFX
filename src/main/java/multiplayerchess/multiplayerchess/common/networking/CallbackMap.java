@@ -15,6 +15,9 @@ public class CallbackMap<T, V> {
 
     private final Map<T, List<V>> callbackMap;
 
+    /**
+     * Constructs a new CallbackMap.
+     */
     public CallbackMap() {
         callbackMap = new HashMap<>();
     }

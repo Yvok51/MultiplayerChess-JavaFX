@@ -11,6 +11,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 
+/**
+ * The main class of the server.
+ */
 public class Main {
     /**
      * Starts the server. The server listens for incoming connections and dispatches

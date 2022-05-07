@@ -32,7 +32,7 @@ public class MainMenuController {
     }
 
     /**
-     * Setup the controller after its construction, since the constructor is called by the JavFX framework.
+     * Sets up the controller after its construction, since the constructor is called by the JavFX framework.
      *
      * @param stage The stage the scene is displayed on.
      */

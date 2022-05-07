@@ -11,6 +11,11 @@ public abstract sealed class ClientOngoingMatchMessage extends ClientMessage imp
 
     public final String matchID;
 
+    /**
+     * Constructor for the ClientOngoingMatchMessage.
+     *
+     * @param matchID the ID of the match
+     */
     public ClientOngoingMatchMessage(String matchID) {
         this.matchID = matchID;
     }
