@@ -5,31 +5,27 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18"
-            fx:controller="multiplayerchess.multiplayerchess.client.ui.JoinGameController">
+
+<AnchorPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="multiplayerchess.multiplayerchess.client.ui.JoinGameController">
     <children>
-        <TextField fx:id="MatchIDTextField" layoutX="225.0" layoutY="358.0" prefHeight="85.0" prefWidth="350.0"
-                   promptText="Enter Game Code">
+        <TextField fx:id="MatchIDTextField" layoutX="225.0" layoutY="358.0" prefHeight="85.0" prefWidth="350.0" promptText="Enter Game Code">
             <font>
-                <Font size="24.0"/>
+                <Font size="24.0" />
             </font>
         </TextField>
-        <Button layoutX="422.0" layoutY="492.0" mnemonicParsing="false" onAction="#onJoinGame" prefHeight="85.0"
-                prefWidth="175.0" text="Join Game">
+        <Button layoutX="422.0" layoutY="492.0" mnemonicParsing="false" onAction="#onJoinGame" prefHeight="85.0" prefWidth="175.0" text="Join Game">
             <font>
-                <Font name="System Bold" size="24.0"/>
+                <Font name="System Bold" size="24.0" />
             </font>
         </Button>
-        <Button layoutX="199.0" layoutY="492.0" mnemonicParsing="false" onAction="#onBack" prefHeight="85.0"
-                prefWidth="175.0" text="Back">
+        <Button layoutX="199.0" layoutY="492.0" mnemonicParsing="false" onAction="#onBack" prefHeight="85.0" prefWidth="175.0" text="Back">
             <font>
-                <Font name="System Bold" size="24.0"/>
+                <Font name="System Bold" size="24.0" />
             </font>
         </Button>
-        <Label fx:id="errorLabel" alignment="CENTER" layoutX="225.0" layoutY="266.0" prefHeight="74.0"
-               prefWidth="350.0">
+        <Label fx:id="errorLabel" alignment="CENTER" layoutX="225.0" layoutY="266.0" prefHeight="74.0" prefWidth="350.0" textFill="RED">
             <font>
-                <Font name="System Bold" size="24.0"/>
+                <Font name="System Bold" size="24.0" />
             </font>
         </Label>
     </children>

@@ -2,7 +2,9 @@ package multiplayerchess.multiplayerchess.client.ui;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import multiplayerchess.multiplayerchess.client.chess.Match;
 import multiplayerchess.multiplayerchess.client.networking.NetworkController;
@@ -17,6 +19,9 @@ import java.io.IOException;
  * Controller for the main menu scene.
  */
 public class MainMenuController {
+
+    @FXML
+    private Label errorLabel;
 
     private boolean opponentConnected = false;
     private Stage stage;
@@ -38,6 +43,7 @@ public class MainMenuController {
      */
     public void setupController(Stage stage) {
         this.stage = stage;
+        errorLabel.setVisible(false);
     }
 
     /**
@@ -46,6 +52,7 @@ public class MainMenuController {
      * @param e The click event.
      */
     public void onStartGame(ActionEvent e) {
+        errorLabel.setVisible(false);
         try {
             networkController = NetworkController.connect(Networking.SERVER_ADDRESS, Networking.SERVER_PORT);
 
@@ -67,6 +74,7 @@ public class MainMenuController {
      * @param e The click event.
      */
     public void onJoinGame(ActionEvent e) {
+        errorLabel.setVisible(false);
         try {
             FXMLLoader loader = Utility.loadNewScene(e, JoinGameController.getFXMLFile());
             JoinGameController controller = loader.getController();
@@ -113,7 +121,7 @@ public class MainMenuController {
                 controller.setupController(startedMatch, networkController, stage, opponentConnected);
             });
         } else {
-            //TODO: Signify to the user that the match could not be started
+            errorLabel.setVisible(true);
         }
     }
 
