@@ -113,7 +113,6 @@ public class MainMenuController {
                     loader = Utility.loadNewScene(stage, ChessGameController.getFXMLFile());
                 }
                 catch (IOException ex) {
-                    //TODO: Handle this - send message to server to dump match
                     return;
                 }
 

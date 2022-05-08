@@ -40,7 +40,6 @@ public class PreMatchController {
     public void startMatch(Message message) {
         controller.clearAllCallbacks();
 
-        // TODO: Change the length of the generated match id according to the number of ongoing matches.
         RandomStringGenerator generator = new RandomStringGenerator(MATCH_ID_AVAILABLE_CHARACTERS);
         String potentialMatchID = generator.nextString(MATCH_ID_LENGTH);
         while (controllerMap.matchExists(potentialMatchID)) {

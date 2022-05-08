@@ -29,7 +29,7 @@ public class Utility {
         var image = pieceImages.get(piece.getIconFilename());
         if (image == null) {
             var resource = Utility.class.getResourceAsStream(piece.getIconFilename());
-            image = new Image(resource); // TODO: what if it is null?
+            image = new Image(resource);
             pieceImages.put(piece.getIconFilename(), image);
         }
         return image;
