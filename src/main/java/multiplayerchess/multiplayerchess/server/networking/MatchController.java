@@ -79,6 +79,10 @@ public final class MatchController extends Thread {
             catch (InterruptedException ignored) {
             }
 
+            if (!gameOngoing.get()) {
+                return;
+            }
+
             if (!blackPlayerController.isRunning() || !blackPlayerController.hasHeartbeatOccurred()) {
                 playerDisconnected(Player.BLACK);
             }

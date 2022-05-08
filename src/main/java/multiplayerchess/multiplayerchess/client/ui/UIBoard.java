@@ -99,6 +99,7 @@ public class UIBoard extends GridPane {
             boolean isCapture = controller.isCapture(selectedField.getPiece().getPieceType(), start, end);
 
             Move move = new Move(start, end, selectedField.getPiece().getPieceType(), isCapture);
+            deselectField();
             controller.movePiece(move);
 
         } else {
