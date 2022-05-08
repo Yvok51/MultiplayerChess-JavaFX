@@ -31,8 +31,7 @@ public class NetworkController implements AutoCloseable {
     private NetworkController() {
         this.callbackMap = new CallbackMap<>();
         this.heartbeatCallback = (message) -> {
-            var heartbeat = (HeartbeatMessage) message;
-            sendMessage(new HeartbeatReplyMessage(heartbeat.matchID));
+            sendMessage(new HeartbeatReplyMessage());
         };
 
         // Add default callback for heartbeat messages
@@ -86,20 +85,17 @@ public class NetworkController implements AutoCloseable {
      * @param endPosition   The ending position of the piece
      * @param color         The color of the piece
      * @param isCapture     Whether the move resulted in a capture
-     * @param matchID       The ID of the match
      */
     public void sendTurn(PieceType pieceType, Position startPosition, Position endPosition,
-                         Color color, boolean isCapture, String matchID) {
-        sendMessage(new TurnMessage(pieceType, startPosition, endPosition, color, isCapture, matchID));
+                         Color color, boolean isCapture) {
+        sendMessage(new TurnMessage(pieceType, startPosition, endPosition, color, isCapture));
     }
 
     /**
      * Send a resignation message to the server.
-     *
-     * @param matchID The ID of the match
      */
-    public void sendResign(String matchID, Player player) {
-        sendMessage(new ResignMessage(matchID, player));
+    public void sendResign(Player player) {
+        sendMessage(new ResignMessage(player));
     }
 
     public void sendConnectionAcknowledgement() {
@@ -156,6 +152,7 @@ public class NetworkController implements AutoCloseable {
      */
     @Override
     public void close() throws IOException {
+        sendMessage(new DisconnectMessage());
         listener.stopRunning();
         writer.stopRunning();
         writer.interrupt();

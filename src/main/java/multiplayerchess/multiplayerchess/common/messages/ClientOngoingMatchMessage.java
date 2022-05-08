@@ -9,14 +9,4 @@ public abstract sealed class ClientOngoingMatchMessage extends ClientMessage imp
         permits TurnMessage, ResignMessage, HeartbeatReplyMessage, DisconnectMessage {
     static final long serialVersionUID = 0x1234567;
 
-    public final String matchID;
-
-    /**
-     * Constructor for the ClientOngoingMatchMessage.
-     *
-     * @param matchID the ID of the match
-     */
-    public ClientOngoingMatchMessage(String matchID) {
-        this.matchID = matchID;
-    }
 }

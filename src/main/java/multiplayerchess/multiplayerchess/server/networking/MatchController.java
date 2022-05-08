@@ -71,7 +71,7 @@ public final class MatchController extends Thread {
 
         final long tenSeconds = 10_000;
         while (gameOngoing.get()) {
-            broadcastMessage(new HeartbeatMessage(matchID));
+            broadcastMessage(new HeartbeatMessage());
 
             try {
                 Thread.sleep(tenSeconds);
@@ -115,7 +115,8 @@ public final class MatchController extends Thread {
             whitePlayerController = playerController;
             whitePlayerController.addCallback(MessageType.RESIGNED, this::playerResignedHandler);
             whitePlayerController.addCallback(MessageType.TURN, this::playerTurnHandler);
-            whitePlayerController.addCallback(MessageType.DISCONNECTED, this::playerDisconnectedHandler);
+            whitePlayerController.addCallback(
+                    MessageType.DISCONNECTED, (message) -> this.playerDisconnectedHandler(Player.WHITE));
 
             return Player.WHITE;
         } else if (blackPlayerController == null) {
@@ -123,7 +124,8 @@ public final class MatchController extends Thread {
             blackPlayerController.addCallback(MessageType.RESIGNED, this::playerResignedHandler);
             blackPlayerController.addCallback(MessageType.TURN, this::playerTurnHandler);
             blackPlayerController.addCallback(MessageType.JOIN_GAME, this::joinedPlayerHasAcknowledgedConnectionHandler);
-            blackPlayerController.addCallback(MessageType.DISCONNECTED, this::playerDisconnectedHandler);
+            blackPlayerController.addCallback(
+                    MessageType.DISCONNECTED, (message) -> this.playerDisconnectedHandler(Player.BLACK));
 
             return Player.BLACK;
         }
@@ -194,18 +196,17 @@ public final class MatchController extends Thread {
      */
     private void playerResignedHandler(Message message) {
         var resignMessage = (ResignMessage) message;
-        sendMessage(new OpponentResignedMessage(matchID), resignMessage.player.opposite());
+        sendMessage(new OpponentResignedMessage(), resignMessage.player.opposite());
         endGame();
     }
 
     /**
      * Handles when a player disconnects
      *
-     * @param message The message containing the player who disconnected
+     * @param disconnectingPlayer The player that disconnected
      */
-    private void playerDisconnectedHandler(Message message) {
-        var disconnectMessage = (DisconnectMessage) message;
-        sendMessage(new OpponentDisconnectedMessage(matchID), disconnectMessage.disconnectingPlayer.opposite());
+    private void playerDisconnectedHandler(Player disconnectingPlayer) {
+        sendMessage(new OpponentDisconnectedMessage(), disconnectingPlayer.opposite());
         endGame();
     }
 
@@ -215,7 +216,7 @@ public final class MatchController extends Thread {
      * @param player The player who disconnected
      */
     private void playerDisconnected(Player player) {
-        sendMessage(new OpponentDisconnectedMessage(matchID), player.opposite());
+        sendMessage(new OpponentDisconnectedMessage(), player.opposite());
         endGame();
     }
 
@@ -233,18 +234,18 @@ public final class MatchController extends Thread {
         SafeLog.log(Level.INFO, "FEN After move attempt: " + match.getFEN());
 
         if (!success) {
-            return new TurnReplyMessage(false, match.getFEN(), false, null, message.matchID);
+            return new TurnReplyMessage(false, match.getFEN(), false, null);
         }
 
         boolean gameOver = match.gameOver();
         if (gameOver) {
             var winner = match.winner();
-            return winner.map(player -> new TurnReplyMessage(success, match.getFEN(), gameOver, player, message.matchID))
-                    .orElseGet(() -> new TurnReplyMessage(success, match.getFEN(), gameOver, null, message.matchID));
+            return winner.map(player -> new TurnReplyMessage(success, match.getFEN(), gameOver, player))
+                    .orElseGet(() -> new TurnReplyMessage(success, match.getFEN(), gameOver, null));
 
         }
 
-        return new TurnReplyMessage(success, match.getFEN(), gameOver, null, message.matchID);
+        return new TurnReplyMessage(success, match.getFEN(), gameOver, null);
     }
 
     /**

@@ -179,14 +179,14 @@ public class ChessGameController {
      */
     public void movePiece(Move move) {
         networkController.sendTurn(move.getPieceType(), move.getStartPosition(),
-                move.getEndPosition(), match.getPlayer().getColor(), move.isCapture(), match.getMatchID());
+                move.getEndPosition(), match.getPlayer().getColor(), move.isCapture());
     }
 
     /**
      * Called when the user clicks the resign button.
      */
     public void onResignAndQuit() {
-        networkController.sendResign(match.getMatchID(), match.getPlayer());
+        networkController.sendResign(match.getPlayer());
         endMatch(Winner.getWinnerFromPlayer(match.getPlayer().opposite()), "Resignation");
     }
 

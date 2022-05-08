@@ -9,14 +9,4 @@ public abstract sealed class ServerOngoingMatchMessage extends ServerMessage imp
         permits TurnReplyMessage, OpponentResignedMessage, OpponentDisconnectedMessage, HeartbeatMessage {
     static final long serialVersionUID = 0x1234567;
 
-    public final String matchID;
-
-    /**
-     * Constructs a new ServerOngoingMatchMessage.
-     *
-     * @param matchID the ID of the match
-     */
-    public ServerOngoingMatchMessage(String matchID) {
-        this.matchID = matchID;
-    }
 }

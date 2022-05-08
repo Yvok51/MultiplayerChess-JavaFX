@@ -8,15 +8,6 @@ import java.io.Serializable;
 public final class OpponentResignedMessage extends ServerOngoingMatchMessage implements Serializable {
     static final long serialVersionUID = 0x1234567;
 
-    /**
-     * Constructs a new OpponentResignedMessage.
-     *
-     * @param matchID the ID of the match
-     */
-    public OpponentResignedMessage(String matchID) {
-        super(matchID);
-    }
-
     @Override
     public MessageType getType() {
         return MessageType.RESIGNED;
