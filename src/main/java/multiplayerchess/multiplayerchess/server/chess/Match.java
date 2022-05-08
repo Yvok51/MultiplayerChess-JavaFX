@@ -15,9 +15,10 @@ import java.util.Set;
  */
 public final class Match {
 
-    private static final String StartingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-    private static final String stalemateFEN = "7k/8/8/5Q2/8/8/4K3/8 w - - 0 1";
-    private static final String insufficientMaterialFEN = "8/8/7k/8/6p1/4N3/4K3/8 w - - 0 1";
+    private static final String START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    // private static final String STALEMATE_FEN = "7k/8/8/5Q2/8/8/4K3/8 w - - 0 1";
+    // private static final String INSUFFICIENT_MATERIAL_FEN = "8/8/7k/8/6p1/4N3/4K3/8 w - - 0 1";
+
     private final Board board;
     private final ChessRules rules;
     private final Set<Castling> possibleCastles;
@@ -30,7 +31,7 @@ public final class Match {
      * The Match constructor. Creates a new match from the StartingFen string
      */
     public Match() {
-        String FENToUse = stalemateFEN;
+        String FENToUse = START_FEN;
         board = new Board(FENToUse);
         rules = new ChessRules();
         moves = FENParser.getMoves(FENToUse);
