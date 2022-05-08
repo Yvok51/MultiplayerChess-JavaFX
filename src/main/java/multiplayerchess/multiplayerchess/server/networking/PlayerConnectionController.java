@@ -48,9 +48,9 @@ public class PlayerConnectionController implements AutoCloseable {
         var controller = new PlayerConnectionController();
 
         MessageQueue<ServerMessage> queue = new MessageQueue<>();
-        SocketMessageWriter<ServerMessage> writer = new SocketMessageWriter<>(playerSocket, queue);
+        SocketMessageWriter<ServerMessage> writer = new SocketMessageWriter<>(playerSocket, queue, controller);
         SocketMessageListener listener = new SocketMessageListener(
-                playerSocket.getInputStream(), controller::handleMessage);
+                playerSocket.getInputStream(), controller::handleMessage, controller);
 
         controller.setWriter(writer, queue);
         controller.setListener(listener);

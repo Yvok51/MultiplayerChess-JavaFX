@@ -112,7 +112,6 @@ public class ChessGameController {
         this.newTurn();
         matchIDLabel.setText("Match ID: " + match.getMatchID());
 
-        // TODO: This is ugly.
         if (gameUnderWay) {
             opponentJoinedHandler(null);
         }

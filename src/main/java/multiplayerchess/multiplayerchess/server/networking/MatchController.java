@@ -235,18 +235,24 @@ public final class MatchController extends Thread {
      */
     private void endGame() {
         try {
-            whitePlayerController.close();
+            if (whitePlayerController != null) {
+                whitePlayerController.close();
+            }
         }
         catch (IOException ignored) {
         }
         try {
-            blackPlayerController.close();
+            if (blackPlayerController != null) {
+                blackPlayerController.close();
+            }
         }
         catch (IOException ignored) {
         }
 
-        controllers.matchEnded(matchID);
+        gameStarted.set(true);
         gameOngoing.set(false);
+        controllers.matchEnded(matchID);
+        this.interrupt();
     }
 
     /**
@@ -255,20 +261,20 @@ public final class MatchController extends Thread {
      * @param message The message to send
      */
     private void broadcastMessage(ServerMessage message) {
-        whitePlayerController.sendMessage(message);
-        blackPlayerController.sendMessage(message);
+        sendMessage(message, Player.WHITE);
+        sendMessage(message, Player.BLACK);
     }
 
     /**
-     * Sends a message to one player
+     * Sends a message to one of the players. If the player is not present, the message is discarded
      *
      * @param message The message to send
      * @param player  The player to send the message to
      */
     private void sendMessage(ServerMessage message, Player player) {
-        if (player == Player.WHITE) {
+        if (player == Player.WHITE && whitePlayerController != null) {
             whitePlayerController.sendMessage(message);
-        } else if (player == Player.BLACK) {
+        } else if (player == Player.BLACK && blackPlayerController != null) {
             blackPlayerController.sendMessage(message);
         }
     }

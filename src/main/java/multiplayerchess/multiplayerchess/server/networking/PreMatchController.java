@@ -17,7 +17,7 @@ public class PreMatchController {
     private static final String UPPER_CASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String NUMERALS = "0123456789";
     private static final String MATCH_ID_AVAILABLE_CHARACTERS = LOWER_CASE + UPPER_CASE + NUMERALS;
-    private static final int MATCH_ID_LENGTH = 1;
+    private static final int MATCH_ID_LENGTH = 5;
     private final PlayerConnectionController controller;
     private final MatchesMap controllerMap;
 

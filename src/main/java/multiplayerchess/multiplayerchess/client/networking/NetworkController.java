@@ -52,9 +52,9 @@ public class NetworkController implements AutoCloseable {
         var controller = new NetworkController();
 
         MessageQueue<ClientMessage> queue = new MessageQueue<>();
-        SocketMessageWriter<ClientMessage> writer = new SocketMessageWriter<>(socket, queue);
+        SocketMessageWriter<ClientMessage> writer = new SocketMessageWriter<>(socket, queue, controller);
         SocketMessageListener listener = new SocketMessageListener(
-                socket.getInputStream(), controller::handleServerMessage);
+                socket.getInputStream(), controller::handleServerMessage, controller);
 
         controller.setListener(listener);
         controller.setWriter(writer, queue);

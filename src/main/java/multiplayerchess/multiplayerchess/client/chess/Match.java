@@ -16,7 +16,6 @@ public final class Match {
     private Board board;
     private boolean ourTurn;
     private Position enPassant;
-    // TODO: add last move
 
     /**
      * Constructor for a match.
