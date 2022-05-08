@@ -115,6 +115,7 @@ public final class MatchController extends Thread {
             whitePlayerController = playerController;
             whitePlayerController.addCallback(MessageType.RESIGNED, this::playerResignedHandler);
             whitePlayerController.addCallback(MessageType.TURN, this::playerTurnHandler);
+            whitePlayerController.addCallback(MessageType.DISCONNECTED, this::playerDisconnectedHandler);
 
             return Player.WHITE;
         } else if (blackPlayerController == null) {
@@ -122,6 +123,7 @@ public final class MatchController extends Thread {
             blackPlayerController.addCallback(MessageType.RESIGNED, this::playerResignedHandler);
             blackPlayerController.addCallback(MessageType.TURN, this::playerTurnHandler);
             blackPlayerController.addCallback(MessageType.JOIN_GAME, this::joinedPlayerHasAcknowledgedConnectionHandler);
+            blackPlayerController.addCallback(MessageType.DISCONNECTED, this::playerDisconnectedHandler);
 
             return Player.BLACK;
         }
@@ -193,6 +195,17 @@ public final class MatchController extends Thread {
     private void playerResignedHandler(Message message) {
         var resignMessage = (ResignMessage) message;
         sendMessage(new OpponentResignedMessage(matchID), resignMessage.player.opposite());
+        endGame();
+    }
+
+    /**
+     * Handles when a player disconnects
+     *
+     * @param message The message containing the player who disconnected
+     */
+    private void playerDisconnectedHandler(Message message) {
+        var disconnectMessage = (DisconnectMessage) message;
+        sendMessage(new OpponentDisconnectedMessage(matchID), disconnectMessage.disconnectingPlayer.opposite());
         endGame();
     }
 
