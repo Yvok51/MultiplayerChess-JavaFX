@@ -18,3 +18,7 @@ This ID is used in the join game screen, which is accessed after pressing the `J
 
 ### Game
 The game itself follows the traditional [rules of chess](https://en.wikipedia.org/wiki/Rules_of_chess) with the exception that a pawn automatically promotes to a queen and the treefold repetition is not checked for. The game does not have a stopwatch.
+
+The player who started the game will play with white pieces, while the player who joined will play with black pieces.
+
+When the game reached the end a popup will appear that annouces who has won and with a button that brings the user back to the main menu.
