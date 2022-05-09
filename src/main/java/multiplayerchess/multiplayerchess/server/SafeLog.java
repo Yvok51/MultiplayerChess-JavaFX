@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 /**
  * Logs thread-safely.
+ * If more games are played simultaneously than this would become a bottleneck, but for debugging purposes it is fine.
  */
 public class SafeLog {
 
