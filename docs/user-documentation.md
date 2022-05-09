@@ -1,12 +1,12 @@
 # Multiplayer Chess
 ## User documentation
 ### Introduction
-Multiplayer Chess is a multiplayer game of chess in which 
+Multiplayer Chess is a multiplayer game of chess in which two players join a match and play until the match ends or one of them resigns.
 
 ### Starting application
 The server is started by calling `mvn exec:java` in the root directory. The client application is started with `mvn javafx:run`.
 
-The server has a fixed port number and as such only one instance can run at a time. The IP adress the client connects to is also fixed as `localhost` though that could be fairly easily changed.
+The server has a fixed port number and as such only one instance can run at a time. The IP address the client connects to is also fixed as `localhost`.
 
 ### Pre Game
 After starting the application the user is met with three buttons. The bottom button `Quit` will exit the application.

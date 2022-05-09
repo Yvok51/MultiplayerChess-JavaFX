@@ -1,0 +1,22 @@
+<body>
+    Multiplayer Chess is a multiplayer game of chess in which two players join a match and play
+    until the match ends or one of them resigns.
+    <p>
+        The server is started by calling <code>mvn exec:java</code> in the root directory.
+        The client application is started with <code>mvn javafx:run</code>.
+    </p>
+    <p>
+        The server has a fixed port number and as such only one instance can run at a time.
+        The IP address the client connects to is also fixed as <code>localhost</code>.
+        The port number of the server and the IP address of the client is set in the
+        multiplayerchess/multiplayerchess/common/networking/Networking.java file.
+    </p>
+    <p>
+        The server and client communicate by sending messages over TCP using Java serialization.
+        The <code>SocketMessageListener</code> and <code>SocketMessageWriter</code> are used to send and receive messages.
+        Both work in their own threads.
+        The messages are written using a queue that the <code>SocketMessageWriter</code> reads from.
+        The <code>SocketMessageListener</code> has a callback function that is called when a message is received.
+        This callback function then performs routing of the message to the correct handlers.
+    </p>
+</body>
