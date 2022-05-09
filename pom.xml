@@ -92,6 +92,7 @@
                 <configuration>
                     <show>private</show>
                     <overview>src/main/javadoc/overview.html</overview>
+                    <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>
